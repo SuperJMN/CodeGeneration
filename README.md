@@ -40,6 +40,6 @@ private static void Main()
 Each sample will print the generated code for the one expression. 
 
 - Sample1 is the expression above. 
+- Sample2 is a little more complex expression.
 
-Feel free to copy or investigate! 
-
+Feel free to copy or investigate!
