@@ -37,9 +37,11 @@ private static void Main()
 }
 ```
 
-Each sample will print the generated code for the one expression. 
+Each sample will print the generated code for a given expression. 
 
 - Sample1 is the expression above. 
 - Sample2 is a little more complex expression.
+
+**PLEASE NOTICE** that the code is generated from an **AST**, not from the actual source code.
 
 Feel free to copy or investigate!
