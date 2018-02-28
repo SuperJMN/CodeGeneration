@@ -42,6 +42,6 @@ Each sample will print the generated code for a given expression.
 - Sample1 is the expression above. 
 - Sample2 is a little more complex expression.
 
-**PLEASE NOTICE** that the code is generated from an **AST**, not from the actual source code.
+**PLEASE NOTICE** that the code is generated from an **AST**, not from the actual source code (a string). The generation of an AST from source code belongs to another (previous) stage of the compiling process.
 
-Feel free to copy or investigate!
+Feel free to copy or investigate / ask!
