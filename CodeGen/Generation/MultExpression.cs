@@ -2,14 +2,26 @@
 {
     public class MultExpression : Expression
     {
-        public MultExpression(Expression i, Expression d)
+        private readonly Expression left;
+        private readonly Expression right;
+
+        public MultExpression(Expression left, Expression right)
         {
-            Reference = new Reference();
-            var code = new Code();
-            code.Add(i.Code);
-            code.Add(d.Code);
-            code.Add(new Instruction(InstructionsTypes.Mult, Reference, i.Reference, d.Reference));
-            Code = code;
+            this.left = left;
+            this.right = right;
+        }
+        
+        public override Code Code
+        {
+            get
+            {
+                Reference = new Reference();
+                var code = new Code();
+                code.Add(left.Code);
+                code.Add(right.Code);
+                code.Add(new ThreeAddressInstruction(InstructionsTypes.Mult, Reference, left.Reference, right.Reference));
+                return code;
+            }
         }
     }
 }

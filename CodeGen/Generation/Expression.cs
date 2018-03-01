@@ -1,8 +1,8 @@
 ﻿namespace CodeGen.Generation
 {
-    public class Expression
+    public abstract class Expression
     {
         public Reference Reference { get; protected set; }
-        public Code Code { get; protected set; } = new Code();
+        public abstract Code Code { get; }
     }
 }

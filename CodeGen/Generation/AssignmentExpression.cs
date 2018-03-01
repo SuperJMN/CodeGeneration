@@ -2,14 +2,26 @@
 {
     public class AssignmentExpression : Expression
     {
-        public AssignmentExpression(Reference reference, Expression e)
-        {
-            Reference = reference;
+        private readonly Reference target;
+        private readonly Expression assignment;
 
-            var code = new Code();
-            code.Add(e.Code);
-            code.Add(new Instruction(InstructionsTypes.Move, reference, e.Reference, null));
-            Code = code;
+        public AssignmentExpression(Reference target, Expression assignment)
+        {
+            this.target = target;
+            this.assignment = assignment;
+        }
+
+        public override Code Code
+        {
+            get
+            {
+                Reference = target;
+
+                var code = new Code();
+                code.Add(assignment.Code);
+                code.Add(new ThreeAddressInstruction(InstructionsTypes.Move, target, assignment.Reference, null));
+                return code;
+            }
         }
     }
 }

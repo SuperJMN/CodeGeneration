@@ -6,5 +6,7 @@
         {
             Reference = r;
         }
+
+        public override Code Code => new Code();
     }
 }

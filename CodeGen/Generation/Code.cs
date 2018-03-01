@@ -4,16 +4,16 @@ namespace CodeGen.Generation
 {
     public class Code
     {
-        private readonly List<Instruction> instructions;
+        private readonly List<ThreeAddressInstruction> instructions;
 
         public Code()
         {
-            instructions = new List<Instruction>();
+            instructions = new List<ThreeAddressInstruction>();
         }
 
-        public void Add(Instruction instruction)
+        public void Add(ThreeAddressInstruction threeAddressInstruction)
         {
-            instructions.Add(instruction);
+            instructions.Add(threeAddressInstruction);
         }
 
         public void Add(Code code)
@@ -21,6 +21,6 @@ namespace CodeGen.Generation
             instructions.AddRange(code.Instructions);
         }
 
-        public IEnumerable<Instruction> Instructions => instructions;
+        public IEnumerable<ThreeAddressInstruction> Instructions => instructions;
     }
 }

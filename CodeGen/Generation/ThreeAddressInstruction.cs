@@ -1,13 +1,13 @@
 ﻿namespace CodeGen.Generation
 {
-    public class Instruction
+    public class ThreeAddressInstruction
     {
         private readonly string instruction;
         private readonly Reference reference;
         private readonly Reference left;
         private readonly Reference right;
 
-        public Instruction(string instruction, Reference reference, Reference left, Reference right)
+        public ThreeAddressInstruction(string instruction, Reference reference, Reference left, Reference right)
         {
             this.instruction = instruction;
             this.left = left;

@@ -2,15 +2,27 @@
 {
     public class AddExpression : Expression
     {
+        private readonly Expression left;
+        private readonly Expression right;
+
         public AddExpression(Expression left, Expression right)
         {
-            Reference = new Reference();
+            this.left = left;
+            this.right = right;
+        }
 
-            var code = new Code();
-            code.Add(left.Code);
-            code.Add(right.Code);
-            code.Add(new Instruction(InstructionsTypes.Add, Reference, left.Reference, right.Reference));
-            Code = code;
+        public override Code Code
+        {
+            get
+            {
+                Reference = new Reference();
+
+                var code = new Code();
+                code.Add(left.Code);
+                code.Add(right.Code);
+                code.Add(new ThreeAddressInstruction(InstructionsTypes.Add, Reference, left.Reference, right.Reference));
+                return code;
+            }
         }
     }
 }
