@@ -2,9 +2,9 @@
 {
     public class ReferenceExpression : Expression
     {
-        public ReferenceExpression(Reference r)
+        public ReferenceExpression(Reference reference)
         {
-            Reference = r;
+            Reference = reference;
         }
 
         public override Code Code => new Code();
