@@ -2,7 +2,12 @@
 {
     public abstract class Expression
     {
-        public Reference Reference { get; protected set; }
+        protected Expression(Reference reference)
+        {
+            Reference = reference;
+        }
+
+        public Reference Reference { get; }
         public abstract Code Code { get; }
     }
 }

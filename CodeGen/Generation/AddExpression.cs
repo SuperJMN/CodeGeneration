@@ -5,7 +5,7 @@
         private readonly Expression left;
         private readonly Expression right;
 
-        public AddExpression(Expression left, Expression right)
+        public AddExpression(Expression left, Expression right) : base(new Reference())
         {
             this.left = left;
             this.right = right;
@@ -15,8 +15,6 @@
         {
             get
             {
-                Reference = new Reference();
-
                 var code = new Code();
                 code.Add(left.Code);
                 code.Add(right.Code);

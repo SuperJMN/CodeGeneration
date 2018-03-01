@@ -7,6 +7,6 @@ namespace CodeGen
         public Code Generate(Expression expression)
         {
             return expression.Code;
-        }
+        }        
     }
 }

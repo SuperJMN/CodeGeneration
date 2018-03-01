@@ -5,7 +5,7 @@
         private readonly Reference target;
         private readonly Expression assignment;
 
-        public AssignmentExpression(Reference target, Expression assignment)
+        public AssignmentExpression(Reference target, Expression assignment) : base(target)
         {
             this.target = target;
             this.assignment = assignment;
@@ -15,8 +15,6 @@
         {
             get
             {
-                Reference = target;
-
                 var code = new Code();
                 code.Add(assignment.Code);
                 code.Add(new ThreeAddressCode(CodeType.Move, target, assignment.Reference, null));

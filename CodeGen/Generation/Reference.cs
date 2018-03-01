@@ -3,11 +3,11 @@
     public class Reference
     {
         private readonly string identifier;
-        private static int anonymousReferecenCount;
+        private static int anonymousRefereceCount;
 
         public Reference()
         {
-            identifier = "T" + ++anonymousReferecenCount;
+            identifier = "T" + ++anonymousRefereceCount;
         }
 
         public Reference(string identifier)
