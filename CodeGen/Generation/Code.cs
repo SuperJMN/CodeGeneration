@@ -1,19 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace CodeGen.Generation
 {
     public class Code
     {
-        private readonly List<ThreeAddressInstruction> instructions;
+        private readonly List<ThreeAddressCode> instructions;
 
         public Code()
         {
-            instructions = new List<ThreeAddressInstruction>();
+            instructions = new List<ThreeAddressCode>();
         }
 
-        public void Add(ThreeAddressInstruction threeAddressInstruction)
+        public Code(IEnumerable<ThreeAddressCode> instructions) 
         {
-            instructions.Add(threeAddressInstruction);
+            this.instructions = instructions.ToList();
+        }
+
+        public void Add(ThreeAddressCode threeAddressCode)
+        {
+            instructions.Add(threeAddressCode);
         }
 
         public void Add(Code code)
@@ -21,6 +28,6 @@ namespace CodeGen.Generation
             instructions.AddRange(code.Instructions);
         }
 
-        public IEnumerable<ThreeAddressInstruction> Instructions => instructions;
+        public IEnumerable<ThreeAddressCode> Instructions => new ReadOnlyCollection<ThreeAddressCode>(instructions);
     }
 }

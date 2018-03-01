@@ -7,7 +7,7 @@
 
         public Reference()
         {
-            identifier = "T" + anonymousReferecenCount++;
+            identifier = "T" + ++anonymousReferecenCount;
         }
 
         public Reference(string identifier)
@@ -15,10 +15,15 @@
             this.identifier = identifier;
         }
 
+        public string Identifier
+        {
+            get { return identifier; }
+        }
+
 
         public override string ToString()
         {
-            return identifier;
+            return Identifier;
         }
     }
 }

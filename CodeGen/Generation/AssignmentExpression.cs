@@ -19,7 +19,7 @@
 
                 var code = new Code();
                 code.Add(assignment.Code);
-                code.Add(new ThreeAddressInstruction(InstructionsTypes.Move, target, assignment.Reference, null));
+                code.Add(new ThreeAddressCode(CodeType.Move, target, assignment.Reference, null));
                 return code;
             }
         }
