@@ -1,0 +1,3 @@
+[submodule "DeepEqual"]
+	path = DeepEqual
+	url = https://github.com/jamesfoster/DeepEqual.git
