@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Intermediate.Expressions;
+using CodeGen.Intermediate.Units;
 
 namespace CodeGen.Intermediate
 {
@@ -8,7 +8,7 @@ namespace CodeGen.Intermediate
     {
         private int implicitReferenceCount;
 
-        public IReadOnlyCollection<IntermediateCode> Generate(Expression expression)
+        public IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit expression)
         {
             implicitReferenceCount = 0;
 

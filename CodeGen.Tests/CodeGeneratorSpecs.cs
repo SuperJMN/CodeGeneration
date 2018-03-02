@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeGen.Intermediate;
-using CodeGen.Intermediate.Expressions;
+using CodeGen.Intermediate.Units.Expressions;
+using CodeGen.Intermediate.Units.Sentences;
 using DeepEqual.Syntax;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace CodeGen.Tests
         [Fact]
         public void Assignment()
         {
-            var expr = new AssignmentExpression(
+            var expr = new AssignmentSentence(
                 new Reference("a"),
                 new AddExpression(
                     new ReferenceExpression(new Reference("b")),
@@ -36,7 +37,7 @@ namespace CodeGen.Tests
         [Fact]
         public void Complex()
         {
-            var expr = new AssignmentExpression(
+            var expr = new AssignmentSentence(
                 new Reference("x"),
                 new AddExpression(
                     new MultExpression(

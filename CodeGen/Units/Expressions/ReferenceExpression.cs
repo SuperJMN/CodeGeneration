@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Intermediate.Expressions
+﻿namespace CodeGen.Intermediate.Units.Expressions
 {
     public class ReferenceExpression : Expression
     {
@@ -6,9 +6,9 @@
         {
         }
 
-        public override void Accept(IExpressionVisitor expressionVisitor)
+        public override void Accept(ICodeVisitor codeVisitor)
         {            
-            expressionVisitor.Visit(this);
+            codeVisitor.Visit(this);
         }
     }
 }

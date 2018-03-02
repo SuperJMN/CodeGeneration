@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Intermediate.Expressions;
+using CodeGen.Intermediate.Units.Expressions;
+using CodeGen.Intermediate.Units.Sentences;
 
 namespace CodeGen.Intermediate
 {
-    public class CodeGeneratingVisitor : IExpressionVisitor
+    public class CodeGeneratingVisitor : ICodeVisitor
     {
         public IReadOnlyCollection<IntermediateCode> Code => new ReadOnlyCollection<IntermediateCode>(InnerCode);
 
@@ -22,11 +23,11 @@ namespace CodeGen.Intermediate
         {            
         }
 
-        public void Visit(AssignmentExpression expression)
+        public void Visit(AssignmentSentence expression)
         {
             expression.Assignment.Accept(this);
 
-            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Move, expression.Reference, expression.Assignment.Reference, null));
+            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Move, expression.Target, expression.Assignment.Reference, null));
         }
 
         public void Visit(MultExpression expression)
