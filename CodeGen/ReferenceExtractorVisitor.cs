@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Expressions;
+using CodeGen.Intermediate.Expressions;
 
-namespace CodeGen
+namespace CodeGen.Intermediate
 {
     public class ReferenceExtractorVisitor : IExpressionVisitor
     {

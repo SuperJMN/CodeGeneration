@@ -1,6 +1,6 @@
-﻿using CodeGen.Expressions;
+﻿using CodeGen.Intermediate.Expressions;
 
-namespace CodeGen
+namespace CodeGen.Intermediate
 {
     public interface IExpressionVisitor
     {

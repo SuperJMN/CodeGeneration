@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using CodeGen.Expressions;
+using CodeGen.Intermediate;
+using CodeGen.Intermediate.Expressions;
 using DeepEqual.Syntax;
 using Xunit;
 
@@ -22,11 +23,11 @@ namespace CodeGen.Tests
             var sut = new CodeGenerator();
             var actual = sut.Generate(expr);
 
-            var expected = new List<ThreeAddressCode>()
+            var expected = new List<IntermediateCode>()
             {
-                new ThreeAddressCode(CodeType.Mult, new Reference("T1"), new Reference("c"), new Reference("d")),
-                new ThreeAddressCode(CodeType.Add, new Reference("T2"), new Reference("b"), new Reference("T1")),
-                new ThreeAddressCode(CodeType.Move, new Reference("a"), new Reference("T2"), null),
+                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T1"), new Reference("c"), new Reference("d")),
+                new IntermediateCode(IntermediateCodeType.Add, new Reference("T2"), new Reference("b"), new Reference("T1")),
+                new IntermediateCode(IntermediateCodeType.Move, new Reference("a"), new Reference("T2"), null),
             };
 
             actual.ShouldDeepEqual(expected);
@@ -50,13 +51,13 @@ namespace CodeGen.Tests
 
             var sut = new CodeGenerator();
             var actual = sut.Generate(expr);
-            var expected = new List<ThreeAddressCode>()
+            var expected = new List<IntermediateCode>()
             {
-                new ThreeAddressCode(CodeType.Mult, new Reference("T1"), new Reference("z"), new Reference("w")),
-                new ThreeAddressCode(CodeType.Mult, new Reference("T2"), new Reference("y"), new Reference("T1")),
-                new ThreeAddressCode(CodeType.Add, new Reference("T3"), new Reference("y"), new Reference("x")),
-                new ThreeAddressCode(CodeType.Add, new Reference("T4"), new Reference("T2"), new Reference("T3")),
-                new ThreeAddressCode(CodeType.Move, new Reference("x"), new Reference("T4"), null),
+                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T1"), new Reference("z"), new Reference("w")),
+                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T2"), new Reference("y"), new Reference("T1")),
+                new IntermediateCode(IntermediateCodeType.Add, new Reference("T3"), new Reference("y"), new Reference("x")),
+                new IntermediateCode(IntermediateCodeType.Add, new Reference("T4"), new Reference("T2"), new Reference("T3")),
+                new IntermediateCode(IntermediateCodeType.Move, new Reference("x"), new Reference("T4"), null),
             };          
 
             actual.ShouldDeepEqual(expected);

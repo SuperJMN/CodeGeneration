@@ -1,8 +1,8 @@
-﻿namespace CodeGen
+﻿namespace CodeGen.Intermediate
 {
-    public class ThreeAddressCode
+    public class IntermediateCode
     {
-        public ThreeAddressCode(CodeType instruction, Reference reference, Reference left, Reference right)
+        public IntermediateCode(IntermediateCodeType instruction, Reference reference, Reference left, Reference right)
         {
             this.Instruction = instruction;
             this.Left = left;
@@ -16,7 +16,7 @@
 
         public Reference Reference { get; }
 
-        public CodeType Instruction { get; }
+        public IntermediateCodeType Instruction { get; }
 
         public override string ToString()
         {

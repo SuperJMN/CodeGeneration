@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Expressions;
+using CodeGen.Intermediate.Expressions;
 
-namespace CodeGen
+namespace CodeGen.Intermediate
 {
     public class CodeGenerator
     {
         private int implicitReferenceCount;
 
-        public IReadOnlyCollection<ThreeAddressCode> Generate(Expression expression)
+        public IReadOnlyCollection<IntermediateCode> Generate(Expression expression)
         {
             implicitReferenceCount = 0;
 

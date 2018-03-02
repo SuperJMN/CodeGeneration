@@ -1,4 +1,5 @@
-﻿using CodeGen.Expressions;
+﻿using CodeGen.Intermediate;
+using CodeGen.Intermediate.Expressions;
 
 namespace CodeGen.Console
 {

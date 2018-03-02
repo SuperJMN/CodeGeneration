@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Expressions
+﻿namespace CodeGen.Intermediate.Expressions
 {
     public abstract class Expression
     {

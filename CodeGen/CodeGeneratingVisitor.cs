@@ -1,21 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Expressions;
+using CodeGen.Intermediate.Expressions;
 
-namespace CodeGen
+namespace CodeGen.Intermediate
 {
     public class CodeGeneratingVisitor : IExpressionVisitor
     {
-        public IReadOnlyCollection<ThreeAddressCode> Code => new ReadOnlyCollection<ThreeAddressCode>(InnerCode);
+        public IReadOnlyCollection<IntermediateCode> Code => new ReadOnlyCollection<IntermediateCode>(InnerCode);
 
-        private IList<ThreeAddressCode> InnerCode { get; } = new List<ThreeAddressCode>();
+        private IList<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
 
         public void Visit(AddExpression expression)
         {
             expression.Left.Accept(this);
             expression.Right.Accept(this);
 
-            InnerCode.Add(new ThreeAddressCode(CodeType.Add, expression.Reference, expression.Left.Reference, expression.Right.Reference));
+            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Add, expression.Reference, expression.Left.Reference, expression.Right.Reference));
         }
 
         public void Visit()
@@ -26,7 +26,7 @@ namespace CodeGen
         {
             expression.Assignment.Accept(this);
 
-            InnerCode.Add(new ThreeAddressCode(CodeType.Move, expression.Reference, expression.Assignment.Reference, null));
+            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Move, expression.Reference, expression.Assignment.Reference, null));
         }
 
         public void Visit(MultExpression expression)
@@ -34,7 +34,7 @@ namespace CodeGen
             expression.Left.Accept(this);
             expression.Right.Accept(this);
 
-            InnerCode.Add(new ThreeAddressCode(CodeType.Mult, expression.Reference, expression.Left.Reference, expression.Right.Reference));
+            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Mult, expression.Reference, expression.Left.Reference, expression.Right.Reference));
         }
 
         public void Visit(ReferenceExpression expression)
