@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Sentences;
+using CodeGen.Intermediate.Units.Statements;
 
 namespace CodeGen.Intermediate
 {
@@ -18,11 +18,11 @@ namespace CodeGen.Intermediate
             references.Add(expression.Reference);            
         }
 
-        public void Visit(AssignmentSentence expression)
+        public void Visit(AssignmentStatement statement)
         {
-            expression.Assignment.Accept(this);
+            statement.Assignment.Accept(this);
 
-            references.Add(expression.Target);            
+            references.Add(statement.Target);            
         }
 
         public void Visit(MultExpression expression)
@@ -36,6 +36,15 @@ namespace CodeGen.Intermediate
         public void Visit(ReferenceExpression expression)
         {
             references.Add(expression.Reference);
+        }
+
+        public void Visit(IfStatement statement)
+        {
+            
+        }
+
+        public void Visit(Block block)
+        {            
         }
     }
 }

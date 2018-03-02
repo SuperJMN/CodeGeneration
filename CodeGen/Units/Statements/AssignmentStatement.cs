@@ -1,10 +1,10 @@
 ﻿using CodeGen.Intermediate.Units.Expressions;
 
-namespace CodeGen.Intermediate.Units.Sentences
+namespace CodeGen.Intermediate.Units.Statements
 {
-    public class AssignmentSentence : Sentence
+    public class AssignmentStatement : Statement
     {
-        public AssignmentSentence(Reference target, Expression assignment)
+        public AssignmentStatement(Reference target, Expression assignment)
         {
             Target = target;
             Assignment = assignment;

@@ -5,5 +5,7 @@
         Mult,
         Add,
         Move,
+        JumpIfZero,
+        Label
     }
 }

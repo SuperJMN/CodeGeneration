@@ -1,6 +1,6 @@
 ﻿using CodeGen.Intermediate;
 using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Sentences;
+using CodeGen.Intermediate.Units.Statements;
 
 namespace CodeGen.Console
 {
@@ -8,7 +8,7 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var assigmentExpression = new AssignmentSentence(
+            var assigmentExpression = new AssignmentStatement(
                 new Reference("a"),
                 new AddExpression(
                     new ReferenceExpression(new Reference("b")),
