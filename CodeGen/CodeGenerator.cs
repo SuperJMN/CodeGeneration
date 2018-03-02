@@ -1,12 +1,41 @@
-using CodeGen.Generation;
+using System.Collections.Generic;
+using System.Linq;
+using CodeGen.Expressions;
 
 namespace CodeGen
 {
     public class CodeGenerator
     {
-        public Code Generate(Expression expression)
+        private int implicitReferenceCount;
+
+        public IReadOnlyCollection<ThreeAddressCode> Generate(Expression expression)
         {
-            return expression.Code;
-        }        
+            implicitReferenceCount = 0;
+
+            var codeGeneratingVisitor = new CodeGeneratingVisitor();
+            expression.Accept(codeGeneratingVisitor);
+
+            var referenceExtractor = new ReferenceExtractorVisitor();
+            expression.Accept(referenceExtractor);
+
+            AssignIdentifiersToImplicityReferences(referenceExtractor.References);
+
+            return codeGeneratingVisitor.Code;
+        }
+
+        private void AssignIdentifiersToImplicityReferences(IEnumerable<Reference> referenceExtractorReferences)
+        {
+            var noIdentifiers = referenceExtractorReferences
+                .Where(r => r.Identifier == null)
+                .Distinct()
+                .ToList();
+
+            noIdentifiers.ForEach(r => r.Identifier = GetNewIdentifier());
+        }
+
+        private string GetNewIdentifier()
+        {
+            return "T" + ++implicitReferenceCount;
+        }
     }
 }

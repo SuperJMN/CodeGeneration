@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Generation
+﻿namespace CodeGen
 {
     public enum CodeType
     {
