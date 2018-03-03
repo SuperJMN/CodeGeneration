@@ -7,26 +7,39 @@ namespace CodeGen.Intermediate
     public class CodeGenerator
     {
         private int implicitReferenceCount;
+        private int labelCount;
 
         public IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit expression)
         {
             implicitReferenceCount = 0;
+            labelCount = 0;
 
             var codeGeneratingVisitor = new CodeGeneratingVisitor();
             expression.Accept(codeGeneratingVisitor);
 
-            var referenceExtractor = new ReferenceExtractorVisitor();
-            expression.Accept(referenceExtractor);
-
-            AssignIdentifiersToImplicityReferences(referenceExtractor.References);
-
+            AssignIdentifiersToImplicityReferences(codeGeneratingVisitor.Code);
+            AssignIdentifiersToLabels(codeGeneratingVisitor.Code);
+            
             return codeGeneratingVisitor.Code;
         }
 
-        private void AssignIdentifiersToImplicityReferences(IEnumerable<Reference> referenceExtractorReferences)
+        private void AssignIdentifiersToLabels(IReadOnlyCollection<IntermediateCode> code)
         {
-            var noIdentifiers = referenceExtractorReferences
-                .Where(r => r.Identifier == null)
+            var labels = code
+                .Select(x => x.Label)
+                .Where(r => r != null && r.Name == null)
+                .Distinct()
+                .ToList();
+
+            labels.ForEach(r => r.Name = GetNewLabelName());
+
+        }
+
+        private void AssignIdentifiersToImplicityReferences(IEnumerable<IntermediateCode> code)
+        {
+            var noIdentifiers = code
+                .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Destination })
+                .Where(r => r != null && r.Identifier == null)
                 .Distinct()
                 .ToList();
 
@@ -36,6 +49,11 @@ namespace CodeGen.Intermediate
         private string GetNewIdentifier()
         {
             return "T" + ++implicitReferenceCount;
+        }
+
+        private string GetNewLabelName()
+        {
+            return "label" + ++labelCount;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace CodeGen.Intermediate
+﻿using System;
+
+namespace CodeGen.Intermediate
 {
     public class IntermediateCode
     {
@@ -30,12 +32,29 @@
 
         public override string ToString()
         {
-            return Instruction + " " +
-                   Destination + " " +
-                   Left + " " + Right;
+            switch (Instruction)
+            {
+                case IntermediateCodeType.Mult:
+                    return $"{Destination} = {Left} * {Right}";
+
+                case IntermediateCodeType.Add:
+                    return $"{Destination} = {Left} + {Right}";
+
+                case IntermediateCodeType.Move:
+                    return $"{Destination} = {Left}";
+
+                case IntermediateCodeType.JumpIfZero:
+                    return $"if {Destination} == 0 go to {Label}";
+
+                case IntermediateCodeType.Label:
+                    return $"{Label}:";
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
-        public class Emit
+        public static class Emit
         {
             public static IntermediateCode Add(Reference destination, Reference left, Reference right)
             {
@@ -64,7 +83,7 @@
 
             public static IntermediateCode Label(Label label)
             {
-                return new IntermediateCode()
+                return new IntermediateCode
                 {
                     Instruction = IntermediateCodeType.Label,
                     Label = label,

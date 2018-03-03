@@ -41,7 +41,7 @@ namespace CodeGen.Intermediate
 
         public void Visit(IfStatement statement)
         {
-            statement.Accept(this);
+            statement.Condition.Accept(this);
             var label = new Label();
             InnerCode.Add(IntermediateCode.Emit.JumpIfZero(statement.Condition.Reference, label));
             statement.Block.Accept(this);
