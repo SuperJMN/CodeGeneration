@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using CodeGen.Intermediate;
-using CodeGen.Intermediate.Expressions;
+using CodeGen.Intermediate.Units.Expressions;
+using CodeGen.Intermediate.Units.Statements;
 using DeepEqual.Syntax;
 using Xunit;
 
@@ -9,9 +10,9 @@ namespace CodeGen.Tests
     public class CodeGeneratorSpecs
     {
         [Fact]
-        public void Assignment()
+        public void SimpleAssignment()
         {
-            var expr = new AssignmentExpression(
+            var expr = new AssignmentStatement(
                 new Reference("a"),
                 new AddExpression(
                     new ReferenceExpression(new Reference("b")),
@@ -23,20 +24,20 @@ namespace CodeGen.Tests
             var sut = new CodeGenerator();
             var actual = sut.Generate(expr);
 
-            var expected = new List<IntermediateCode>()
+            var expected = new List<IntermediateCode>
             {
-                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T1"), new Reference("c"), new Reference("d")),
-                new IntermediateCode(IntermediateCodeType.Add, new Reference("T2"), new Reference("b"), new Reference("T1")),
-                new IntermediateCode(IntermediateCodeType.Move, new Reference("a"), new Reference("T2"), null),
+                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("c"), new Reference("d")),
+                IntermediateCode.Emit.Add(new Reference("T2"), new Reference("b"), new Reference("T1")),
+                IntermediateCode.Emit.DirectAssignment(new Reference("a"), new Reference("T2")),
             };
 
             actual.ShouldDeepEqual(expected);
         }
 
         [Fact]
-        public void Complex()
+        public void ComplexAssignment()
         {
-            var expr = new AssignmentExpression(
+            var expr = new AssignmentStatement(
                 new Reference("x"),
                 new AddExpression(
                     new MultExpression(
@@ -53,12 +54,62 @@ namespace CodeGen.Tests
             var actual = sut.Generate(expr);
             var expected = new List<IntermediateCode>()
             {
-                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T1"), new Reference("z"), new Reference("w")),
-                new IntermediateCode(IntermediateCodeType.Mult, new Reference("T2"), new Reference("y"), new Reference("T1")),
-                new IntermediateCode(IntermediateCodeType.Add, new Reference("T3"), new Reference("y"), new Reference("x")),
-                new IntermediateCode(IntermediateCodeType.Add, new Reference("T4"), new Reference("T2"), new Reference("T3")),
-                new IntermediateCode(IntermediateCodeType.Move, new Reference("x"), new Reference("T4"), null),
+                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("z"), new Reference("w")),
+                IntermediateCode.Emit.Mult(new Reference("T2"), new Reference("y"), new Reference("T1")),
+                IntermediateCode.Emit.Add(new Reference("T3"), new Reference("y"), new Reference("x")),
+                IntermediateCode.Emit.Add(new Reference("T4"), new Reference("T2"), new Reference("T3")),
+                IntermediateCode.Emit.DirectAssignment(new Reference("x"), new Reference("T4")),
             };          
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void IfSentence()
+        {
+            var expr = new IfStatement(new ReferenceExpression(new Reference("a")), new Block
+            {
+                new AssignmentStatement(new Reference("b"), new ReferenceExpression(new Reference("c"))),
+            });
+
+            var sut = new CodeGenerator();
+            var actual = sut.Generate(expr);
+
+            var label = new Label("label1");
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.JumpIfZero(new Reference("a"), label),
+                IntermediateCode.Emit.DirectAssignment(new Reference("b"), new Reference("c")),
+                IntermediateCode.Emit.Label(label),
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void IfStatementComplexExpression()
+        {
+            var condition = new MultExpression(new ReferenceExpression(new Reference("x")),
+                new ReferenceExpression(new Reference("y")));
+
+            var statement = new IfStatement(condition, new Block
+            {
+                new AssignmentStatement(new Reference("a"), new ReferenceExpression(new Reference("b"))),
+            });
+
+            var sut = new CodeGenerator();
+            var actual = sut.Generate(statement);
+
+            var label = new Label("label1");
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("x"), new Reference("y")),
+                IntermediateCode.Emit.JumpIfZero(new Reference("T1"), label),
+                IntermediateCode.Emit.DirectAssignment(new Reference("a"), new Reference("b")),
+                IntermediateCode.Emit.Label(label),
+            };
 
             actual.ShouldDeepEqual(expected);
         }

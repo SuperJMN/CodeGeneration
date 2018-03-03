@@ -1,32 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Intermediate.Expressions;
+using CodeGen.Intermediate.Units.Expressions;
+using CodeGen.Intermediate.Units.Statements;
 
 namespace CodeGen.Intermediate
 {
-    public class CodeGeneratingVisitor : IExpressionVisitor
+    public class CodeGeneratingVisitor : ICodeVisitor
     {
         public IReadOnlyCollection<IntermediateCode> Code => new ReadOnlyCollection<IntermediateCode>(InnerCode);
 
         private IList<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
+
+        public void Visit(ReferenceExpression expression)
+        {            
+        }
 
         public void Visit(AddExpression expression)
         {
             expression.Left.Accept(this);
             expression.Right.Accept(this);
 
-            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Add, expression.Reference, expression.Left.Reference, expression.Right.Reference));
+            InnerCode.Add(IntermediateCode.Emit.Add(expression.Reference, expression.Left.Reference, expression.Right.Reference));
         }
 
-        public void Visit()
-        {            
-        }
-
-        public void Visit(AssignmentExpression expression)
+        public void Visit(AssignmentStatement statement)
         {
-            expression.Assignment.Accept(this);
+            statement.Assignment.Accept(this);
 
-            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Move, expression.Reference, expression.Assignment.Reference, null));
+            InnerCode.Add(IntermediateCode.Emit.DirectAssignment(statement.Target, statement.Assignment.Reference));
         }
 
         public void Visit(MultExpression expression)
@@ -34,11 +36,24 @@ namespace CodeGen.Intermediate
             expression.Left.Accept(this);
             expression.Right.Accept(this);
 
-            InnerCode.Add(new IntermediateCode(IntermediateCodeType.Mult, expression.Reference, expression.Left.Reference, expression.Right.Reference));
+            InnerCode.Add(IntermediateCode.Emit.Mult(expression.Reference, expression.Left.Reference, expression.Right.Reference));
         }
 
-        public void Visit(ReferenceExpression expression)
-        {            
+        public void Visit(IfStatement statement)
+        {
+            statement.Condition.Accept(this);
+            var label = new Label();
+            InnerCode.Add(IntermediateCode.Emit.JumpIfZero(statement.Condition.Reference, label));
+            statement.Block.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.Label(label));
+        }
+
+        public void Visit(Block block)
+        {
+            foreach (var line in block)
+            {
+                line.Accept(this);
+            }
         }
     }
 }
