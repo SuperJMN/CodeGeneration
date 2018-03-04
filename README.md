@@ -26,21 +26,8 @@ a = T2
 
 # Running the application
 
-**Program.cs** prints 2 examples:
-
-```
-private static void Main()
-{
-  PrintSample1();
-  PrintSeparator();
-  PrintSample2();
-}
-```
-
-Each sample will print the generated code for a given expression. 
-
-- Sample1 is the expression above. 
-- Sample2 is a little more complex expression.
+- **Tests**. this projects has tests, so run them and see what's under the hood :)
+- **Program.cs**. In addition, you will find code in the Main method that generates code from an AST. If you debug it from Visual Studio it will close almost immediately, so it's better to run it "without debugging", that keeps the console window until you press a key :)
 
 **PLEASE NOTICE** that the code is generated from an **AST**, not from the actual source code (a string). The generation of an AST from source code belongs to another (previous) stage of the compiling process.
 
