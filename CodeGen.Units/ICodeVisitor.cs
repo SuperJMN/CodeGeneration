@@ -10,5 +10,6 @@ namespace CodeGen.Units
         void Visit(IfStatement statement);
         void Visit(Block block);
         void Visit(OperatorExpression expression);
+        void Visit(ConstantExpression expression);
     }
 }

@@ -11,6 +11,22 @@ namespace CodeGen.Tests
     public class CodeGeneratorSpecs
     {
         [Fact]
+        public void ConstantAssignment()
+        {
+            var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
+            var sut = new CodeGenerator();
+            var actual = sut.Generate(st);
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.DirectAssignment(new Reference("T1"), 123),
+                IntermediateCode.Emit.DirectAssignment(new Reference("a"), new Reference("T1")),
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
         public void SimpleAssignment()
         {
             var expr = new AssignmentStatement(

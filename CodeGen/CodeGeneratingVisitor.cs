@@ -66,5 +66,10 @@ namespace CodeGen.Intermediate
 
             InnerCode.Add(emitted);
         }
+
+        public void Visit(ConstantExpression expression)
+        {
+            InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
+        }
     }
 }

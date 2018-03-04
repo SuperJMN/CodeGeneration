@@ -11,12 +11,4 @@
 
         public abstract void Accept(ICodeVisitor codeVisitor);
     }
-
-    public enum OperatorKind
-    {
-        Add,
-        Mult,
-        Div,
-        Subs,
-    }
 }
