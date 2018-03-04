@@ -9,17 +9,16 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var assigmentExpression = new AssignmentStatement(
+            var statement = new AssignmentStatement(
                 new Reference("a"),
-                new AddExpression(
+                new OperatorExpression(OperatorKind.Add,
                     new ReferenceExpression(new Reference("b")),
-                    new MultExpression(new ReferenceExpression(new Reference("c")),
+                    new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("c")),
                         new ReferenceExpression(new Reference("d")))
-                )
-            );
+                ));
 
             var generator = new CodeGenerator();
-            var codes = generator.Generate(assigmentExpression);
+            var codes = generator.Generate(statement);
 
             foreach (var line in codes)
             {

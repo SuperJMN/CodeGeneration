@@ -1,4 +1,5 @@
-﻿using Superpower;
+﻿using CodeGen.Units;
+using Superpower;
 using Superpower.Parsers;
 
 namespace CodeGen.Ast
@@ -11,7 +12,7 @@ namespace CodeGen.Ast
 
         public static readonly TokenListParser<Token, Expression> Reference =
             from identifier in Identifier
-            select (Expression) new ReferenceExpression(identifier);
+            select (Expression) new ReferenceExpression(new Reference(identifier));
 
         public static readonly TokenListParser<Token, Expression> Constant =
             Number.Select(n => (Expression)new ConstantExpression(n));
@@ -21,7 +22,7 @@ namespace CodeGen.Ast
                 .Or(OperatorParser(Token.Asterisk, OperatorKind.Mult))
                 .Or(OperatorParser(Token.Slash, OperatorKind.Div));
 
-        public static readonly TokenListParser<Token, Expression> CallExpression =
+        public static readonly TokenListParser<Token, Expression> ExpressionTree =
             Parse.Chain(
                 Operator,
                 Parse.Ref(() => ExpressionItem),
@@ -36,7 +37,7 @@ namespace CodeGen.Ast
         public static readonly TokenListParser<Token, Statement> Assignment =
             from identifier in Identifier
             from eq in Superpower.Parsers.Token.EqualTo(Token.Equal)
-            from expr in CallExpression
+            from expr in ExpressionTree
             select (Statement) new AssignmentStatement(identifier, expr);
 
         public static readonly TokenListParser<Token, Statement> Statement = 

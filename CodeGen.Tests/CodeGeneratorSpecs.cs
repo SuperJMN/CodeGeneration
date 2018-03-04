@@ -15,9 +15,9 @@ namespace CodeGen.Tests
         {
             var expr = new AssignmentStatement(
                 new Reference("a"),
-                new AddExpression(
+                new OperatorExpression(OperatorKind.Add,
                     new ReferenceExpression(new Reference("b")),
-                    new MultExpression(new ReferenceExpression(new Reference("c")),
+                    new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("c")),
                         new ReferenceExpression(new Reference("d")))
                 )
             );
@@ -40,13 +40,13 @@ namespace CodeGen.Tests
         {
             var expr = new AssignmentStatement(
                 new Reference("x"),
-                new AddExpression(
-                    new MultExpression(
+                new OperatorExpression(OperatorKind.Add,
+                    new OperatorExpression(OperatorKind.Mult,
                         new ReferenceExpression(new Reference("y")),
-                        new MultExpression(new ReferenceExpression(new Reference("z")),
+                        new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("z")),
                             new ReferenceExpression(new Reference("w")))
                     ),
-                    new AddExpression(new ReferenceExpression(new Reference("y")),
+                    new OperatorExpression(OperatorKind.Add, new ReferenceExpression(new Reference("y")),
                         new ReferenceExpression(new Reference("x")))
                 )
             );
@@ -60,7 +60,7 @@ namespace CodeGen.Tests
                 IntermediateCode.Emit.Add(new Reference("T3"), new Reference("y"), new Reference("x")),
                 IntermediateCode.Emit.Add(new Reference("T4"), new Reference("T2"), new Reference("T3")),
                 IntermediateCode.Emit.DirectAssignment(new Reference("x"), new Reference("T4")),
-            };          
+            };
 
             actual.ShouldDeepEqual(expected);
         }
@@ -91,7 +91,7 @@ namespace CodeGen.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var condition = new MultExpression(new ReferenceExpression(new Reference("x")),
+            var condition = new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("x")),
                 new ReferenceExpression(new Reference("y")));
 
             var statement = new IfStatement(condition, new Block

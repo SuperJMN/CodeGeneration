@@ -1,10 +1,12 @@
-﻿namespace CodeGen.Ast
+﻿using CodeGen.Units;
+
+namespace CodeGen.Ast
 {
     public class ReferenceExpression : Expression
     {
-        public string Identifier { get; }
+        public Reference Identifier { get; }
 
-        public ReferenceExpression(string identifier)
+        public ReferenceExpression(Reference identifier)
         {
             Identifier = identifier;
         }

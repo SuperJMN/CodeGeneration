@@ -10,7 +10,7 @@ namespace CodeGen.Ast.Tests
         public void OperatorExpression()
         {
             var tokenList = Tokenize("a+b*12");
-            var generated = Parsers.CallExpression.Parse(tokenList);
+            var generated = Parsers.ExpressionTree.Parse(tokenList);
         }
 
         [Theory]

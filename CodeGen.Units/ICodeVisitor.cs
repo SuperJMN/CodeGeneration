@@ -5,11 +5,10 @@ namespace CodeGen.Units
 {
     public interface ICodeVisitor
     {
-        void Visit(AddExpression expression);
         void Visit(AssignmentStatement statement);
-        void Visit(MultExpression expression);
         void Visit(ReferenceExpression expression);
         void Visit(IfStatement statement);
         void Visit(Block block);
+        void Visit(OperatorExpression expression);
     }
 }
