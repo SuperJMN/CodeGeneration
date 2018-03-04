@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+using CodeGen.Units;
+using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 
 namespace CodeGen.Intermediate
 {

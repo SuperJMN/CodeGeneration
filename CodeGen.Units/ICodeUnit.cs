@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Intermediate.Units
+﻿namespace CodeGen.Units
 {
     public interface ICodeUnit
     {

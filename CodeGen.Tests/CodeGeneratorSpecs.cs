@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using CodeGen.Intermediate;
-using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+using CodeGen.Units;
+using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 using DeepEqual.Syntax;
 using Xunit;
 

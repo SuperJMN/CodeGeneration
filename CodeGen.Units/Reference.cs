@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Intermediate
+﻿namespace CodeGen.Units
 {
     public class Reference
     {

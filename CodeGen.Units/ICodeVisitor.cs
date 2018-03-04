@@ -1,7 +1,7 @@
-﻿using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+﻿using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 
-namespace CodeGen.Intermediate
+namespace CodeGen.Units
 {
     public interface ICodeVisitor
     {
