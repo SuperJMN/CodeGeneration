@@ -8,61 +8,69 @@ namespace CodeGen.Ast
 {
     public class Parsers
     {
-        public static readonly TokenListParser<Token, int> Number = Superpower.Parsers.Token.EqualTo(Token.Number).Apply(Numerics.IntegerInt32);
+        public static readonly TokenListParser<LangToken, int> Number = Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32);
 
-        public static readonly TokenListParser<Token, string> Identifier = Superpower.Parsers.Token.EqualTo(Token.Text).Select(token => token.ToStringValue());
+        public static readonly TokenListParser<LangToken, string> Identifier = Token.EqualTo(LangToken.Text).Select(token => token.ToStringValue());
 
-        public static readonly TokenListParser<Token, Expression> Reference =
+        public static readonly TokenListParser<LangToken, Expression> Reference =
             from identifier in Identifier
             select (Expression) new ReferenceExpression(new Reference(identifier));
 
-        public static readonly TokenListParser<Token, Expression> Constant =
+        public static readonly TokenListParser<LangToken, Expression> Constant =
             Number.Select(n => (Expression)new ConstantExpression(n));
 
-        public static readonly TokenListParser<Token, OperatorKind> Operator =
-            OperatorParser(Token.Plus, OperatorKind.Add)
-                .Or(OperatorParser(Token.Asterisk, OperatorKind.Mult))
-                .Or(OperatorParser(Token.Slash, OperatorKind.Div));
+        public static readonly TokenListParser<LangToken, OperatorKind> Operator =
+            OperatorParser(LangToken.Plus, OperatorKind.Add)
+                .Or(OperatorParser(LangToken.Asterisk, OperatorKind.Mult))
+                .Or(OperatorParser(LangToken.Slash, OperatorKind.Div));
 
-        public static readonly TokenListParser<Token, Expression> ExpressionTree =
+        public static readonly TokenListParser<LangToken, Expression> ExpressionTree =
             Parse.Chain(
                 Operator,
                 Parse.Ref(() => ExpressionItem),
                 (op, lhs, rhs) => new OperatorExpression(op, lhs, rhs));
 
-        public static readonly TokenListParser<Token, Expression> ExpressionItem =
+        public static readonly TokenListParser<LangToken, Expression> ExpressionItem =
             Reference.Or(Constant);
 
-        public static readonly TokenListParser<Token, Expression> Condition =
-            ExpressionItem;
-        
-        public static readonly TokenListParser<Token, Statement> Assignment =
+
+        public static readonly TokenListParser<LangToken, Expression> EqualityCondition =
+            from expr1 in ExpressionTree 
+            from _ in Token.EqualTo(LangToken.Whitespace).Optional()
+            from isEqual in Token.EqualTo(LangToken.DoubleEqual)
+            from __ in Token.EqualTo(LangToken.Whitespace).Optional()
+            from expr2 in ExpressionTree
+            select (Expression)new CompareExpression(expr1, expr2);
+
+        public static readonly TokenListParser<LangToken, Expression> ConditionExpression = EqualityCondition.Try().Or(ExpressionItem);
+
+        public static readonly TokenListParser<LangToken, Statement> Assignment =
             from identifier in Identifier
-            from eq in Superpower.Parsers.Token.EqualTo(Token.Equal)
+            from eq in Token.EqualTo(LangToken.Equal)
             from expr in ExpressionTree
             select (Statement) new AssignmentStatement(new Reference(identifier), expr);
 
-        public static readonly TokenListParser<Token, Statement> Statement = 
+        public static readonly TokenListParser<LangToken, Statement> FullStatement = 
             from statement in Assignment
-            from semicolon in Superpower.Parsers.Token.EqualTo(Token.Semicolon)
+            from semicolon in Token.EqualTo(LangToken.Semicolon)
             select statement;
 
-        public static readonly TokenListParser<Token, Block> Block =
-            from statements in Statement
+        public static readonly TokenListParser<LangToken, Block> Block =
+            from statements in FullStatement
                 .Many()
-                .Between(Superpower.Parsers.Token.EqualTo(Token.LeftBrace), Superpower.Parsers.Token.EqualTo(Token.RightBrace))
+                .Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace))
             select new Block(statements);
 
-        private static TokenListParser<Token, OperatorKind> OperatorParser(Token token, OperatorKind operatorKind)
+        private static TokenListParser<LangToken, OperatorKind> OperatorParser(LangToken langToken, OperatorKind operatorKind)
         {
-            return Superpower.Parsers.Token.EqualTo(token).Select(x => operatorKind);
+            return Token.EqualTo(langToken).Select(x => operatorKind);
         }
 
-        public static readonly TokenListParser<Token, Statement> IfStatement =
-            from keywork in Superpower.Parsers.Token.EqualTo(Token.If)
-            from _ in Superpower.Parsers.Token.EqualTo(Token.Whitespace)
-            from expr in Condition.Between(Superpower.Parsers.Token.EqualTo(Token.LeftParenthesis), Superpower.Parsers.Token.EqualTo(Token.RightParenthesis))
-            from white in Superpower.Parsers.Token.EqualTo(Token.Whitespace).Optional()
+        public static readonly TokenListParser<LangToken, Statement> IfStatement =
+            from keywork in Token.EqualTo(LangToken.If)
+            from _ in Token.EqualTo(LangToken.Whitespace)
+            from expr in ConditionExpression.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+            from white in Token.EqualTo(LangToken.Whitespace).Optional()
             from block in Block
             select (Statement) new IfStatement(expr, block);
     }

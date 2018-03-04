@@ -6,7 +6,7 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var intermediateCode = new CodeGenerator().Generate("if (a) {b=3;}");
+            var intermediateCode = new CodeGenerator().Generate("if (a==1) {b=3;}");
 
             foreach (var i in intermediateCode)
             {

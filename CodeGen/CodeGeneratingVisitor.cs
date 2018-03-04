@@ -71,5 +71,12 @@ namespace CodeGen.Intermediate
         {
             InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
         }
+
+        public void Visit(CompareExpression expression)
+        {
+            //expression.Left.Accept(this);
+            //expression.Right.Accept(this);
+            //InnerCode.Add(IntermediateCode.Emit.Label());
+        }
     }
 }

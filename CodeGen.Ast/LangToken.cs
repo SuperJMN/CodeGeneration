@@ -2,7 +2,7 @@
 
 namespace CodeGen.Ast
 {
-    public enum Token
+    public enum LangToken
     {
         [Token(Category = "keyword", Example = "MOVE")]
         Move,
@@ -47,5 +47,6 @@ namespace CodeGen.Ast
         Do,
         Slash,
         Minus,
+        DoubleEqual
     }
 }

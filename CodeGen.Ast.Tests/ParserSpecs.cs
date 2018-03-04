@@ -42,19 +42,28 @@ namespace CodeGen.Ast.Tests
 
         [Theory]
         [InlineData("if (a) {b=3;}")]
-        //[InlineData("if (a==b) {c=3;}")]
+        [InlineData("if (a==b) {c=3;}")]
         public void If(string code)
         {
             Parse(code, Parsers.IfStatement);
         }
 
-        private static void Parse<T>(string code, TokenListParser<Token, T> tokenListParser)
+        [Theory]
+        [InlineData("b")]
+        [InlineData("b+2")]
+        [InlineData("b==1")]
+        public void Condition(string code)
+        {
+            Parse(code, Parsers.ConditionExpression);
+        }
+
+        private static void Parse<T>(string code, TokenListParser<LangToken, T> tokenListParser)
         {
             var tokenList = Tokenize(code);
             var result = tokenListParser.Parse(tokenList);
         }
 
-        private static TokenList<Token> Tokenize(string aBb)
+        private static TokenList<LangToken> Tokenize(string aBb)
         {
             return new Tokenizer().Tokenize(aBb);
         }
