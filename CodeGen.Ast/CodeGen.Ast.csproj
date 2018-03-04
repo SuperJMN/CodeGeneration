@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGen.Units\CodeGen.Units.csproj" />
+    <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
   </ItemGroup>
 
 </Project>

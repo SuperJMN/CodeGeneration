@@ -4,7 +4,7 @@ using CodeGen.Units;
 
 namespace CodeGen.Intermediate
 {
-    public class CodeGenerator
+    public class IntermediateCodeGenerator
     {
         private int implicitReferenceCount;
         private int labelCount;

@@ -1,4 +1,6 @@
 ﻿using CodeGen.Units;
+using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 using Superpower;
 using Superpower.Parsers;
 
@@ -18,7 +20,7 @@ namespace CodeGen.Ast
             Number.Select(n => (Expression)new ConstantExpression(n));
 
         public static readonly TokenListParser<Token, OperatorKind> Operator =
-            OperatorParser(Token.Plus, OperatorKind.Sum)
+            OperatorParser(Token.Plus, OperatorKind.Add)
                 .Or(OperatorParser(Token.Asterisk, OperatorKind.Mult))
                 .Or(OperatorParser(Token.Slash, OperatorKind.Div));
 
@@ -38,7 +40,7 @@ namespace CodeGen.Ast
             from identifier in Identifier
             from eq in Superpower.Parsers.Token.EqualTo(Token.Equal)
             from expr in ExpressionTree
-            select (Statement) new AssignmentStatement(identifier, expr);
+            select (Statement) new AssignmentStatement(new Reference(identifier), expr);
 
         public static readonly TokenListParser<Token, Statement> Statement = 
             from statement in Assignment
@@ -46,10 +48,10 @@ namespace CodeGen.Ast
             select statement;
 
         public static readonly TokenListParser<Token, Block> Block =
-            from sentences in Statement
+            from statements in Statement
                 .Many()
                 .Between(Superpower.Parsers.Token.EqualTo(Token.LeftBrace), Superpower.Parsers.Token.EqualTo(Token.RightBrace))
-            select new Block(sentences);
+            select new Block(statements);
 
         private static TokenListParser<Token, OperatorKind> OperatorParser(Token token, OperatorKind operatorKind)
         {

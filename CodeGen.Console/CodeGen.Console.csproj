@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Superpower" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGen.Ast\CodeGen.Ast.csproj" />
     <ProjectReference Include="..\CodeGen.Units\CodeGen.Units.csproj" />
     <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
   </ItemGroup>

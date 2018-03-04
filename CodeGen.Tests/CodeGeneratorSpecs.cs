@@ -14,7 +14,7 @@ namespace CodeGen.Tests
         public void ConstantAssignment()
         {
             var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(st);
 
             var expected = new List<IntermediateCode>
@@ -38,7 +38,7 @@ namespace CodeGen.Tests
                 )
             );
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
 
             var expected = new List<IntermediateCode>
@@ -67,7 +67,7 @@ namespace CodeGen.Tests
                 )
             );
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
             var expected = new List<IntermediateCode>()
             {
@@ -89,7 +89,7 @@ namespace CodeGen.Tests
                 new AssignmentStatement(new Reference("b"), new ReferenceExpression(new Reference("c"))),
             });
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
 
             var label = new Label("label1");
@@ -115,7 +115,7 @@ namespace CodeGen.Tests
                 new AssignmentStatement(new Reference("a"), new ReferenceExpression(new Reference("b"))),
             });
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(statement);
 
             var label = new Label("label1");
