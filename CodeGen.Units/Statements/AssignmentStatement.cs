@@ -1,6 +1,6 @@
-﻿using CodeGen.Intermediate.Units.Expressions;
+﻿using CodeGen.Units.Expressions;
 
-namespace CodeGen.Intermediate.Units.Statements
+namespace CodeGen.Units.Statements
 {
     public class AssignmentStatement : Statement
     {

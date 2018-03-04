@@ -1,4 +1,5 @@
 ﻿using System;
+using CodeGen.Units;
 
 namespace CodeGen.Intermediate
 {
@@ -17,7 +18,7 @@ namespace CodeGen.Intermediate
         }
 
         private IntermediateCode()
-        {            
+        {
         }
 
         public Reference Right { get; private set; }
@@ -41,7 +42,14 @@ namespace CodeGen.Intermediate
                     return $"{Destination} = {Left} + {Right}";
 
                 case IntermediateCodeType.Move:
-                    return $"{Destination} = {Left}";
+                    if (Left != null)
+                    {
+                        return $"{Destination} = {Left}";
+                    }
+                    else
+                    {
+                        return $"{Destination} = {Value}";
+                    }
 
                 case IntermediateCodeType.JumpIfZero:
                     return $"if {Destination} == 0 go to {Label}";
@@ -89,6 +97,28 @@ namespace CodeGen.Intermediate
                     Label = label,
                 };
             }
+
+            public static IntermediateCode Constant(Reference reference, int value)
+            {
+                return new IntermediateCode
+                {
+                    Instruction = IntermediateCodeType.Move,
+                    Destination = reference,
+                    Value = value,
+                };
+            }
+
+            public static IntermediateCode DirectAssignment(Reference destination, int value)
+            {
+                return new IntermediateCode
+                {
+                    Instruction = IntermediateCodeType.Move,
+                    Destination = destination,
+                    Value = value,
+                };
+            }
         }
+
+        public int Value { get; set; }
     }
 }

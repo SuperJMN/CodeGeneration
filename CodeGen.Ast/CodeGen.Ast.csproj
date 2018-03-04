@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ApplicationIcon />
-    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Superpower" Version="1.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CodeGen.Units\CodeGen.Units.csproj" />
+    <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
   </ItemGroup>
 
 </Project>

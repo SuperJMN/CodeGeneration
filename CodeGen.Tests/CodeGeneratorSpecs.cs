@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using CodeGen.Intermediate;
-using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+using CodeGen.Units;
+using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 using DeepEqual.Syntax;
 using Xunit;
 
@@ -10,18 +11,34 @@ namespace CodeGen.Tests
     public class CodeGeneratorSpecs
     {
         [Fact]
+        public void ConstantAssignment()
+        {
+            var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
+            var sut = new IntermediateCodeGenerator();
+            var actual = sut.Generate(st);
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.DirectAssignment(new Reference("T1"), 123),
+                IntermediateCode.Emit.DirectAssignment(new Reference("a"), new Reference("T1")),
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
         public void SimpleAssignment()
         {
             var expr = new AssignmentStatement(
                 new Reference("a"),
-                new AddExpression(
+                new OperatorExpression(OperatorKind.Add,
                     new ReferenceExpression(new Reference("b")),
-                    new MultExpression(new ReferenceExpression(new Reference("c")),
+                    new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("c")),
                         new ReferenceExpression(new Reference("d")))
                 )
             );
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
 
             var expected = new List<IntermediateCode>
@@ -39,18 +56,18 @@ namespace CodeGen.Tests
         {
             var expr = new AssignmentStatement(
                 new Reference("x"),
-                new AddExpression(
-                    new MultExpression(
+                new OperatorExpression(OperatorKind.Add,
+                    new OperatorExpression(OperatorKind.Mult,
                         new ReferenceExpression(new Reference("y")),
-                        new MultExpression(new ReferenceExpression(new Reference("z")),
+                        new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("z")),
                             new ReferenceExpression(new Reference("w")))
                     ),
-                    new AddExpression(new ReferenceExpression(new Reference("y")),
+                    new OperatorExpression(OperatorKind.Add, new ReferenceExpression(new Reference("y")),
                         new ReferenceExpression(new Reference("x")))
                 )
             );
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
             var expected = new List<IntermediateCode>()
             {
@@ -59,7 +76,7 @@ namespace CodeGen.Tests
                 IntermediateCode.Emit.Add(new Reference("T3"), new Reference("y"), new Reference("x")),
                 IntermediateCode.Emit.Add(new Reference("T4"), new Reference("T2"), new Reference("T3")),
                 IntermediateCode.Emit.DirectAssignment(new Reference("x"), new Reference("T4")),
-            };          
+            };
 
             actual.ShouldDeepEqual(expected);
         }
@@ -72,7 +89,7 @@ namespace CodeGen.Tests
                 new AssignmentStatement(new Reference("b"), new ReferenceExpression(new Reference("c"))),
             });
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(expr);
 
             var label = new Label("label1");
@@ -90,7 +107,7 @@ namespace CodeGen.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var condition = new MultExpression(new ReferenceExpression(new Reference("x")),
+            var condition = new OperatorExpression(OperatorKind.Mult, new ReferenceExpression(new Reference("x")),
                 new ReferenceExpression(new Reference("y")));
 
             var statement = new IfStatement(condition, new Block
@@ -98,7 +115,7 @@ namespace CodeGen.Tests
                 new AssignmentStatement(new Reference("a"), new ReferenceExpression(new Reference("b"))),
             });
 
-            var sut = new CodeGenerator();
+            var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(statement);
 
             var label = new Label("label1");

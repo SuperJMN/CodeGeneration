@@ -1,6 +1,4 @@
-﻿using CodeGen.Intermediate;
-using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+﻿using CodeGen.Ast;
 
 namespace CodeGen.Console
 {
@@ -8,22 +6,12 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var assigmentExpression = new AssignmentStatement(
-                new Reference("a"),
-                new AddExpression(
-                    new ReferenceExpression(new Reference("b")),
-                    new MultExpression(new ReferenceExpression(new Reference("c")),
-                        new ReferenceExpression(new Reference("d")))
-                )
-            );
+            var intermediateCode = new CodeGenerator().Generate("if (a) {b=3;}");
 
-            var generator = new CodeGenerator();
-            var codes = generator.Generate(assigmentExpression);
-
-            foreach (var line in codes)
+            foreach (var i in intermediateCode)
             {
-               System.Console.WriteLine(line);
+               System.Console.WriteLine(i);
             }
-        }       
+        }
     }
 }

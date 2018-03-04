@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Intermediate.Units;
+using CodeGen.Units;
 
 namespace CodeGen.Intermediate
 {
-    public class CodeGenerator
+    public class IntermediateCodeGenerator
     {
         private int implicitReferenceCount;
         private int labelCount;

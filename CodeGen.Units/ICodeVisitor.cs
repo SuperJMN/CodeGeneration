@@ -1,15 +1,15 @@
-﻿using CodeGen.Intermediate.Units.Expressions;
-using CodeGen.Intermediate.Units.Statements;
+﻿using CodeGen.Units.Expressions;
+using CodeGen.Units.Statements;
 
-namespace CodeGen.Intermediate
+namespace CodeGen.Units
 {
     public interface ICodeVisitor
     {
-        void Visit(AddExpression expression);
         void Visit(AssignmentStatement statement);
-        void Visit(MultExpression expression);
         void Visit(ReferenceExpression expression);
         void Visit(IfStatement statement);
         void Visit(Block block);
+        void Visit(OperatorExpression expression);
+        void Visit(ConstantExpression expression);
     }
 }
