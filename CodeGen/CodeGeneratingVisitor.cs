@@ -72,7 +72,7 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
         }
 
-        public void Visit(CompareExpression expression)
+        public void Visit(BooleanExpression expression)
         {
             //expression.Left.Accept(this);
             //expression.Right.Accept(this);

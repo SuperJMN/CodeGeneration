@@ -11,6 +11,6 @@ namespace CodeGen.Units
         void Visit(Block block);
         void Visit(OperatorExpression expression);
         void Visit(ConstantExpression expression);
-        void Visit(CompareExpression expression);
+        void Visit(BooleanExpression expression);
     }
 }

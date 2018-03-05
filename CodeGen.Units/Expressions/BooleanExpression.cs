@@ -1,12 +1,14 @@
 ﻿namespace CodeGen.Units.Expressions
 {
-    public class CompareExpression : Expression
+    public class BooleanExpression : Expression
     {
+        public BooleanOperatorKind BooleanOperatorKind { get; }
         public Expression Left { get; }
         public Expression Right { get; }
 
-        public CompareExpression(Expression left, Expression right) : base(new Reference())
+        public BooleanExpression(BooleanOperatorKind booleanOperatorKind, Expression left, Expression right) : base(new Reference())
         {
+            BooleanOperatorKind = booleanOperatorKind;
             Left = left;
             Right = right;
         }

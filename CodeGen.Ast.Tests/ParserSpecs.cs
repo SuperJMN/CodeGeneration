@@ -1,3 +1,4 @@
+using CodeGen.Ast.Parsers;
 using Superpower;
 using Superpower.Model;
 using Xunit;
@@ -10,7 +11,7 @@ namespace CodeGen.Ast.Tests
         public void OperatorExpression()
         {
             var tokenList = Tokenize("a+b*12");
-            var generated = Parsers.ExpressionTree.Parse(tokenList);
+            var generated = Expressions.ExpressionTree.Parse(tokenList);
         }
 
         [Theory]
@@ -19,7 +20,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("{a=b;c=d;e=f+g*3;}")]
         public void Block(string code)
         {
-            Parse(code, Parsers.Block);
+            Parse(code, Parsers.Statements.Block);
         }
 
 
@@ -29,7 +30,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c+d")]
         public void Assignment(string code)
         {
-            Parse(code, Parsers.Assignment);
+            Parse(code, Parsers.Statements.Assignment);
         }
 
         [Theory]
@@ -37,7 +38,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c;")]
         public void Statement(string code)
         {
-            Parse(code, Parsers.Assignment);
+            Parse(code, Parsers.Statements.Assignment);
         }
 
         [Theory]
@@ -45,7 +46,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("if (a==b) {c=3;}")]
         public void If(string code)
         {
-            Parse(code, Parsers.IfStatement);
+            Parse(code, Parsers.Statements.IfStatement);
         }
 
         [Theory]
@@ -54,7 +55,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("b==1")]
         public void Condition(string code)
         {
-            Parse(code, Parsers.ConditionExpression);
+            Parse(code, Expressions.BooleanExpression);
         }
 
         private static void Parse<T>(string code, TokenListParser<LangToken, T> tokenListParser)
