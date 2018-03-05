@@ -15,7 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Ast", "CodeGen.Ast\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Ast.Tests", "CodeGen.Ast.Tests\CodeGen.Ast.Tests.csproj", "{5D70EE6F-DFB3-48CF-BF68-6578C2ED365C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGen.Units", "CodeGen.Units\CodeGen.Units.csproj", "{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Units", "CodeGen.Units\CodeGen.Units.csproj", "{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{8006AAB8-3131-4608-8F7B-49C06A334346}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Superpower", "superpower\src\Superpower\Superpower.csproj", "{0536E143-7463-4292-90F8-0614EB6D8960}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,9 +55,17 @@ Global
 		{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0536E143-7463-4292-90F8-0614EB6D8960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0536E143-7463-4292-90F8-0614EB6D8960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0536E143-7463-4292-90F8-0614EB6D8960}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0536E143-7463-4292-90F8-0614EB6D8960}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5125DCF0-FAD0-412F-B06C-FF4CE289A844} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{0536E143-7463-4292-90F8-0614EB6D8960} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAF4BB59-85D5-455A-89C8-A15AABAC6527}
