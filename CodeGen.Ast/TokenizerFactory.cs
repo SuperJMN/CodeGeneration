@@ -21,6 +21,7 @@ namespace CodeGen.Ast
                 .Match(Span.EqualTo("while"), LangToken.While, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
+                .Match(Span.Regex(@"\d*"), LangToken.Number, true)
                 .Match(Span.Regex(@"\w[\w\d]*"), LangToken.Identifier, true)
                 .Build();
         }

@@ -25,6 +25,8 @@ namespace CodeGen.Ast.Tests
             return new List<object[]>()
             {
                 new object[] {"==", new List<LangToken>() {LangToken.DoubleEqual},},
+                new object[] {"14", new List<LangToken>() {LangToken.Number},},
+                new object[] {"a14", new List<LangToken>() {LangToken.Identifier},},
                 new object[] {"=", new List<LangToken>() {LangToken.Equal},},
                 new object[] {"ifSomething", new List<LangToken>() {LangToken.Identifier},},
                 new object[]
@@ -44,7 +46,7 @@ namespace CodeGen.Ast.Tests
             };
         }
 
-        private Tokenizer<LangToken> CreateSut()
+        private static Tokenizer<LangToken> CreateSut()
         {
             return TokenizerFactory.Create();
         }
