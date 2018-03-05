@@ -111,7 +111,7 @@ namespace CodeGen.Ast
                     }
                     else
                     {
-                        yield return Result.Value(LangToken.Text, start, cursor.Location);
+                        yield return Result.Value(LangToken.Identifier, start, cursor.Location);
                     }
                 }
                 else

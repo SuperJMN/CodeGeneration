@@ -24,8 +24,23 @@ namespace CodeGen.Ast.Tests
         {
             return new List<object[]>()
             {
-                new object[]{ "==", new List<LangToken>() { LangToken.DoubleEqual },  },
-                new object[]{ "=", new List<LangToken>() { LangToken.Equal },  },
+                new object[] {"==", new List<LangToken>() {LangToken.DoubleEqual},},
+                new object[] {"=", new List<LangToken>() {LangToken.Equal},},
+                new object[] {"ifSomething", new List<LangToken>() {LangToken.Identifier},},
+                new object[]
+                {
+                    "if whileRunning == true", 
+                    new List<LangToken>()
+                    {
+                        LangToken.If,
+                        LangToken.Whitespace,
+                        LangToken.Identifier,
+                        LangToken.Whitespace,
+                        LangToken.DoubleEqual,
+                        LangToken.Whitespace,
+                        LangToken.True,
+                    },
+                },
             };
         }
 

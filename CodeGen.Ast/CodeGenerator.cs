@@ -7,9 +7,9 @@ namespace CodeGen.Ast
 {
     public class CodeGenerator
     {
-        public IReadOnlyCollection<IntermediateCode> Generate(string source)
+        public IEnumerable<IntermediateCode> Generate(string source)
         {
-            var tokens = new Tokenizer().Tokenize(source);
+            var tokens = TokenizerFactory.Create().Tokenize(source);
             var parsed = Statements.IfStatement.Parse(tokens);
 
             var generator = new IntermediateCodeGenerator();

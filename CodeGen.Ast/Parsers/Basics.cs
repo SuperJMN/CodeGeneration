@@ -8,7 +8,7 @@ namespace CodeGen.Ast.Parsers
     {
         public static readonly TokenListParser<LangToken, int> Number = Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32);
 
-        public static readonly TokenListParser<LangToken, string> Identifier = Token.EqualTo(LangToken.Text).Select(token => token.ToStringValue());
+        public static readonly TokenListParser<LangToken, string> Identifier = Token.EqualTo(LangToken.Identifier).Select(token => token.ToStringValue());
 
         public static readonly TokenListParser<LangToken, OperatorKind> Operator =
             OperatorParser(LangToken.Plus, OperatorKind.Add)

@@ -27,7 +27,7 @@ namespace CodeGen.Ast
         [Token(Category = "keyword", Example = "BRANCH")]
         Branch,
         [Token(Category = "text", Example = "abc")]
-        Text,
+        Identifier,
         [Token(Category = "text", Example = ":")]
         Colon,
         [Token(Category = "keyword", Example = "HALT")]
@@ -47,6 +47,8 @@ namespace CodeGen.Ast
         Do,
         Slash,
         Minus,
-        DoubleEqual
+        DoubleEqual,
+        True,
+        False
     }
 }
