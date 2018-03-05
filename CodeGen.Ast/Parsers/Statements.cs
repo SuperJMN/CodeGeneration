@@ -27,7 +27,7 @@ namespace CodeGen.Ast.Parsers
         public static readonly TokenListParser<LangToken, Statement> IfStatement =
             from keywork in Token.EqualTo(LangToken.If)
             from _ in Token.EqualTo(LangToken.Whitespace).Optional()
-            from expr in Expressions.BooleanExpression.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+            from expr in Expressions.BooleanExpressionParser.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
             from white in Token.EqualTo(LangToken.Whitespace).Optional()
             from block in Block
             select (Statement) new IfStatement(expr, block);

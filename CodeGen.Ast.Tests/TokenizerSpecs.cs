@@ -24,6 +24,8 @@ namespace CodeGen.Ast.Tests
         {
             return new List<object[]>()
             {
+                new object[] {"true", new List<LangToken>() {LangToken.True},},
+                new object[] {"false", new List<LangToken>() {LangToken.False},},
                 new object[] {"==", new List<LangToken>() {LangToken.DoubleEqual},},
                 new object[] {"14", new List<LangToken>() {LangToken.Number},},
                 new object[] {"a14", new List<LangToken>() {LangToken.Identifier},},
