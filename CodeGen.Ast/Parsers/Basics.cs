@@ -16,7 +16,7 @@ namespace CodeGen.Ast.Parsers
                 .Or(OperatorParser(LangToken.Slash, OperatorKind.Div));
 
         public static readonly TokenListParser<LangToken, BooleanOperatorKind> BooleanOperator =
-            from eq in Token.EqualTo(LangToken.Equal)
+            from eq in Token.EqualTo(LangToken.DoubleEqual)
             select BooleanOperatorKind.Equal;
 
 
