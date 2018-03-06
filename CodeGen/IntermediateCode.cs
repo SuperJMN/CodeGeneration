@@ -1,6 +1,5 @@
 ﻿using System;
 using CodeGen.Units;
-using CodeGen.Units.Expressions;
 
 namespace CodeGen.Intermediate
 {
@@ -44,7 +43,7 @@ namespace CodeGen.Intermediate
                 return Standard(IntermediateCodeType.Mult, destination, left, right);
             }
 
-            public static IntermediateCode JumpIfFalse(Reference reference, Label label)
+            public static IntermediateCode JumpOnNotZero(Reference reference, Label label)
             {
                 return new IntermediateCode
                 {

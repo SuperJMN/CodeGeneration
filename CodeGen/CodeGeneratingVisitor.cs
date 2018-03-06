@@ -28,7 +28,7 @@ namespace CodeGen.Intermediate
         {
             statement.Condition.Accept(this);
             var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
+            InnerCode.Add(IntermediateCode.Emit.JumpOnNotZero(statement.Condition.Reference, label));
             statement.Block.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
