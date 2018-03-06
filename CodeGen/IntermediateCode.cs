@@ -139,12 +139,8 @@ namespace CodeGen.Intermediate
                             return $"{intermediateCode.Target} = {intermediateCode.Value}";
                         }
 
-                    case IntermediateCodeType.JumpOnNotZero:
-                        return $"if {intermediateCode.Target} == 0 continue. Otherwise go to {intermediateCode.Label}";
-
                     case IntermediateCodeType.Label:
                         return $"{intermediateCode.Label}:";
-
 
                     case IntermediateCodeType.IsEqual:
                         return "a == b";

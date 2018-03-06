@@ -5,7 +5,6 @@
         Mult,
         Add,
         Move,
-        JumpOnNotZero,
         Label,
         IsEqual,
         JumpIfFalse
