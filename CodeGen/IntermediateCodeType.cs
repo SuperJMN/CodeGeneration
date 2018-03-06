@@ -5,7 +5,8 @@
         Mult,
         Add,
         Move,
-        JumpIfZero,
-        Label
+        JumpOnNotZero,
+        Label,
+        Cmp
     }
 }

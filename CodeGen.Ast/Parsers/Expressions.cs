@@ -1,7 +1,6 @@
 ﻿using CodeGen.Units;
 using CodeGen.Units.Expressions;
 using Superpower;
-using Superpower.Model;
 using Superpower.Parsers;
 
 namespace CodeGen.Ast.Parsers
@@ -23,21 +22,18 @@ namespace CodeGen.Ast.Parsers
 
         public static readonly TokenListParser<LangToken, Expression> ExpressionItem = Reference.Or(Constant);
 
-        public static readonly TokenListParser<LangToken, Expression> BooleanCondition =
+        public static readonly TokenListParser<LangToken, BooleanExpression> BooleanCondition =
             from expr1 in ExpressionTree
-            from _ in Token.EqualTo(LangToken.Whitespace).Optional()
             from op in Basics.BooleanOperator
-            from __ in Token.EqualTo(LangToken.Whitespace).Optional()
             from expr2 in ExpressionTree
-            select (Expression) BooleanExpression.Binary(op, expr1, expr2);
+            select (BooleanExpression) new BinaryBooleanExpression(op, expr1, expr2);
 
-        public static readonly TokenListParser<LangToken, Expression> TruthExpression =
+        public static readonly TokenListParser<LangToken, BooleanExpression> TruthExpression =
             from v in Token.EqualTo(LangToken.True).Or(Token.EqualTo(LangToken.False))
-            select (Expression)BooleanExpression.BoolValue(v.Kind == LangToken.True);
+            select (BooleanExpression) new BooleanValueExpression(v.Kind == LangToken.True);
 
-        public static readonly TokenListParser<LangToken, Expression> BooleanExpressionParser =
+        public static readonly TokenListParser<LangToken, BooleanExpression> BooleanExpressionParser =
             BooleanCondition.Try()
-                .Or(ExpressionItem)
                 .Or(TruthExpression);
     }
 }

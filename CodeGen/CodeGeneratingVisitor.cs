@@ -21,14 +21,14 @@ namespace CodeGen.Intermediate
         {
             statement.Assignment.Accept(this);
 
-            InnerCode.Add(IntermediateCode.Emit.DirectAssignment(statement.Target, statement.Assignment.Reference));
+            InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
 
         public void Visit(IfStatement statement)
         {
             statement.Condition.Accept(this);
             var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpIfZero(statement.Condition.Reference, label));
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
             statement.Block.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
@@ -72,11 +72,17 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
         }
 
-        public void Visit(BooleanExpression expression)
+        public void Visit(BinaryBooleanExpression booleanExpression)
         {
-            //expression.Left.Accept(this);
-            //expression.Right.Accept(this);
-            //InnerCode.Add(IntermediateCode.Emit.Label());
+            booleanExpression.Left.Accept(this);
+            booleanExpression.Right.Accept(this); 
+         
+            InnerCode.Add(IntermediateCode.Emit.CmpEquals(booleanExpression.Reference, booleanExpression.Left.Reference, booleanExpression.Right.Reference));
+        }
+
+        public void Visit(BooleanValueExpression booleanExpression)
+        {
+            InnerCode.Add(IntermediateCode.Emit.Set(booleanExpression.Reference, booleanExpression.Value));
         }
     }
 }

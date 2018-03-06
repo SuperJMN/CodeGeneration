@@ -9,7 +9,7 @@ namespace CodeGen.Ast
         public static Tokenizer<LangToken> Create()
         {
             return new TokenizerBuilder<LangToken>()
-                .Match(Character.WhiteSpace.AtLeastOnce(), LangToken.Whitespace)
+                .Ignore(Span.WhiteSpace)
                 .Match(Span.EqualTo("=="), LangToken.DoubleEqual)
                 .Match(Character.EqualTo('='), LangToken.Equal)
                 .Match(Character.EqualTo('*'), LangToken.Asterisk)

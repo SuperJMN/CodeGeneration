@@ -37,11 +37,8 @@ namespace CodeGen.Ast.Tests
                     new List<LangToken>()
                     {
                         LangToken.If,
-                        LangToken.Whitespace,
                         LangToken.Identifier,
-                        LangToken.Whitespace,
                         LangToken.DoubleEqual,
-                        LangToken.Whitespace,
                         LangToken.True,
                     },
                 },

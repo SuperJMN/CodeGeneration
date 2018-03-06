@@ -1,5 +1,6 @@
 ﻿using System;
 using CodeGen.Units;
+using CodeGen.Units.Expressions;
 
 namespace CodeGen.Intermediate
 {
@@ -13,7 +14,7 @@ namespace CodeGen.Intermediate
                 Instruction = type,
                 Left = left,
                 Right = right,
-                Destination = destination,
+                Target = destination,
             };
         }
 
@@ -25,42 +26,11 @@ namespace CodeGen.Intermediate
 
         public Reference Left { get; private set; }
 
-        public Reference Destination { get; private set; }
+        public Reference Target { get; private set; }
 
         public Label Label { get; private set; }
 
         public IntermediateCodeType Instruction { get; private set; }
-
-        public override string ToString()
-        {
-            switch (Instruction)
-            {
-                case IntermediateCodeType.Mult:
-                    return $"{Destination} = {Left} * {Right}";
-
-                case IntermediateCodeType.Add:
-                    return $"{Destination} = {Left} + {Right}";
-
-                case IntermediateCodeType.Move:
-                    if (Left != null)
-                    {
-                        return $"{Destination} = {Left}";
-                    }
-                    else
-                    {
-                        return $"{Destination} = {Value}";
-                    }
-
-                case IntermediateCodeType.JumpIfZero:
-                    return $"if {Destination} == 0 go to {Label}";
-
-                case IntermediateCodeType.Label:
-                    return $"{Label}:";
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
 
         public static class Emit
         {
@@ -74,17 +44,12 @@ namespace CodeGen.Intermediate
                 return Standard(IntermediateCodeType.Mult, destination, left, right);
             }
 
-            public static IntermediateCode DirectAssignment(Reference destination, Reference left)
-            {
-                return Standard(IntermediateCodeType.Move, destination, left);
-            }
-
-            public static IntermediateCode JumpIfZero(Reference reference, Label label)
+            public static IntermediateCode JumpIfFalse(Reference reference, Label label)
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.JumpIfZero,
-                    Destination = reference,
+                    Instruction = IntermediateCodeType.JumpOnNotZero,
+                    Target = reference,
                     Label = label,
                 };
             }
@@ -103,22 +68,90 @@ namespace CodeGen.Intermediate
                 return new IntermediateCode
                 {
                     Instruction = IntermediateCodeType.Move,
-                    Destination = reference,
+                    Target = reference,
                     Value = value,
                 };
             }
 
-            public static IntermediateCode DirectAssignment(Reference destination, int value)
+            public static IntermediateCode Set(Reference destination, Reference left)
+            {
+                return Standard(IntermediateCodeType.Move, destination, left);
+            }
+
+            public static IntermediateCode Set(Reference destination, int value)
             {
                 return new IntermediateCode
                 {
                     Instruction = IntermediateCodeType.Move,
-                    Destination = destination,
+                    Target = destination,
                     Value = value,
+                };
+            }
+
+            public static IntermediateCode Set(Reference target, bool value)
+            {
+                return new IntermediateCode
+                {
+                    Instruction = IntermediateCodeType.Move,
+                    Target = target,
+                    Value = value ? BooleanValue.True.Value : BooleanValue.False.Value,
+                };
+            }
+
+            public static IntermediateCode CmpEquals(Reference target, Reference left, Reference right)
+            {
+                return new IntermediateCode
+                {
+                    Instruction = IntermediateCodeType.Cmp,
+                    Target = target,
+                    Left = left,
+                    Right = right,
                 };
             }
         }
 
+        public override string ToString()
+        {
+            return Formatter.Format(this);
+        }
+
         public int Value { get; set; }
-    }
+
+        private static class Formatter
+        {
+            public static string Format(IntermediateCode intermediateCode)
+            {
+                switch (intermediateCode.Instruction)
+                {
+                    case IntermediateCodeType.Mult:
+                        return $"{intermediateCode.Target} = {intermediateCode.Left} * {intermediateCode.Right}";
+
+                    case IntermediateCodeType.Add:
+                        return $"{intermediateCode.Target} = {intermediateCode.Left} + {intermediateCode.Right}";
+
+                    case IntermediateCodeType.Move:
+                        if (intermediateCode.Left != null)
+                        {
+                            return $"{intermediateCode.Target} = {intermediateCode.Left}";
+                        }
+                        else
+                        {
+                            return $"{intermediateCode.Target} = {intermediateCode.Value}";
+                        }
+
+                    case IntermediateCodeType.JumpOnNotZero:
+                        return $"if {intermediateCode.Target} == 0 continue. Otherwise go to {intermediateCode.Label}";
+
+                    case IntermediateCodeType.Label:
+                        return $"{intermediateCode.Label}:";
+
+                    case IntermediateCodeType.Cmp:
+                        return $"{intermediateCode.Target} = {intermediateCode.Left} == {intermediateCode.Right}";
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+    }    
 }

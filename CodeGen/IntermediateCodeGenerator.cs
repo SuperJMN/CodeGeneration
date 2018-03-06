@@ -38,7 +38,7 @@ namespace CodeGen.Intermediate
         private void AssignIdentifiersToImplicityReferences(IEnumerable<IntermediateCode> code)
         {
             var noIdentifiers = code
-                .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Destination })
+                .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Target })
                 .Where(r => r != null && r.Identifier == null)
                 .Distinct()
                 .ToList();
