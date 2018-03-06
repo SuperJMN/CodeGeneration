@@ -28,7 +28,7 @@ namespace CodeGen.Intermediate
         {
             statement.Condition.Accept(this);
             var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpOnNotZero(statement.Condition.Reference, label));
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
             statement.Block.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
@@ -75,9 +75,18 @@ namespace CodeGen.Intermediate
         public void Visit(BinaryBooleanExpression booleanExpression)
         {
             booleanExpression.Left.Accept(this);
-            booleanExpression.Right.Accept(this); 
-         
-            InnerCode.Add(IntermediateCode.Emit.CmpEquals(booleanExpression.Reference, booleanExpression.Left.Reference, booleanExpression.Right.Reference));
+            booleanExpression.Right.Accept(this);
+
+            switch (booleanExpression.Operator)
+            {
+                case BooleanOperatorKind.Equal:
+
+                    InnerCode.Add(IntermediateCode.Emit.IsEqual(booleanExpression.Reference, booleanExpression.Left.Reference, booleanExpression.Right.Reference));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
         }
 
         public void Visit(BooleanValueExpression booleanExpression)

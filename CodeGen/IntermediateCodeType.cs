@@ -7,6 +7,7 @@
         Move,
         JumpOnNotZero,
         Label,
-        Cmp
+        IsEqual,
+        JumpIfFalse
     }
 }

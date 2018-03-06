@@ -5,20 +5,20 @@ namespace CodeGen.Intermediate
 {
     public class IntermediateCode
     {
+        private IntermediateCode()
+        {
+        }
+
         private static IntermediateCode Standard(IntermediateCodeType type, Reference destination, Reference left,
             Reference right = null)
         {
             return new IntermediateCode
             {
-                Instruction = type,
+                Type = type,
                 Left = left,
                 Right = right,
                 Target = destination,
             };
-        }
-
-        private IntermediateCode()
-        {
         }
 
         public Reference Right { get; private set; }
@@ -29,7 +29,7 @@ namespace CodeGen.Intermediate
 
         public Label Label { get; private set; }
 
-        public IntermediateCodeType Instruction { get; private set; }
+        public IntermediateCodeType Type { get; private set; }
 
         public static class Emit
         {
@@ -38,16 +38,21 @@ namespace CodeGen.Intermediate
                 return Standard(IntermediateCodeType.Add, destination, left, right);
             }
 
+            public static IntermediateCode IsEqual(Reference destination, Reference left, Reference right)
+            {
+                return Standard(IntermediateCodeType.IsEqual, destination, left, right);
+            }
+
             public static IntermediateCode Mult(Reference destination, Reference left, Reference right)
             {
                 return Standard(IntermediateCodeType.Mult, destination, left, right);
             }
 
-            public static IntermediateCode JumpOnNotZero(Reference reference, Label label)
+            public static IntermediateCode JumpIfFalse(Reference reference, Label label)
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.JumpOnNotZero,
+                    Type = IntermediateCodeType.JumpIfFalse,
                     Target = reference,
                     Label = label,
                 };
@@ -57,7 +62,7 @@ namespace CodeGen.Intermediate
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.Label,
+                    Type = IntermediateCodeType.Label,
                     Label = label,
                 };
             }
@@ -66,7 +71,7 @@ namespace CodeGen.Intermediate
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.Move,
+                    Type = IntermediateCodeType.Move,
                     Target = reference,
                     Value = value,
                 };
@@ -81,7 +86,7 @@ namespace CodeGen.Intermediate
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.Move,
+                    Type = IntermediateCodeType.Move,
                     Target = destination,
                     Value = value,
                 };
@@ -91,23 +96,14 @@ namespace CodeGen.Intermediate
             {
                 return new IntermediateCode
                 {
-                    Instruction = IntermediateCodeType.Move,
+                    Type = IntermediateCodeType.Move,
                     Target = target,
-                    Value = value ? BooleanValue.True.Value : BooleanValue.False.Value,
-                };
-            }
-
-            public static IntermediateCode CmpEquals(Reference target, Reference left, Reference right)
-            {
-                return new IntermediateCode
-                {
-                    Instruction = IntermediateCodeType.Cmp,
-                    Target = target,
-                    Left = left,
-                    Right = right,
+                    BooleanValue = value,
                 };
             }
         }
+
+        public bool? BooleanValue { get; set; }
 
         public override string ToString()
         {
@@ -120,7 +116,7 @@ namespace CodeGen.Intermediate
         {
             public static string Format(IntermediateCode intermediateCode)
             {
-                switch (intermediateCode.Instruction)
+                switch (intermediateCode.Type)
                 {
                     case IntermediateCodeType.Mult:
                         return $"{intermediateCode.Target} = {intermediateCode.Left} * {intermediateCode.Right}";
@@ -129,9 +125,14 @@ namespace CodeGen.Intermediate
                         return $"{intermediateCode.Target} = {intermediateCode.Left} + {intermediateCode.Right}";
 
                     case IntermediateCodeType.Move:
+
                         if (intermediateCode.Left != null)
                         {
                             return $"{intermediateCode.Target} = {intermediateCode.Left}";
+                        }
+                        else if (intermediateCode.BooleanValue.HasValue)
+                        {
+                            return $"{intermediateCode.Target} = {intermediateCode.BooleanValue}";
                         }
                         else
                         {
@@ -144,8 +145,12 @@ namespace CodeGen.Intermediate
                     case IntermediateCodeType.Label:
                         return $"{intermediateCode.Label}:";
 
-                    case IntermediateCodeType.Cmp:
-                        return $"{intermediateCode.Target} = {intermediateCode.Left} == {intermediateCode.Right}";
+
+                    case IntermediateCodeType.IsEqual:
+                        return "a == b";
+
+                    case IntermediateCodeType.JumpIfFalse:
+                        return $"if {intermediateCode.Target} is true continue. Otherwise go to {intermediateCode.Label}";
 
                     default:
                         throw new ArgumentOutOfRangeException();

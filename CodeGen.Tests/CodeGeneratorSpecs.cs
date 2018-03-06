@@ -92,7 +92,7 @@ namespace CodeGen.Tests
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.CmpEquals(new Reference("T1"), new Reference("a"), new Reference("b")),
+                IntermediateCode.Emit.IsEqual(new Reference("T1"), new Reference("a"), new Reference("b")),
             };
 
             actual.ShouldDeepEqual(expected);
@@ -113,7 +113,7 @@ namespace CodeGen.Tests
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Set(new Reference("T1"), true),
-                IntermediateCode.Emit.JumpOnNotZero(new Reference("T1"), label),
+                IntermediateCode.Emit.JumpIfFalse(new Reference("T1"), label),
                 IntermediateCode.Emit.Set(new Reference("b"), new Reference("c")),
                 IntermediateCode.Emit.Label(label),
             };
@@ -148,8 +148,8 @@ namespace CodeGen.Tests
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("x"), new Reference("y")),
-                IntermediateCode.Emit.CmpEquals(new Reference("T2"), new Reference("T1"), new Reference("z")),
-                IntermediateCode.Emit.JumpOnNotZero(new Reference("T2"), label),
+                IntermediateCode.Emit.IsEqual(new Reference("T2"), new Reference("T1"), new Reference("z")),
+                IntermediateCode.Emit.JumpIfFalse(new Reference("T2"), label),
                 IntermediateCode.Emit.Set(new Reference("a"), new Reference("b")),
                 IntermediateCode.Emit.Label(label),
             };

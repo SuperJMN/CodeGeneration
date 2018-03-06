@@ -23,7 +23,7 @@ namespace CodeGen.Intermediate
             return codeGeneratingVisitor.Code;
         }
 
-        private void AssignIdentifiersToLabels(IReadOnlyCollection<IntermediateCode> code)
+        private void AssignIdentifiersToLabels(IEnumerable<IntermediateCode> code)
         {
             var labels = code
                 .Select(x => x.Label)
