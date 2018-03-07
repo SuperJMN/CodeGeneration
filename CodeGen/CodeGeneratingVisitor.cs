@@ -69,7 +69,7 @@ namespace CodeGen.Intermediate
 
         public void Visit(ConstantExpression expression)
         {
-            InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
+            InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, expression.Value));
         }
 
         public void Visit(BinaryBooleanExpression booleanExpression)

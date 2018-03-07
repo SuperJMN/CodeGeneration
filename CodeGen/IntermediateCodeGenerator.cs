@@ -25,25 +25,24 @@ namespace CodeGen.Intermediate
 
         private void AssignIdentifiersToLabels(IEnumerable<IntermediateCode> code)
         {
-            var labels = code
-                .Select(x => x.Label)
-                .Where(r => r != null && r.Name == null)
-                .Distinct()
-                .ToList();
+            //var labels = code
+            //    .Select(x => x.Label)
+            //    .Where(r => r != null && r.Name == null)
+            //    .Distinct()
+            //    .ToList();
 
-            labels.ForEach(r => r.Name = GetNewLabelName());
-
+            //labels.ForEach(r => r.Name = GetNewLabelName());
         }
 
         private void AssignIdentifiersToImplicityReferences(IEnumerable<IntermediateCode> code)
         {
-            var noIdentifiers = code
-                .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Target })
-                .Where(r => r != null && r.Identifier == null)
-                .Distinct()
-                .ToList();
+            //var noIdentifiers = code
+            //    .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Target })
+            //    .Where(r => r != null && r.Identifier == null)
+            //    .Distinct()
+            //    .ToList();
 
-            noIdentifiers.ForEach(r => r.Identifier = GetNewIdentifier());
+            //noIdentifiers.ForEach(r => r.Identifier = GetNewIdentifier());
         }
 
         private string GetNewIdentifier()
