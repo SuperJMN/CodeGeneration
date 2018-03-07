@@ -6,7 +6,7 @@ namespace CodeGen.Intermediate.Codes.Common
         public string Name { get; set; }
 
         public static BooleanValue False = new BooleanValue(1, "false");
-        public static BooleanValue True = new BooleanValue(0, "name");
+        public static BooleanValue True = new BooleanValue(0, "true");
 
         private BooleanValue(int value, string name)
         {
