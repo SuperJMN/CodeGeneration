@@ -1,13 +1,11 @@
-﻿using System;
+﻿using CodeGen.Intermediate.Codes.Common;
 using CodeGen.Units;
 
-namespace CodeGen.Intermediate
+namespace CodeGen.Intermediate.Codes
 {
-    public class IntermediateCode
+    public abstract class IntermediateCode
     {
-        protected IntermediateCode()
-        {
-        }
+        public abstract void Accept(IIntermediateCodeVisitor visitor);
       
         public static class Emit
         {
@@ -33,7 +31,7 @@ namespace CodeGen.Intermediate
 
             public static IntermediateCode Label(Label label)
             {
-                return new GoToLabel(label);
+                return new LabelCode(label);
             }
 
             public static IntermediateCode Set(Reference destination, Reference left)

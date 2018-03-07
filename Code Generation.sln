@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Ast.Tests", "CodeGe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Units", "CodeGen.Units\CodeGen.Units.csproj", "{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{8006AAB8-3131-4608-8F7B-49C06A334346}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{8006AAB8-3131-4608-8F7B-49C06A334346}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Superpower", "superpower\src\Superpower\Superpower.csproj", "{0536E143-7463-4292-90F8-0614EB6D8960}"
 EndProject

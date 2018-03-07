@@ -1,6 +1,7 @@
-﻿using CodeGen.Units;
+﻿using CodeGen.Intermediate.Codes.Common;
+using CodeGen.Units;
 
-namespace CodeGen.Intermediate
+namespace CodeGen.Intermediate.Codes
 {
     public class BoolExpressionAssignment : Assignment
     {
@@ -19,6 +20,11 @@ namespace CodeGen.Intermediate
         public override string ToString()
         {
             return $"{Target} = {Left} {Operation.Symbol} {Right}";
+        }
+
+        public override void Accept(IIntermediateCodeVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

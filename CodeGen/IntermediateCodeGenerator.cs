@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 
 namespace CodeGen.Intermediate
@@ -17,32 +18,41 @@ namespace CodeGen.Intermediate
             var codeGeneratingVisitor = new CodeGeneratingVisitor();
             expression.Accept(codeGeneratingVisitor);
 
-            AssignIdentifiersToImplicityReferences(codeGeneratingVisitor.Code);
-            AssignIdentifiersToLabels(codeGeneratingVisitor.Code);
+            var code = codeGeneratingVisitor.Code;
+
+            AssignNames(code.ToList());
             
             return codeGeneratingVisitor.Code;
         }
 
-        private void AssignIdentifiersToLabels(IEnumerable<IntermediateCode> code)
+        private void AssignNames(List<IntermediateCode> code)
         {
-            //var labels = code
-            //    .Select(x => x.Label)
-            //    .Where(r => r != null && r.Name == null)
-            //    .Distinct()
-            //    .ToList();
+            var intermediateVisitor = new NamedObjectCollector();
+            
+            code.ForEach(x => x.Accept(intermediateVisitor));
 
-            //labels.ForEach(r => r.Name = GetNewLabelName());
+            AssignIdentifiersToImplicityReferences(intermediateVisitor.References);
+            AssignIdentifiersToLabels(intermediateVisitor.Labels);
         }
 
-        private void AssignIdentifiersToImplicityReferences(IEnumerable<IntermediateCode> code)
+        private void AssignIdentifiersToLabels(IEnumerable<Label> labels)
         {
-            //var noIdentifiers = code
-            //    .SelectMany(x => new List<Reference> { x.Left, x.Right, x.Target })
-            //    .Where(r => r != null && r.Identifier == null)
-            //    .Distinct()
-            //    .ToList();
+            var toGiveName = labels
+                .Where(r => r.Name == null)
+                .Distinct()
+                .ToList();
 
-            //noIdentifiers.ForEach(r => r.Identifier = GetNewIdentifier());
+            toGiveName.ForEach(r => r.Name = GetNewLabelName());
+        }
+
+        private void AssignIdentifiersToImplicityReferences(IEnumerable<Reference> references)
+        {
+            var toGiveName = references
+                .Where(r => r.Identifier == null)
+                .Distinct()
+                .ToList();
+
+            toGiveName.ForEach(r => r.Identifier = GetNewIdentifier());
         }
 
         private string GetNewIdentifier()

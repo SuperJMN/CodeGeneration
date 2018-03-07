@@ -1,6 +1,6 @@
 ﻿using CodeGen.Units;
 
-namespace CodeGen.Intermediate
+namespace CodeGen.Intermediate.Codes
 {
     public class BoolConstantAssignment : Assignment
     {
@@ -14,6 +14,11 @@ namespace CodeGen.Intermediate
         public override string ToString()
         {
             return $"{Target} = {Value}";
+        }
+
+        public override void Accept(IIntermediateCodeVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

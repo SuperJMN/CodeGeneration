@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
 using CodeGen.Units.Statements;
@@ -9,9 +9,9 @@ namespace CodeGen.Intermediate
 {
     public class CodeGeneratingVisitor : ICodeVisitor
     {
-        public IReadOnlyCollection<IntermediateCode> Code => new ReadOnlyCollection<IntermediateCode>(InnerCode);
+        public IReadOnlyCollection<IntermediateCode> Code => InnerCode.AsReadOnly();
 
-        private IList<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
+        private List<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
 
         public void Visit(ReferenceExpression expression)
         {

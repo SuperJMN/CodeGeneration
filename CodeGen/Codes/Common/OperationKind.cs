@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Intermediate
+﻿namespace CodeGen.Intermediate.Codes.Common
 {
     public class OperationKind
     {
