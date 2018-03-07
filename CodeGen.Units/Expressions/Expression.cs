@@ -1,6 +1,6 @@
 ﻿namespace CodeGen.Units.Expressions
 {
-    public abstract class Expression
+    public abstract class Expression : ICodeUnit
     {
         protected Expression(Reference reference)
         {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
 using CodeGen.Units.Statements;
@@ -9,9 +9,9 @@ namespace CodeGen.Intermediate
 {
     public class CodeGeneratingVisitor : ICodeVisitor
     {
-        public IReadOnlyCollection<IntermediateCode> Code => new ReadOnlyCollection<IntermediateCode>(InnerCode);
+        public IReadOnlyCollection<IntermediateCode> Code => InnerCode.AsReadOnly();
 
-        private IList<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
+        private List<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
 
         public void Visit(ReferenceExpression expression)
         {
@@ -21,14 +21,14 @@ namespace CodeGen.Intermediate
         {
             statement.Assignment.Accept(this);
 
-            InnerCode.Add(IntermediateCode.Emit.DirectAssignment(statement.Target, statement.Assignment.Reference));
+            InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
 
         public void Visit(IfStatement statement)
         {
             statement.Condition.Accept(this);
             var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpIfZero(statement.Condition.Reference, label));
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
             statement.Block.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
@@ -69,7 +69,29 @@ namespace CodeGen.Intermediate
 
         public void Visit(ConstantExpression expression)
         {
-            InnerCode.Add(IntermediateCode.Emit.Constant(expression.Reference, expression.Value));
+            InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, expression.Value));
+        }
+
+        public void Visit(BinaryBooleanExpression booleanExpression)
+        {
+            booleanExpression.Left.Accept(this);
+            booleanExpression.Right.Accept(this);
+
+            switch (booleanExpression.Operator)
+            {
+                case BooleanOperatorKind.Equal:
+
+                    InnerCode.Add(IntermediateCode.Emit.IsEqual(booleanExpression.Reference, booleanExpression.Left.Reference, booleanExpression.Right.Reference));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
+        }
+
+        public void Visit(BooleanValueExpression booleanExpression)
+        {
+            InnerCode.Add(IntermediateCode.Emit.Set(booleanExpression.Reference, booleanExpression.Value));
         }
     }
 }

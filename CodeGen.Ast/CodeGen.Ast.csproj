@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Superpower" Version="1.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CodeGen.Units\CodeGen.Units.csproj" />
     <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
+    <ProjectReference Include="..\superpower\src\Superpower\Superpower.csproj" />
   </ItemGroup>
 
 </Project>

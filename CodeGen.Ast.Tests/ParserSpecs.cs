@@ -1,3 +1,4 @@
+using CodeGen.Ast.Parsers;
 using Superpower;
 using Superpower.Model;
 using Xunit;
@@ -6,11 +7,11 @@ namespace CodeGen.Ast.Tests
 {
     public class ParserSpecs
     {
-        [Fact]
-        public void OperatorExpression()
+        [Theory]
+        [InlineData("a+b*12")]
+        public void OperatorExpression(string str)
         {
-            var tokenList = Tokenize("a+b*12");
-            var generated = Parsers.ExpressionTree.Parse(tokenList);
+            Parse(str, Expressions.ExpressionTree);
         }
 
         [Theory]
@@ -19,7 +20,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("{a=b;c=d;e=f+g*3;}")]
         public void Block(string code)
         {
-            Parse(code, Parsers.Block);
+            Parse(code, Statements.Block);
         }
 
 
@@ -29,7 +30,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c+d")]
         public void Assignment(string code)
         {
-            Parse(code, Parsers.Assignment);
+            Parse(code, Statements.Assignment);
         }
 
         [Theory]
@@ -37,26 +38,34 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c;")]
         public void Statement(string code)
         {
-            Parse(code, Parsers.Assignment);
+            Parse(code, Statements.Assignment);
         }
 
         [Theory]
-        [InlineData("if (a) {b=3;}")]
-        //[InlineData("if (a==b) {c=3;}")]
+        [InlineData("if (a==b) {c=3;}")]
         public void If(string code)
         {
-            Parse(code, Parsers.IfStatement);
+            Parse(code, Statements.IfStatement);
         }
 
-        private static void Parse<T>(string code, TokenListParser<Token, T> tokenListParser)
+        [Theory]
+        [InlineData("b==1")]
+        [InlineData("true")]
+        [InlineData("false")]
+        public void Condition(string code)
+        {
+            Parse(code, Expressions.BooleanExpressionParser);
+        }
+
+        private static void Parse<T>(string code, TokenListParser<LangToken, T> tokenListParser)
         {
             var tokenList = Tokenize(code);
             var result = tokenListParser.Parse(tokenList);
         }
 
-        private static TokenList<Token> Tokenize(string aBb)
+        private static TokenList<LangToken> Tokenize(string str)
         {
-            return new Tokenizer().Tokenize(aBb);
+            return TokenizerFactory.Create().Tokenize(str);
         }
     }    
 }
