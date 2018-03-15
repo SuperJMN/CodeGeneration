@@ -1,4 +1,5 @@
-﻿using CodeGen.Units.Expressions;
+﻿using CodeGen.Units;
+using CodeGen.Units.Expressions;
 using CodeGen.Units.New.Expressions;
 using Superpower;
 using Superpower.Parsers;
@@ -28,10 +29,9 @@ namespace CodeGen.Ast.NewParsers
         private static readonly TokenListParser<LangToken, Expression> Number = Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32)
             .Select(d => (Expression)new NewConstantExpression(d));
 
-        private static readonly TokenListParser<LangToken, Expression> Identifier = 
+        private static readonly TokenListParser<LangToken, Expression> Identifier =
             Token.EqualTo(LangToken.Identifier)
-                .Select(token => (Expression)new NewConstantExpression(token.ToStringValue()));
-
+                .Select(token => (Expression) new NewReferenceExpression(new Reference(token.ToStringValue())));
 
         private static readonly TokenListParser<LangToken, Expression> BooleanValue =
             Token.EqualTo(LangToken.True).Value((Expression) new NewConstantExpression(true))

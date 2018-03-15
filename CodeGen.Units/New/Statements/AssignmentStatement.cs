@@ -14,6 +14,7 @@ namespace CodeGen.Units.New.Statements
         public Expression Assignment { get; }
         public override void Accept(ICodeVisitor visitor)
         {
+            visitor.Visit(this);
         }
     }
 }

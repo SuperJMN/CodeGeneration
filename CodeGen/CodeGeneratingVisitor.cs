@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
@@ -87,7 +88,7 @@ namespace CodeGen.Intermediate
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
         }
 
         public void Visit(BooleanValueExpression booleanExpression)
@@ -97,12 +98,42 @@ namespace CodeGen.Intermediate
 
         public void Visit(CallExpression expression)
         {
-            throw new NotImplementedException();
+            expression.Operands.ToList().ForEach(x => x.Accept(this));
+
+            IntermediateCode emitted;
+
+            switch (expression.OperatorName)
+            {
+                case nameof(Operators.Add):
+                    emitted = IntermediateCode.Emit.Add(expression.Reference, expression.Operands[0].Reference,
+                        expression.Operands[1].Reference);
+
+                    break;
+                case nameof(Operators.Multiply):
+                    emitted = IntermediateCode.Emit.Mult(expression.Reference, expression.Operands[0].Reference,
+                        expression.Operands[1].Reference);
+                    break;
+
+                case nameof(Operators.Eq):
+                    emitted = IntermediateCode.Emit.IsEqual(expression.Reference, expression.Operands[0].Reference,
+                        expression.Operands[1].Reference);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            InnerCode.Add(emitted);
         }
 
         public void Visit(NewConstantExpression expression)
         {
-            throw new NotImplementedException();
+            switch (expression.Value)
+            {
+                case int t:
+                    InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, t));
+                    break;
+            }
         }
 
         public void Visit(Units.New.Statements.IfStatement expression)
@@ -113,6 +144,17 @@ namespace CodeGen.Intermediate
         public void Visit(Units.New.Statements.Block block)
         {
             throw new NotImplementedException();
+        }
+
+        public void Visit(NewReferenceExpression expression)
+        {
+        }
+
+        public void Visit(Units.New.Statements.AssignmentStatement statement)
+        {
+            statement.Assignment.Accept(this);
+
+            InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
     }
 }

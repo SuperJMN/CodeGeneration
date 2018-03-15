@@ -4,7 +4,7 @@
     {
         public object Value { get; }
 
-        public NewConstantExpression(object value)
+        public NewConstantExpression(object value) : base(new Reference())
         {
             Value = value;
         }

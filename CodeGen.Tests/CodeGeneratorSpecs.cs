@@ -4,6 +4,7 @@ using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
+using CodeGen.Units.New.Expressions;
 using CodeGen.Units.Statements;
 using DeepEqual.Syntax;
 using Xunit;
@@ -15,7 +16,7 @@ namespace CodeGen.Tests
         [Fact]
         public void ConstantAssignment()
         {
-            var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
+            var st = new Units.New.Statements.AssignmentStatement(new Reference("a"), new NewConstantExpression(123));
             var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(st);
 
@@ -86,8 +87,7 @@ namespace CodeGen.Tests
         [Fact]
         public void BinaryBooleanExpression()
         {
-            var sut = new BinaryBooleanExpression(BooleanOperatorKind.Equal,
-                new ReferenceExpression(new Reference("a")), new ReferenceExpression(new Reference("b")));
+            var sut = new CallExpression(Operators.Eq, new NewReferenceExpression(new Reference("a")), new NewReferenceExpression(new Reference("b")));
 
             var actual = Generate(sut);
 

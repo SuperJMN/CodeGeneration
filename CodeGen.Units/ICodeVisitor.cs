@@ -18,5 +18,7 @@ namespace CodeGen.Units
         void Visit(NewConstantExpression expression);
         void Visit(New.Statements.IfStatement expression);
         void Visit(New.Statements.Block block);
+        void Visit(NewReferenceExpression expression);
+        void Visit(New.Statements.AssignmentStatement expression);
     }
 }

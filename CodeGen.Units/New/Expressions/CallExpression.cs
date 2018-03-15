@@ -9,7 +9,7 @@
             Operands = operands;
         }
 
-        public CallExpression(string operatorName)
+        public CallExpression(string operatorName) : base(new Reference())
         {   
             OperatorName = operatorName;
         }
