@@ -1,6 +1,6 @@
-﻿using CodeGen.Units;
+﻿using CodeGen.Units.New.Expressions;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Units.New.Statements
 {
     public class IfStatement : Statement
     {
@@ -15,6 +15,7 @@ namespace CodeGen.Ast.NewParsers
         
         public override void Accept(ICodeVisitor visitor)
         {
+            visitor.Visit(this);
         }
     }
 }

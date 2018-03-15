@@ -1,4 +1,5 @@
 ﻿using CodeGen.Units.Expressions;
+using CodeGen.Units.New.Expressions;
 using CodeGen.Units.Statements;
 
 namespace CodeGen.Units
@@ -11,7 +12,11 @@ namespace CodeGen.Units
         void Visit(Block block);
         void Visit(OperatorExpression expression);
         void Visit(ConstantExpression expression);
-        void Visit(BinaryBooleanExpression booleanExpression);
-        void Visit(BooleanValueExpression booleanExpression);
+        void Visit(BinaryBooleanExpression expression);
+        void Visit(BooleanValueExpression expression);
+        void Visit(CallExpression expression);
+        void Visit(NewConstantExpression expression);
+        void Visit(New.Statements.IfStatement expression);
+        void Visit(New.Statements.Block block);
     }
 }

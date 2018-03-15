@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
+using CodeGen.Units.New.Expressions;
 using CodeGen.Units.Statements;
 
 namespace CodeGen.Intermediate
@@ -92,6 +93,26 @@ namespace CodeGen.Intermediate
         public void Visit(BooleanValueExpression booleanExpression)
         {
             InnerCode.Add(IntermediateCode.Emit.Set(booleanExpression.Reference, booleanExpression.Value));
+        }
+
+        public void Visit(CallExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(NewConstantExpression expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(Units.New.Statements.IfStatement expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Visit(Units.New.Statements.Block block)
+        {
+            throw new NotImplementedException();
         }
     }
 }

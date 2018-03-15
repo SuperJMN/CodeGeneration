@@ -1,7 +1,6 @@
-﻿
-using CodeGen.Units;
+﻿using CodeGen.Units.New.Expressions;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Units.New.Statements
 {
     public class AssignmentStatement : Statement
     {

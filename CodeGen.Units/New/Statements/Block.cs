@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using CodeGen.Units;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Units.New.Statements
 {
-    public class Block : Collection<Statement>
+    public class Block : Collection<Statement>, ICodeUnit
     {
         public Block()
         {            
@@ -14,5 +13,9 @@ namespace CodeGen.Ast.NewParsers
         {
         }
 
+        public void Accept(ICodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

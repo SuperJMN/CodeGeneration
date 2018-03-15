@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Ast.NewParsers
+﻿namespace CodeGen.Units.New.Expressions
 {
     public class CallExpression : Expression
     {
@@ -15,5 +15,9 @@
         }
 
         public string OperatorName { get; }
+        public override void Accept(ICodeVisitor visitor)
+        {
+            visitor.Visit(this);
+        }
     }
 }

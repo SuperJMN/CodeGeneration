@@ -1,6 +1,8 @@
 ﻿using CodeGen.Units.Expressions;
+using CodeGen.Units.New.Expressions;
 using Superpower;
 using Superpower.Parsers;
+using Expression = CodeGen.Units.New.Expressions.Expression;
 
 namespace CodeGen.Ast.NewParsers
 {

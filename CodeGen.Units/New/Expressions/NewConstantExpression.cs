@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Ast.NewParsers
+﻿namespace CodeGen.Units.New.Expressions
 {
     public class NewConstantExpression : Expression
     {
@@ -7,6 +7,11 @@
         public NewConstantExpression(object value)
         {
             Value = value;
+        }
+
+        public override void Accept(ICodeVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }
