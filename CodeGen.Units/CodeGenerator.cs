@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using CodeGen.Ast.NewParsers;
+using CodeGen.Ast;
+using CodeGen.Ast.Parsers;
 using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
 using Superpower;
 
-namespace CodeGen.Ast
+namespace CodeGen.Compiler
 {
     public class CodeGenerator
     {

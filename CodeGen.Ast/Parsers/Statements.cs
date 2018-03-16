@@ -1,9 +1,9 @@
-﻿using CodeGen.Units;
-using CodeGen.Units.New.Statements;
+﻿using CodeGen.Ast.Units;
+using CodeGen.Ast.Units.Statements;
 using Superpower;
 using Superpower.Parsers;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Ast.Parsers
 {
     public class Statements
     {

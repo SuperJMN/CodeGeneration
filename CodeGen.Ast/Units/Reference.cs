@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Units
+﻿namespace CodeGen.Ast.Units
 {
     public class Reference
     {

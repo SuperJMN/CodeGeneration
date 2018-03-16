@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Ast.Units;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Units;
 
 namespace CodeGen.Intermediate
 {

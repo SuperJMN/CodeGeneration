@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Units
+﻿namespace CodeGen.Intermediate
 {
     public class Label
     {

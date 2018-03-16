@@ -1,4 +1,4 @@
-using CodeGen.Ast.NewParsers;
+using CodeGen.Ast.Parsers;
 using Superpower;
 using Superpower.Model;
 using Xunit;

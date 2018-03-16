@@ -1,7 +1,7 @@
 ﻿using Superpower;
 using Superpower.Parsers;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Ast.Parsers
 {
     public static class Basics
     {

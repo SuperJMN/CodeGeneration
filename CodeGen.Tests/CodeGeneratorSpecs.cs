@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using CodeGen.Ast.Units;
+using CodeGen.Ast.Units.Expressions;
+using CodeGen.Ast.Units.Statements;
 using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Units;
-using CodeGen.Units.Expressions;
-using CodeGen.Units.New.Expressions;
 using DeepEqual.Syntax;
 using Xunit;
-using Statement = CodeGen.Units.New.Statements.Statement;
+using Statement = CodeGen.Ast.Units.Statements.Statement;
 
 namespace CodeGen.Tests
 {
@@ -16,7 +16,7 @@ namespace CodeGen.Tests
         [Fact]
         public void ConstantAssignment()
         {
-            var st = new Units.New.Statements.AssignmentStatement(new Reference("a"), new ConstantExpression(123));
+            var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
             var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(st);
 
@@ -32,7 +32,7 @@ namespace CodeGen.Tests
         [Fact]
         public void SimpleAssignment()
         {
-            var expr = new Units.New.Statements.AssignmentStatement(
+            var expr = new AssignmentStatement(
                 new Reference("a"),
                 new ExpressionNode(nameof(Operators.Add),
                     new NewReferenceExpression(new Reference("b")),
@@ -57,7 +57,7 @@ namespace CodeGen.Tests
         [Fact]
         public void ComplexAssignment()
         {
-            var expr = new Units.New.Statements.AssignmentStatement(
+            var expr = new AssignmentStatement(
                 new Reference("x"),
                 new ExpressionNode(nameof(Operators.Add),
                     new ExpressionNode(nameof(Operators.Multiply),
@@ -103,10 +103,10 @@ namespace CodeGen.Tests
         public void IfSentence()
         {
 
-            var statement = new Units.New.Statements.AssignmentStatement(new Reference("b"), new NewReferenceExpression(new Reference("c")));
+            var statement = new AssignmentStatement(new Reference("b"), new NewReferenceExpression(new Reference("c")));
 
-            var expr = new Units.New.Statements.IfStatement(new ConstantExpression(true),
-                new Units.New.Statements.Block(new List<Statement>() { statement }));
+            var expr = new IfStatement(new ConstantExpression(true),
+                new Block(new List<Statement>() { statement }));
 
             var actual = Generate(expr);
 
@@ -130,9 +130,9 @@ namespace CodeGen.Tests
             var right = new NewReferenceExpression(new Reference("z"));
             var condition = new ExpressionNode(nameof(Operators.Eq), left, right);
             
-            var statement = new Units.New.Statements.IfStatement(condition, new Units.New.Statements.Block
+            var statement = new IfStatement(condition, new Block
             {
-                new Units.New.Statements.AssignmentStatement(new Reference("a"), new NewReferenceExpression(new Reference("b"))),
+                new AssignmentStatement(new Reference("a"), new NewReferenceExpression(new Reference("b"))),
             });
 
             var sut = new IntermediateCodeGenerator();

@@ -1,6 +1,6 @@
-﻿using CodeGen.Units.New.Expressions;
+﻿using CodeGen.Ast.Units.Expressions;
 
-namespace CodeGen.Units.New.Statements
+namespace CodeGen.Ast.Units.Statements
 {
     public class IfStatement : Statement
     {

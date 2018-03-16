@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Units.New.Expressions
+﻿namespace CodeGen.Ast.Units.Expressions
 {
     public abstract class Expression : ICodeUnit
     {

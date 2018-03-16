@@ -1,11 +1,10 @@
-﻿using CodeGen.Units;
-using CodeGen.Units.Expressions;
-using CodeGen.Units.New.Expressions;
+﻿using CodeGen.Ast.Units;
+using CodeGen.Ast.Units.Expressions;
 using Superpower;
 using Superpower.Parsers;
-using Expression = CodeGen.Units.New.Expressions.Expression;
+using Expression = CodeGen.Ast.Units.Expressions.Expression;
 
-namespace CodeGen.Ast.NewParsers
+namespace CodeGen.Ast.Parsers
 {
     public class Expressions
     {

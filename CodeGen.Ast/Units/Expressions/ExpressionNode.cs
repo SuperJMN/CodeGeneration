@@ -1,6 +1,4 @@
-﻿using CodeGen.Units.New.Expressions;
-
-namespace CodeGen.Units.Expressions
+﻿namespace CodeGen.Ast.Units.Expressions
 {
     public class ExpressionNode : Expression
     {

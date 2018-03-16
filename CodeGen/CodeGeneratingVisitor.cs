@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Ast.Units;
+using CodeGen.Ast.Units.Expressions;
+using CodeGen.Ast.Units.Statements;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Units;
-using CodeGen.Units.Expressions;
-using CodeGen.Units.New.Expressions;
 
 namespace CodeGen.Intermediate
 {
@@ -44,7 +44,7 @@ namespace CodeGen.Intermediate
             InnerCode.Add(emitted);
         }
 
-        public void Visit(ConstantExpression expression)
+        public void Visit(Ast.Units.Expressions.ConstantExpression expression)
         {
             switch (expression.Value)
             {
@@ -57,7 +57,7 @@ namespace CodeGen.Intermediate
             }
         }
 
-        public void Visit(Units.New.Statements.IfStatement statement)
+        public void Visit(IfStatement statement)
         {
             statement.Condition.Accept(this);
             var label = new Label();
@@ -66,7 +66,7 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
 
-        public void Visit(Units.New.Statements.Block block)
+        public void Visit(Block block)
         {
             block.ToList().ForEach(x => x.Accept(this));
         }
@@ -75,7 +75,7 @@ namespace CodeGen.Intermediate
         {
         }
 
-        public void Visit(Units.New.Statements.AssignmentStatement statement)
+        public void Visit(AssignmentStatement statement)
         {
             statement.Assignment.Accept(this);
 

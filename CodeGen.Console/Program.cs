@@ -1,5 +1,6 @@
 ﻿using CodeGen.Ast;
-using CodeGen.Ast.NewParsers;
+using CodeGen.Ast.Parsers;
+using CodeGen.Compiler;
 using Superpower;
 
 namespace CodeGen.Console

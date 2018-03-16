@@ -1,5 +1,5 @@
-﻿using CodeGen.Intermediate.Codes.Common;
-using CodeGen.Units;
+﻿using CodeGen.Ast.Units;
+using CodeGen.Intermediate.Codes.Common;
 
 namespace CodeGen.Intermediate.Codes
 {

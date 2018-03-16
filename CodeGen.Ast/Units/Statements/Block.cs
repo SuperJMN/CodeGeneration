@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace CodeGen.Units.New.Statements
+namespace CodeGen.Ast.Units.Statements
 {
     public class Block : Collection<Statement>, ICodeUnit
     {
