@@ -5,7 +5,6 @@ using CodeGen.Intermediate.Codes;
 using CodeGen.Units;
 using CodeGen.Units.Expressions;
 using CodeGen.Units.New.Expressions;
-using CodeGen.Units.Statements;
 
 namespace CodeGen.Intermediate
 {
@@ -15,51 +14,27 @@ namespace CodeGen.Intermediate
 
         private List<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
 
-        public void Visit(ReferenceExpression expression)
+        public void Visit(ExpressionNode expressionNode)
         {
-        }
-
-        public void Visit(AssignmentStatement statement)
-        {
-            statement.Assignment.Accept(this);
-
-            InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
-        }
-
-        public void Visit(IfStatement statement)
-        {
-            statement.Condition.Accept(this);
-            var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
-            statement.Block.Accept(this);
-            InnerCode.Add(IntermediateCode.Emit.Label(label));
-        }
-
-        public void Visit(Block block)
-        {
-            foreach (var line in block)
-            {
-                line.Accept(this);
-            }
-        }
-
-        public void Visit(OperatorExpression expression)
-        {
-            expression.Left.Accept(this);
-            expression.Right.Accept(this);
+            expressionNode.Operands.ToList().ForEach(x => x.Accept(this));
 
             IntermediateCode emitted;
 
-            switch (expression.Operator)
+            switch (expressionNode.OperatorName)
             {
-                case OperatorKind.Add:
-                    emitted = IntermediateCode.Emit.Add(expression.Reference, expression.Left.Reference,
-                        expression.Right.Reference);
+                case nameof(Operators.Add):
+                    emitted = IntermediateCode.Emit.Add(expressionNode.Reference, expressionNode.Operands[0].Reference,
+                        expressionNode.Operands[1].Reference);
 
                     break;
-                case OperatorKind.Mult:
-                    emitted = IntermediateCode.Emit.Mult(expression.Reference, expression.Left.Reference,
-                        expression.Right.Reference);
+                case nameof(Operators.Multiply):
+                    emitted = IntermediateCode.Emit.Mult(expressionNode.Reference, expressionNode.Operands[0].Reference,
+                        expressionNode.Operands[1].Reference);
+                    break;
+
+                case nameof(Operators.Eq):
+                    emitted = IntermediateCode.Emit.IsEqual(expressionNode.Reference, expressionNode.Operands[0].Reference,
+                        expressionNode.Operands[1].Reference);
                     break;
 
                 default:
@@ -71,79 +46,29 @@ namespace CodeGen.Intermediate
 
         public void Visit(ConstantExpression expression)
         {
-            InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, expression.Value));
-        }
-
-        public void Visit(BinaryBooleanExpression booleanExpression)
-        {
-            booleanExpression.Left.Accept(this);
-            booleanExpression.Right.Accept(this);
-
-            switch (booleanExpression.Operator)
-            {
-                case BooleanOperatorKind.Equal:
-
-                    InnerCode.Add(IntermediateCode.Emit.IsEqual(booleanExpression.Reference, booleanExpression.Left.Reference, booleanExpression.Right.Reference));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-        }
-
-        public void Visit(BooleanValueExpression booleanExpression)
-        {
-            InnerCode.Add(IntermediateCode.Emit.Set(booleanExpression.Reference, booleanExpression.Value));
-        }
-
-        public void Visit(CallExpression expression)
-        {
-            expression.Operands.ToList().ForEach(x => x.Accept(this));
-
-            IntermediateCode emitted;
-
-            switch (expression.OperatorName)
-            {
-                case nameof(Operators.Add):
-                    emitted = IntermediateCode.Emit.Add(expression.Reference, expression.Operands[0].Reference,
-                        expression.Operands[1].Reference);
-
-                    break;
-                case nameof(Operators.Multiply):
-                    emitted = IntermediateCode.Emit.Mult(expression.Reference, expression.Operands[0].Reference,
-                        expression.Operands[1].Reference);
-                    break;
-
-                case nameof(Operators.Eq):
-                    emitted = IntermediateCode.Emit.IsEqual(expression.Reference, expression.Operands[0].Reference,
-                        expression.Operands[1].Reference);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            InnerCode.Add(emitted);
-        }
-
-        public void Visit(NewConstantExpression expression)
-        {
             switch (expression.Value)
             {
                 case int t:
                     InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, t));
                     break;
+                case bool b:
+                    InnerCode.Add(IntermediateCode.Emit.Set(expression.Reference, b));
+                    break;
             }
         }
 
-        public void Visit(Units.New.Statements.IfStatement expression)
+        public void Visit(Units.New.Statements.IfStatement statement)
         {
-            throw new NotImplementedException();
+            statement.Condition.Accept(this);
+            var label = new Label();
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
+            statement.Block.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
 
         public void Visit(Units.New.Statements.Block block)
         {
-            throw new NotImplementedException();
+            block.ToList().ForEach(x => x.Accept(this));
         }
 
         public void Visit(NewReferenceExpression expression)

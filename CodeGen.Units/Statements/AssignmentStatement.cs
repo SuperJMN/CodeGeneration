@@ -1,6 +1,6 @@
-﻿using CodeGen.Units.Expressions;
+﻿using CodeGen.Units.New.Expressions;
 
-namespace CodeGen.Units.Statements
+namespace CodeGen.Units.New.Statements
 {
     public class AssignmentStatement : Statement
     {
@@ -12,7 +12,6 @@ namespace CodeGen.Units.Statements
 
         public Reference Target { get; }
         public Expression Assignment { get; }
-
         public override void Accept(ICodeVisitor visitor)
         {
             visitor.Visit(this);

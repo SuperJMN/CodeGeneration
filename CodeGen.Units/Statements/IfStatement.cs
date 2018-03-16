@@ -1,18 +1,18 @@
-﻿using CodeGen.Units.Expressions;
+﻿using CodeGen.Units.New.Expressions;
 
-namespace CodeGen.Units.Statements
+namespace CodeGen.Units.New.Statements
 {
     public class IfStatement : Statement
     {
-        public BooleanExpression Condition { get; }
+        public Expression Condition { get; }
         public Block Block { get; }
 
-        public IfStatement(BooleanExpression condition, Block block)
+        public IfStatement(Expression condition, Block block)
         {
             Condition = condition;
             Block = block;
         }
-
+        
         public override void Accept(ICodeVisitor visitor)
         {
             visitor.Visit(this);

@@ -1,17 +1,19 @@
-﻿namespace CodeGen.Units.Expressions
+﻿using CodeGen.Units.New.Expressions;
+
+namespace CodeGen.Units.Expressions
 {
     public class ConstantExpression : Expression
     {
-        public int Value { get; }
+        public object Value { get; }
 
-        public ConstantExpression(int value) : base(new Reference())
+        public ConstantExpression(object value) : base(new Reference())
         {
             Value = value;
         }
 
-        public override void Accept(ICodeVisitor codeVisitor)
+        public override void Accept(ICodeVisitor visitor)
         {
-            codeVisitor.Visit(this);
+            visitor.Visit(this);
         }
     }
 }

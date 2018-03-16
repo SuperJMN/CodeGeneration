@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Units.Statements
+﻿namespace CodeGen.Units.New.Statements
 {
     public abstract class Statement : ICodeUnit
     {

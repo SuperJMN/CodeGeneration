@@ -1,8 +1,8 @@
-﻿namespace CodeGen.Units.Expressions
+﻿namespace CodeGen.Units.New.Expressions
 {
-    public class ReferenceExpression : Expression
+    public class NewReferenceExpression : Expression
     {
-        public ReferenceExpression(Reference reference) : base(reference)
+        public NewReferenceExpression(Reference reference)  : base(reference)
         {
         }
 

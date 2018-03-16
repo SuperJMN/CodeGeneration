@@ -1,16 +1,16 @@
 ﻿using CodeGen.Units;
-using CodeGen.Units.Statements;
+using CodeGen.Units.New.Statements;
 using Superpower;
 using Superpower.Parsers;
 
-namespace CodeGen.Ast.Parsers
+namespace CodeGen.Ast.NewParsers
 {
-    public static class Statements
+    public class Statements
     {
         public static readonly TokenListParser<LangToken, Statement> Assignment =
             from identifier in Basics.Identifier
             from eq in Token.EqualTo(LangToken.Equal)
-            from expr in Expressions.ExpressionTree
+            from expr in Expressions.Expr
             select (Statement) new AssignmentStatement(new Reference(identifier), expr);
 
         public static readonly TokenListParser<LangToken, Statement> FullStatement = 
@@ -26,7 +26,7 @@ namespace CodeGen.Ast.Parsers
 
         public static readonly TokenListParser<LangToken, Statement> IfStatement =
             from keywork in Token.EqualTo(LangToken.If)
-            from expr in Expressions.BooleanExpressionParser.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+            from expr in Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
             from block in Block
             select (Statement) new IfStatement(expr, block);
     }

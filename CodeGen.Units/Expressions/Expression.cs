@@ -1,14 +1,14 @@
-﻿namespace CodeGen.Units.Expressions
+﻿namespace CodeGen.Units.New.Expressions
 {
     public abstract class Expression : ICodeUnit
     {
-        protected Expression(Reference reference)
+        public Reference Reference { get; }
+
+        public Expression(Reference reference)
         {
             Reference = reference;
         }
 
-        public Reference Reference { get; }
-
-        public abstract void Accept(ICodeVisitor codeVisitor);
+        public abstract void Accept(ICodeVisitor visitor);
     }
 }

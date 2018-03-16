@@ -1,15 +1,17 @@
-﻿namespace CodeGen.Units.New.Expressions
+﻿using CodeGen.Units.New.Expressions;
+
+namespace CodeGen.Units.Expressions
 {
-    public class CallExpression : Expression
+    public class ExpressionNode : Expression
     {
         public Expression[] Operands { get; }
 
-        public CallExpression(string operatorName, params Expression[] operands) : this(operatorName)
+        public ExpressionNode(string operatorName, params Expression[] operands) : this(operatorName)
         {
             Operands = operands;
         }
 
-        public CallExpression(string operatorName) : base(new Reference())
+        public ExpressionNode(string operatorName) : base(new Reference())
         {   
             OperatorName = operatorName;
         }

@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Units.Expressions
+﻿namespace CodeGen.Units
 {
     public class Operators
     {
