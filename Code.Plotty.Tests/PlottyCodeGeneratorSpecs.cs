@@ -20,8 +20,40 @@ namespace CodeGen.Plotty.Tests
             {
                 new MoveInstruction()
                 {
-                    Destination = new Register(1),
+                    Destination = new Register(0),
                     Source = new ImmediateSource(123),
+                }
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void MultipleConstants()
+        {
+            var sut = new PlottyCodeGenerator();
+            var actual = sut.Generate(new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.Set(new Reference("a"), 1),
+                IntermediateCode.Emit.Set(new Reference("b"), 2),
+                IntermediateCode.Emit.Set(new Reference("c"), 3),
+            });
+
+            var expected = new List<Instruction>
+            {
+                new MoveInstruction()
+                {
+                    Destination = new Register(0),
+                    Source = new ImmediateSource(1),
+                },
+                new MoveInstruction()
+                {
+                    Destination = new Register(1),
+                    Source = new ImmediateSource(2),
+                }, new MoveInstruction()
+                {
+                    Destination = new Register(2),
+                    Source = new ImmediateSource(3),
                 }
             };
 

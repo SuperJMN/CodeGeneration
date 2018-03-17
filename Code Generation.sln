@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Intermediate", "CodeGen\CodeGen.Intermediate.csproj", "{E57C283E-DAE8-4805-8773-5A1C80F2D145}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Tests", "CodeGen.Tests\CodeGen.Tests.csproj", "{7D959EAF-0565-4A30-AB71-827FE4DAB180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Intermediate.Tests", "CodeGen.Tests\CodeGen.Intermediate.Tests.csproj", "{7D959EAF-0565-4A30-AB71-827FE4DAB180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqual", "DeepEqual\src\DeepEqual\DeepEqual.csproj", "{5125DCF0-FAD0-412F-B06C-FF4CE289A844}"
 EndProject

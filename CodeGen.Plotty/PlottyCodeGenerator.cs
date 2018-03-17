@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Core;
+using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
 using Plotty.Model;
 
@@ -9,18 +11,25 @@ namespace CodeGen.Plotty
     {
         public IEnumerable<Instruction> Generate(List<IntermediateCode> intermediateCodes)
         {
-            var code = intermediateCodes.First();
+            var visitor = new NamedObjectCollector();
+            intermediateCodes.ForEach(x => x.Accept(visitor));
+            var references = visitor.References
+                .Select((r, i) => new {r, i})
+                .ToDictionary(arg => arg.r, arg => new Register(arg.i));
 
-            switch (code)
+            foreach (var intermediateCode in intermediateCodes)
             {
-                case IntegerConstantAssignment ias:
-                    yield return new MoveInstruction()
-                    {
-                        Destination = new Register(1),
-                        Source = new ImmediateSource(123),
-                    };
-                    break;
-            }
+                switch (intermediateCode)
+                {
+                    case IntegerConstantAssignment ias:
+                        yield return new MoveInstruction
+                        {
+                            Destination = references[ias.Target],
+                            Source = new ImmediateSource(ias.Value),
+                        };
+                        break;
+                }    
+            }           
         }
-    }
+    }  
 }

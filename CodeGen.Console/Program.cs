@@ -9,7 +9,7 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var parsed = Statements.IfStatement.Parse(TokenizerFactory.Create().Tokenize("if (true) {b=3;}"));
+            var parsed = Statements.IfStatement.Parse(TokenizerFactory.Create().Tokenize("{ a=1; b=2; c=3; }"));
 
             var intermediateCode = new CodeGenerator().Generate("if (a) {b=3;}");
 
