@@ -9,34 +9,54 @@ namespace CodeGen.Plotty
 {
     public class PlottyCodeGenerator
     {
-        public IEnumerable<Line> Generate(List<IntermediateCode> intermediateCodes)
+        public GenerationResult Generate(List<IntermediateCode> intermediateCodes)
         {
             var visitor = new NamedObjectCollector();
             intermediateCodes.ForEach(x => x.Accept(visitor));
-            var enumerable = visitor.References
-                .Distinct();
 
-            var references = enumerable
-                .Select((r, i) => new { r, i })
-                .ToDictionary(arg => arg.r, arg => new Register(arg.i));
+            var addressMap = visitor.References
+                .Distinct()
+                .Select((reference, index) => new { Reference = reference, Index = index })
+                .ToDictionary(key => key.Reference, value => value.Index);
 
+            return new GenerationResult(addressMap, GenerateCore(intermediateCodes, addressMap).ToList());
+        }
+
+        private static IEnumerable<Line> GenerateCore(IEnumerable<IntermediateCode> intermediateCodes, Dictionary<Reference, int> addressMap)
+        {
             foreach (var intermediateCode in intermediateCodes)
             {
                 switch (intermediateCode)
                 {
                     case IntegerConstantAssignment ias:
+
                         yield return new Line(new MoveInstruction
                         {
-                            Destination = references[ias.Target],
+                            Destination = new Register(1),
                             Source = new ImmediateSource(ias.Value),
                         });
-                        break;
-                    case ReferenceAssignment ras:
-                        yield return new Line(new MoveInstruction
+                        yield return new Line(new StoreInstruction()
                         {
-                            Destination = references[ras.Target],
-                            Source = new RegisterSource(references[ras.Origin]),
+                            Source = new RegisterSource(new Register(1)),
+                            Address = new IndexedAddress(new Register(0), new ImmediateSource(addressMap[ias.Target]))
                         });
+
+                        break;
+
+                    case ReferenceAssignment ras:
+
+                        yield return new Line(new LoadInstruction()
+                        {
+                            Destination = new Register(1),
+                            MemoryAddress = new IndexedAddress(new Register(0), new ImmediateSource(addressMap[ras.Origin]))
+                        });
+
+                        yield return new Line(new StoreInstruction()
+                        {
+                            Source = new RegisterSource(new Register(1)),
+                            Address = new IndexedAddress(new Register(0), new ImmediateSource(addressMap[ras.Target]))
+                        });
+
                         break;
                 }
             }

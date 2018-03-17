@@ -8,15 +8,15 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var plottyCode = new PlottyCompiler().Compile("{ a=1; b=a; c=3; b = c; }");
+            var result = new PlottyCompiler().Compile("{ a=1; b=2; }");
 
             var machine = new PlottyMachine();
-            machine.Load(plottyCode.ToList());
+            machine.Load(result.Code.ToList());
 
             while (machine.CanExecute)
             {
                 machine.Execute();
-            }                        
+            }              
         }
     }
 }

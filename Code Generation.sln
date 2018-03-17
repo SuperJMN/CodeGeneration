@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Core", "CodeGen.Cor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Plotty", "CodeGen.Plotty\CodeGen.Plotty.csproj", "{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Plotty.Tests", "Code.Plotty.Tests\CodeGen.Plotty.Tests.csproj", "{DBBF659E-9137-481F-89B0-7A80CBBED366}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Compiler.Tests", "Code.Plotty.Tests\CodeGen.Compiler.Tests.csproj", "{DBBF659E-9137-481F-89B0-7A80CBBED366}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.Model", "Plotty\Plotty.Model\Plotty.Model.csproj", "{2E3C7353-1A52-49E4-BAFB-969A3681B983}"
 EndProject

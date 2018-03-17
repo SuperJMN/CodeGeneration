@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using CodeGen.Ast;
 using CodeGen.Ast.Parsers;
 using CodeGen.Intermediate;
 using CodeGen.Plotty;
-using Plotty.Model;
 using Superpower;
 
 namespace CodeGen.Compiler
 {
     public class PlottyCompiler
     {
-        public IEnumerable<Line> Compile(string source)
+        public GenerationResult Compile(string source)
         {
             var tokens = TokenizerFactory.Create().Tokenize(source);
             var parsed = Statements.ProgramParser.Parse(tokens);
