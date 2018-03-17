@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Plotty.Model;
+using Plotty.Model;
 
 namespace CodeGen.Plotty
 {

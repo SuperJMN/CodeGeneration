@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Plotty.Model;
 using DeepEqual.Syntax;
+using Plotty.Model;
 using Xunit;
 
 namespace CodeGen.Plotty.Tests

@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
-    <ProjectReference Include="..\Core.Plotty.Model\CodeGen.Plotty.Model.csproj" />
+    <ProjectReference Include="..\Plotty\Plotty.Model\Plotty.Model.csproj" />
   </ItemGroup>
 
 </Project>
