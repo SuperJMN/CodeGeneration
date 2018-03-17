@@ -1,6 +1,4 @@
-﻿using CodeGen.Units;
-
-namespace CodeGen.Intermediate.Codes
+﻿namespace CodeGen.Intermediate.Codes
 {
     public class LabelCode : IntermediateCode
     {

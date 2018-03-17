@@ -1,4 +1,6 @@
-﻿using CodeGen.Ast;
+﻿using System.Linq;
+using CodeGen.Compiler;
+using Plotty.VirtualMachine;
 
 namespace CodeGen.Console
 {
@@ -6,12 +8,15 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var intermediateCode = new CodeGenerator().Generate("if (a) {b=3;}");
+            var parsed = new CodeGenerator().Generate("{ a=1; b=a; c=3; b = c; }");
 
-            foreach (var i in intermediateCode)
+            var plottyCore = new PlottyCore();
+            plottyCore.Load(parsed.ToList());
+
+            while (plottyCore.CanExecute)
             {
-               System.Console.WriteLine(i);
-            }
+                plottyCore.Execute();
+            }                        
         }
     }
 }

@@ -4,3 +4,6 @@
 [submodule "superpower"]
 	path = superpower
 	url = https://github.com/datalust/superpower.git
+[submodule "Plotty"]
+	path = Plotty
+	url = https://github.com/SuperJMN/Plotty.git

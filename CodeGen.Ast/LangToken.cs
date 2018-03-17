@@ -29,6 +29,17 @@ namespace CodeGen.Ast
         Minus,
         DoubleEqual,
         True,
-        False
+        False,
+        Or,
+        And,
+        Mod,
+        LessThanOrEqual,
+        LessThan,
+        GreaterThan,
+        GreaterThanOrEqual,
+        NotEqual,
+        Caret,
+        Not,
+        Null
     }
 }

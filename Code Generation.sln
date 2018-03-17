@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Intermediate", "CodeGen\CodeGen.Intermediate.csproj", "{E57C283E-DAE8-4805-8773-5A1C80F2D145}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Tests", "CodeGen.Tests\CodeGen.Tests.csproj", "{7D959EAF-0565-4A30-AB71-827FE4DAB180}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Intermediate.Tests", "CodeGen.Tests\CodeGen.Intermediate.Tests.csproj", "{7D959EAF-0565-4A30-AB71-827FE4DAB180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepEqual", "DeepEqual\src\DeepEqual\DeepEqual.csproj", "{5125DCF0-FAD0-412F-B06C-FF4CE289A844}"
 EndProject
@@ -15,11 +15,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Ast", "CodeGen.Ast\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Ast.Tests", "CodeGen.Ast.Tests\CodeGen.Ast.Tests.csproj", "{5D70EE6F-DFB3-48CF-BF68-6578C2ED365C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Units", "CodeGen.Units\CodeGen.Units.csproj", "{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Compiler", "CodeGen.Units\CodeGen.Compiler.csproj", "{79BB95C2-6C6D-4098-B8BA-0F880C7EDAFD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{8006AAB8-3131-4608-8F7B-49C06A334346}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Superpower", "superpower\src\Superpower\Superpower.csproj", "{0536E143-7463-4292-90F8-0614EB6D8960}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Core", "CodeGen.Core\CodeGen.Core.csproj", "{218896F7-8149-4322-AF9A-5CEC02F9C3B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Plotty", "CodeGen.Plotty\CodeGen.Plotty.csproj", "{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Plotty.Tests", "Code.Plotty.Tests\CodeGen.Plotty.Tests.csproj", "{DBBF659E-9137-481F-89B0-7A80CBBED366}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.Model", "Plotty\Plotty.Model\Plotty.Model.csproj", "{2E3C7353-1A52-49E4-BAFB-969A3681B983}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.VirtualMachine", "Plotty\Plotty.VirtualMachine\Plotty.VirtualMachine.csproj", "{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.Commands", "Plotty\Plotty.Commands\Plotty.Commands.csproj", "{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +71,30 @@ Global
 		{0536E143-7463-4292-90F8-0614EB6D8960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0536E143-7463-4292-90F8-0614EB6D8960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0536E143-7463-4292-90F8-0614EB6D8960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{218896F7-8149-4322-AF9A-5CEC02F9C3B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{218896F7-8149-4322-AF9A-5CEC02F9C3B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{218896F7-8149-4322-AF9A-5CEC02F9C3B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{218896F7-8149-4322-AF9A-5CEC02F9C3B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A54F2F3D-87DF-4813-9DE9-BBC513CD72D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBBF659E-9137-481F-89B0-7A80CBBED366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBBF659E-9137-481F-89B0-7A80CBBED366}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBBF659E-9137-481F-89B0-7A80CBBED366}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBBF659E-9137-481F-89B0-7A80CBBED366}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +102,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5125DCF0-FAD0-412F-B06C-FF4CE289A844} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 		{0536E143-7463-4292-90F8-0614EB6D8960} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{2E3C7353-1A52-49E4-BAFB-969A3681B983} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAF4BB59-85D5-455A-89C8-A15AABAC6527}

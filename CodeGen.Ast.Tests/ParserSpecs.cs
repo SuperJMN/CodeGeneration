@@ -11,7 +11,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("a+b*12")]
         public void OperatorExpression(string str)
         {
-            Parse(str, Expressions.ExpressionTree);
+            Parse(str, Expressions.Expr);
         }
 
         [Theory]
@@ -54,7 +54,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("false")]
         public void Condition(string code)
         {
-            Parse(code, Expressions.BooleanExpressionParser);
+            Parse(code, Expressions.Expr);
         }
 
         private static void Parse<T>(string code, TokenListParser<LangToken, T> tokenListParser)
