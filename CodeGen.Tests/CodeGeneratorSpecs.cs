@@ -7,7 +7,6 @@ using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
 using DeepEqual.Syntax;
 using Xunit;
-using Statement = CodeGen.Ast.Units.Statements.Statement;
 
 namespace CodeGen.Tests
 {
@@ -106,7 +105,7 @@ namespace CodeGen.Tests
             var statement = new AssignmentStatement(new Reference("b"), new NewReferenceExpression(new Reference("c")));
 
             var expr = new IfStatement(new ConstantExpression(true),
-                new Block(new List<Statement>() { statement }));
+                new Block(new List<Statement> { statement }));
 
             var actual = Generate(expr);
 
