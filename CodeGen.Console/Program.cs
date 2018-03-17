@@ -8,14 +8,14 @@ namespace CodeGen.Console
     {
         private static void Main()
         {
-            var parsed = new CodeGenerator().Generate("{ a=1; b=a; c=3; b = c; }");
+            var plottyCode = new PlottyCompiler().Compile("{ a=1; b=a; c=3; b = c; }");
 
-            var plottyCore = new PlottyCore();
-            plottyCore.Load(parsed.ToList());
+            var machine = new PlottyMachine();
+            machine.Load(plottyCode.ToList());
 
-            while (plottyCore.CanExecute)
+            while (machine.CanExecute)
             {
-                plottyCore.Execute();
+                machine.Execute();
             }                        
         }
     }

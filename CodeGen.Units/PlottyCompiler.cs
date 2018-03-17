@@ -9,9 +9,9 @@ using Superpower;
 
 namespace CodeGen.Compiler
 {
-    public class CodeGenerator
+    public class PlottyCompiler
     {
-        public IEnumerable<Line> Generate(string source)
+        public IEnumerable<Line> Compile(string source)
         {
             var tokens = TokenizerFactory.Create().Tokenize(source);
             var parsed = Statements.ProgramParser.Parse(tokens);
