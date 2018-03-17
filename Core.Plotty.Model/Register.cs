@@ -1,14 +1,17 @@
-namespace CodeGen.Plotty.Model
+﻿namespace CodeGen.Plotty.Model
 {
     public class Register
     {
-        public int Index { get; }
+        public int Id { get; }
 
-        public Register(int index)
+        public Register(int id)
         {
-            Index = index;
+            Id = id;
         }
 
-        
+        public override string ToString()
+        {
+            return $"R{Id}";
+        }
     }
 }

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Plotty.Core.csproj" />
+    <PackageReference Include="Superpower" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

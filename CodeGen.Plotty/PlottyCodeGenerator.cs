@@ -7,14 +7,18 @@ namespace CodeGen.Plotty
 {
     public class PlottyCodeGenerator
     {
-        public IEnumerable<PlottyCodeBase> Generate(List<IntermediateCode> intermediateCodes)
+        public IEnumerable<Instruction> Generate(List<IntermediateCode> intermediateCodes)
         {
             var code = intermediateCodes.First();
 
             switch (code)
             {
                 case IntegerConstantAssignment ias:
-                    yield return new MoveCode(new Register(1), ias.Value);
+                    yield return new MoveInstruction()
+                    {
+                        Destination = new Register(1),
+                        Source = new ImmediateSource(123),
+                    };
                     break;
             }
         }
