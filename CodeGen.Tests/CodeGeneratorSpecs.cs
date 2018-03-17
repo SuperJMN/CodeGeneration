@@ -3,12 +3,11 @@ using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
-using CodeGen.Intermediate;
 using CodeGen.Intermediate.Codes;
 using DeepEqual.Syntax;
 using Xunit;
 
-namespace CodeGen.Tests
+namespace CodeGen.Intermediate.Tests
 {
     public class CodeGeneratorSpecs
     {
@@ -17,7 +16,7 @@ namespace CodeGen.Tests
         {
             var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(st);
+            var actual = sut.Generate(new[] {st});
 
             var expected = new List<IntermediateCode>
             {
@@ -34,14 +33,14 @@ namespace CodeGen.Tests
             var expr = new AssignmentStatement(
                 new Reference("a"),
                 new ExpressionNode(nameof(Operators.Add),
-                    new NewReferenceExpression(new Reference("b")),
-                    new ExpressionNode(nameof(Operators.Multiply), new NewReferenceExpression(new Reference("c")),
-                        new NewReferenceExpression(new Reference("d")))
+                    new ReferenceExpression(new Reference("b")),
+                    new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("c")),
+                        new ReferenceExpression(new Reference("d")))
                 )
             );
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(expr);
+            var actual = sut.Generate(new[] {expr});
 
             var expected = new List<IntermediateCode>
             {
@@ -60,17 +59,17 @@ namespace CodeGen.Tests
                 new Reference("x"),
                 new ExpressionNode(nameof(Operators.Add),
                     new ExpressionNode(nameof(Operators.Multiply),
-                        new NewReferenceExpression(new Reference("y")),
-                        new ExpressionNode(nameof(Operators.Multiply), new NewReferenceExpression(new Reference("z")),
-                            new NewReferenceExpression(new Reference("w")))
+                        new ReferenceExpression(new Reference("y")),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("z")),
+                            new ReferenceExpression(new Reference("w")))
                     ),
-                    new ExpressionNode(nameof(Operators.Add), new NewReferenceExpression(new Reference("y")),
-                        new NewReferenceExpression(new Reference("x")))
+                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression(new Reference("y")),
+                        new ReferenceExpression(new Reference("x")))
                 )
             );
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(expr);
+            var actual = sut.Generate(new[] {expr});
             var expected = new List<IntermediateCode>()
             {
                 IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("z"), new Reference("w")),
@@ -86,7 +85,7 @@ namespace CodeGen.Tests
         [Fact]
         public void BinaryBooleanExpression()
         {
-            var sut = new ExpressionNode(Operators.Eq, new NewReferenceExpression(new Reference("a")), new NewReferenceExpression(new Reference("b")));
+            var sut = new ExpressionNode(Operators.Eq, new ReferenceExpression(new Reference("a")), new ReferenceExpression(new Reference("b")));
 
             var actual = Generate(sut);
 
@@ -102,7 +101,7 @@ namespace CodeGen.Tests
         public void IfSentence()
         {
 
-            var statement = new AssignmentStatement(new Reference("b"), new NewReferenceExpression(new Reference("c")));
+            var statement = new AssignmentStatement(new Reference("b"), new ReferenceExpression(new Reference("c")));
 
             var expr = new IfStatement(new ConstantExpression(true),
                 new Block(new List<Statement> { statement }));
@@ -125,17 +124,14 @@ namespace CodeGen.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var left = new ExpressionNode(nameof(Operators.Multiply), new NewReferenceExpression(new Reference("x")), new NewReferenceExpression(new Reference("y")));
-            var right = new NewReferenceExpression(new Reference("z"));
+            var left = new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("x")), new ReferenceExpression(new Reference("y")));
+            var right = new ReferenceExpression(new Reference("z"));
             var condition = new ExpressionNode(nameof(Operators.Eq), left, right);
             
-            var statement = new IfStatement(condition, new Block
-            {
-                new AssignmentStatement(new Reference("a"), new NewReferenceExpression(new Reference("b"))),
-            });
+            var statement = new IfStatement(condition, new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression(new Reference("b")))));
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(statement);
+            var actual = sut.Generate(new[] {statement});
 
             var label = new Label("label1");
 
@@ -154,7 +150,7 @@ namespace CodeGen.Tests
         private static IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit expr)
         {
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(expr);
+            var actual = sut.Generate(new[] {expr});
             return actual;
         }
     }

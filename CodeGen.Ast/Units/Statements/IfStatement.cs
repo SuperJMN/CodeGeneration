@@ -5,12 +5,12 @@ namespace CodeGen.Ast.Units.Statements
     public class IfStatement : Statement
     {
         public Expression Condition { get; }
-        public Block Block { get; }
+        public Statement Statement { get; }
 
-        public IfStatement(Expression condition, Block block)
+        public IfStatement(Expression condition, Statement statement)
         {
             Condition = condition;
-            Block = block;
+            Statement = statement;
         }
         
         public override void Accept(ICodeVisitor visitor)

@@ -29,6 +29,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeGen.Plotty.Tests", "Cod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.Model", "Plotty\Plotty.Model\Plotty.Model.csproj", "{2E3C7353-1A52-49E4-BAFB-969A3681B983}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.VirtualMachine", "Plotty\Plotty.VirtualMachine\Plotty.VirtualMachine.csproj", "{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plotty.Commands", "Plotty\Plotty.Commands\Plotty.Commands.csproj", "{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +87,14 @@ Global
 		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3C7353-1A52-49E4-BAFB-969A3681B983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,6 +103,8 @@ Global
 		{5125DCF0-FAD0-412F-B06C-FF4CE289A844} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 		{0536E143-7463-4292-90F8-0614EB6D8960} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 		{2E3C7353-1A52-49E4-BAFB-969A3681B983} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{C232ADC5-9C1E-4244-BE48-91CCE0251FF1} = {8006AAB8-3131-4608-8F7B-49C06A334346}
+		{C214F2E2-7A05-4AB9-9B47-92ADAE9AE317} = {8006AAB8-3131-4608-8F7B-49C06A334346}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CAF4BB59-85D5-455A-89C8-A15AABAC6527}

@@ -10,6 +10,7 @@
     <ProjectReference Include="..\CodeGen.Ast\CodeGen.Ast.csproj" />
     <ProjectReference Include="..\CodeGen.Units\CodeGen.Compiler.csproj" />
     <ProjectReference Include="..\CodeGen\CodeGen.Intermediate.csproj" />
+    <ProjectReference Include="..\Plotty\Plotty.VirtualMachine\Plotty.VirtualMachine.csproj" />
   </ItemGroup>
 
 </Project>

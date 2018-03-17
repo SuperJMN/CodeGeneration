@@ -62,16 +62,11 @@ namespace CodeGen.Intermediate
             statement.Condition.Accept(this);
             var label = new Label();
             InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
-            statement.Block.Accept(this);
+            statement.Statement.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
 
-        public void Visit(Block block)
-        {
-            block.ToList().ForEach(x => x.Accept(this));
-        }
-
-        public void Visit(NewReferenceExpression expression)
+        public void Visit(ReferenceExpression expression)
         {
         }
 

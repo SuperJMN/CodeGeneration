@@ -11,16 +11,16 @@ namespace CodeGen.Compiler
 {
     public class CodeGenerator
     {
-        public IEnumerable<Instruction> Generate(string source)
+        public IEnumerable<Line> Generate(string source)
         {
             var tokens = TokenizerFactory.Create().Tokenize(source);
-            var parsed = Statements.IfStatement.Parse(tokens);
+            var parsed = Statements.ProgramParser.Parse(tokens);
 
             var generator = new IntermediateCodeGenerator();
             var codes = generator.Generate(parsed);
             var plottyGenerator = new PlottyCodeGenerator();
             
             return plottyGenerator.Generate(codes.ToList());
-        }
-    }
+        }      
+    } 
 }

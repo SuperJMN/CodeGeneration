@@ -11,13 +11,17 @@ namespace CodeGen.Intermediate
         private int implicitReferenceCount;
         private int labelCount;
 
-        public IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit expression)
+        public IReadOnlyCollection<IntermediateCode> Generate(IEnumerable<ICodeUnit> units)
         {
             implicitReferenceCount = 0;
             labelCount = 0;
 
             var codeGeneratingVisitor = new CodeGeneratingVisitor();
-            expression.Accept(codeGeneratingVisitor);
+
+            foreach (var codeUnit in units)
+            {
+                codeUnit.Accept(codeGeneratingVisitor);    
+            }
 
             var code = codeGeneratingVisitor.Code;
 

@@ -8,8 +8,7 @@ namespace CodeGen.Ast.Units
         void Visit(ExpressionNode expressionNode);
         void Visit(ConstantExpression expression);
         void Visit(IfStatement expression);
-        void Visit(Block block);
-        void Visit(NewReferenceExpression expression);
+        void Visit(ReferenceExpression expression);
         void Visit(AssignmentStatement expression);
     }
 }

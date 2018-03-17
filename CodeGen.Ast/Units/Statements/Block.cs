@@ -3,19 +3,26 @@ using System.Collections.ObjectModel;
 
 namespace CodeGen.Ast.Units.Statements
 {
-    public class Block : Collection<Statement>, ICodeUnit
+    public class Block : Statement
     {
-        public Block()
-        {            
+        public IList<Statement> Statements { get; }
+
+        public Block(params Statement[] statements)
+        {
+            Statements = statements;
         }
 
-        public Block(IList<Statement> statements) : base(statements)
+        public Block(IList<Statement> statements)
         {
+            Statements = statements;
         }
 
-        public void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeVisitor visitor)
         {
-            visitor.Visit(this);
+            foreach (var statement in Statements)
+            {
+                statement.Accept(visitor);
+            }
         }
     }
 }

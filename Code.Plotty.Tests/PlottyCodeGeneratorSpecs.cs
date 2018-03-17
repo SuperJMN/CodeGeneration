@@ -14,15 +14,15 @@ namespace CodeGen.Plotty.Tests
         {
             var sut = new PlottyCodeGenerator();
             var code = new IntegerConstantAssignment(new Reference("T1"), 123);
-            var actual = sut.Generate(new List<IntermediateCode> {code});
+            var actual = sut.Generate(new List<IntermediateCode> { code });
 
-            var expected = new List<Instruction>
+            var expected = new List<Line>
             {
-                new MoveInstruction()
-                {
-                    Destination = new Register(0),
-                    Source = new ImmediateSource(123),
-                }
+               new Line( new MoveInstruction()
+               {
+                   Destination = new Register(0),
+                   Source = new ImmediateSource(123),
+               })
             };
 
             actual.ShouldDeepEqual(expected);
@@ -39,22 +39,22 @@ namespace CodeGen.Plotty.Tests
                 IntermediateCode.Emit.Set(new Reference("c"), 3),
             });
 
-            var expected = new List<Instruction>
+            var expected = new List<Line>
             {
-                new MoveInstruction()
-                {
-                    Destination = new Register(0),
-                    Source = new ImmediateSource(1),
-                },
-                new MoveInstruction()
+               new Line( new MoveInstruction()
+               {
+                   Destination = new Register(0),
+                   Source = new ImmediateSource(1),
+               }),
+                new Line(new MoveInstruction()
                 {
                     Destination = new Register(1),
                     Source = new ImmediateSource(2),
-                }, new MoveInstruction()
+                }), new Line(new MoveInstruction()
                 {
                     Destination = new Register(2),
                     Source = new ImmediateSource(3),
-                }
+                })
             };
 
             actual.ShouldDeepEqual(expected);

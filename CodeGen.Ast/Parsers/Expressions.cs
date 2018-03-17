@@ -31,7 +31,7 @@ namespace CodeGen.Ast.Parsers
 
         private static readonly TokenListParser<LangToken, Expression> Identifier =
             Token.EqualTo(LangToken.Identifier)
-                .Select(token => (Expression) new NewReferenceExpression(new Reference(token.ToStringValue())));
+                .Select(token => (Expression) new ReferenceExpression(new Reference(token.ToStringValue())));
 
         private static readonly TokenListParser<LangToken, Expression> BooleanValue =
             Token.EqualTo(LangToken.True).Value((Expression) new ConstantExpression(true))

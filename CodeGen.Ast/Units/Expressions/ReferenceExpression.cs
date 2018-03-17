@@ -2,9 +2,9 @@
 
 namespace CodeGen.Ast.Units.Expressions
 {
-    public class NewReferenceExpression : Expression
+    public class ReferenceExpression : Expression
     {
-        public NewReferenceExpression(Reference reference)  : base(reference)
+        public ReferenceExpression(Reference reference)  : base(reference)
         {
         }
 
