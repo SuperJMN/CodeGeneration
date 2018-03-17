@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CodeGen.Core\CodeGen.Core.csproj" />
     <ProjectReference Include="..\superpower\src\Superpower\Superpower.csproj" />
   </ItemGroup>
 

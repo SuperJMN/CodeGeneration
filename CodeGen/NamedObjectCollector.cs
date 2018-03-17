@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using CodeGen.Ast.Units;
+using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
 
 namespace CodeGen.Intermediate

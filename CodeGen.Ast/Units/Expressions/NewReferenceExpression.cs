@@ -1,4 +1,6 @@
-﻿namespace CodeGen.Ast.Units.Expressions
+﻿using CodeGen.Core;
+
+namespace CodeGen.Ast.Units.Expressions
 {
     public class NewReferenceExpression : Expression
     {

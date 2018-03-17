@@ -1,4 +1,4 @@
-﻿using CodeGen.Ast.Units;
+﻿using CodeGen.Core;
 using CodeGen.Intermediate.Codes.Common;
 
 namespace CodeGen.Intermediate.Codes
