@@ -25,6 +25,11 @@ namespace CodeGen.Intermediate
                 case nameof(Operators.Add):
                     emitted = IntermediateCode.Emit.Add(expressionNode.Reference, expressionNode.Operands[0].Reference,
                         expressionNode.Operands[1].Reference);
+                    break;
+
+                case nameof(Operators.Subtract):
+                    emitted = IntermediateCode.Emit.Substract(expressionNode.Reference, expressionNode.Operands[0].Reference,
+                        expressionNode.Operands[1].Reference);
 
                     break;
                 case nameof(Operators.Multiply):
@@ -44,7 +49,7 @@ namespace CodeGen.Intermediate
             InnerCode.Add(emitted);
         }
 
-        public void Visit(Ast.Units.Expressions.ConstantExpression expression)
+        public void Visit(ConstantExpression expression)
         {
             switch (expression.Value)
             {

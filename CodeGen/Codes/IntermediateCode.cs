@@ -14,6 +14,11 @@ namespace CodeGen.Intermediate.Codes
                 return new OperationAssignment(OperationKind.Add, destination, left, right);
             }
 
+            public static IntermediateCode Substract(Reference destination, Reference left, Reference right)
+            {
+                return new OperationAssignment(OperationKind.Substract, destination, left, right);
+            }
+
             public static IntermediateCode IsEqual(Reference destination, Reference left, Reference right)
             {
                 return new BoolExpressionAssignment(BooleanOperation.IsEqual, destination, left, right);
