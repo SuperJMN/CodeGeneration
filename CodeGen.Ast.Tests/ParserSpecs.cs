@@ -22,6 +22,7 @@ namespace CodeGen.Ast.Tests
 
         public static IEnumerable<object[]> TestData => new List<object[]>()
         {
+            new object[] {"a=1;", new Statement[] {new AssignmentStatement(new Reference("a"), new ConstantExpression(1)), }},
             new object[] {"{}", new Statement[] {new Block()}},
             new object[]
             {
@@ -91,7 +92,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("if (a==b) {c=3;}")]
         public void If(string code)
         {
-            Parse(code, Statements.IfStatement);
+            Parse(code, Statements.ConditionalStatement);
         }
 
         [Theory]

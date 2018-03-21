@@ -26,23 +26,23 @@ namespace CodeGen.Ast.Parsers
             select (Statement)new Block();
 
         public static readonly TokenListParser<LangToken, Statement> Block =
-            EmptyBlock.Try()                
+            EmptyBlock.Try()
                 .Or(from statements in StatementExpression
                         .Many()
                         .Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace))
                     select (Statement) new Block(statements));
 
-        public static readonly TokenListParser<LangToken, Statement> IfStatement =
+        public static readonly TokenListParser<LangToken, Statement> ConditionalStatement =
             from keywork in Token.EqualTo(LangToken.If)
             from expr in Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
             from block in Block
             select (Statement) new IfStatement(expr, block);
 
         public static readonly TokenListParser<LangToken, Statement> SingleStatement =
-            IfStatement;
+            ConditionalStatement.Or(AssignmentExpression);
 
         public static readonly TokenListParser<LangToken, Statement> Statement =
-            Block.Try().Or(SingleStatement);
+            Block.Or(SingleStatement);
         
         public static readonly TokenListParser<LangToken, Statement[]> ProgramParser =
             Statement.Many();
