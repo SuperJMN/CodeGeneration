@@ -1,8 +1,9 @@
-﻿using CodeGen.Core;
+﻿using CodeGen.Ast.Units.Statements;
+using CodeGen.Core;
 
 namespace CodeGen.Ast.Units.Expressions
 {
-    public abstract class Expression : ICodeUnit
+    public abstract class Expression : Statement
     {
         public Reference Reference { get; }
 
@@ -10,7 +11,5 @@ namespace CodeGen.Ast.Units.Expressions
         {
             Reference = reference;
         }
-
-        public abstract void Accept(ICodeVisitor visitor);
     }
 }

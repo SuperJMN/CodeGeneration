@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGen.Ast\CodeGen.Ast.csproj" />
+    <ProjectReference Include="..\DeepEqual\src\DeepEqual\DeepEqual.csproj" />
   </ItemGroup>
 
 </Project>
