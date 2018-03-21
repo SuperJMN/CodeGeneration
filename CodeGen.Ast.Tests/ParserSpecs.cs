@@ -14,7 +14,7 @@ namespace CodeGen.Ast.Tests
     {
         [Theory]
         [MemberData(nameof(TestData))]
-        public void Powerful(string str, Statement[] expectation)
+        public void ParsingTest(string str, Statement[] expectation)
         {
             var actual = Parse(str, Statements.ProgramParser);
             actual.ShouldDeepEqual(expectation);
