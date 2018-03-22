@@ -6,10 +6,10 @@ namespace CodeGen.Intermediate
     {
         void Visit(JumpIfFalse code);
         void Visit(BoolConstantAssignment code);
-        void Visit(LabelCode jumpIfFalse);
-        void Visit(IntegerConstantAssignment jumpIfFalse);
-        void Visit(OperationAssignment jumpIfFalse);
-        void Visit(ReferenceAssignment jumpIfFalse);
-        void Visit(BoolExpressionAssignment boolExpressionAssignment);
+        void Visit(LabelCode code);
+        void Visit(IntegerConstantAssignment code);
+        void Visit(OperationAssignment code);
+        void Visit(ReferenceAssignment code);
+        void Visit(BoolExpressionAssignment code);
     }
 }
