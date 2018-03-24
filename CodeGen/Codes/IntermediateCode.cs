@@ -11,12 +11,12 @@ namespace CodeGen.Intermediate.Codes
         {
             public static IntermediateCode Add(Reference destination, Reference left, Reference right)
             {
-                return new OperationAssignment(OperationKind.Add, destination, left, right);
+                return new ArithmeticAssignment(ArithmeticOperator.Add, destination, left, right);
             }
 
             public static IntermediateCode Substract(Reference destination, Reference left, Reference right)
             {
-                return new OperationAssignment(OperationKind.Substract, destination, left, right);
+                return new ArithmeticAssignment(ArithmeticOperator.Substract, destination, left, right);
             }
 
             public static IntermediateCode IsEqual(Reference destination, Reference left, Reference right)
@@ -26,7 +26,7 @@ namespace CodeGen.Intermediate.Codes
 
             public static IntermediateCode Mult(Reference destination, Reference left, Reference right)
             {
-                return new OperationAssignment(OperationKind.Mult, destination, left, right);
+                return new ArithmeticAssignment(ArithmeticOperator.Mult, destination, left, right);
             }
 
             public static IntermediateCode JumpIfFalse(Reference reference, Label label)

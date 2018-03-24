@@ -33,7 +33,7 @@ namespace CodeGen.Intermediate
             AddReference(code.Target);
         }
 
-        public void Visit(OperationAssignment code)
+        public void Visit(ArithmeticAssignment code)
         {
             AddReference(code.Target);
             AddReference(code.Left);

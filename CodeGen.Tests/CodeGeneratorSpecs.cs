@@ -53,6 +53,23 @@ namespace CodeGen.Intermediate.Tests
         }
 
         [Fact]
+        public void Multiply()
+        {
+            var expr = new AssignmentStatement(
+                new Reference("x"),
+                new ExpressionNode(nameof(Operators.Add),
+                    new ExpressionNode(nameof(Operators.Multiply),
+                        new ReferenceExpression(new Reference("y")),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("z")),
+                            new ReferenceExpression(new Reference("w")))
+                    ),
+                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression(new Reference("y")),
+                        new ReferenceExpression(new Reference("x")))
+                )
+            );
+        }
+
+        [Fact]
         public void ComplexAssignment()
         {
             var expr = new AssignmentStatement(

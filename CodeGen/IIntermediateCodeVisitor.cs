@@ -8,7 +8,7 @@ namespace CodeGen.Intermediate
         void Visit(BoolConstantAssignment code);
         void Visit(LabelCode code);
         void Visit(IntegerConstantAssignment code);
-        void Visit(OperationAssignment code);
+        void Visit(ArithmeticAssignment code);
         void Visit(ReferenceAssignment code);
         void Visit(BoolExpressionAssignment code);
     }

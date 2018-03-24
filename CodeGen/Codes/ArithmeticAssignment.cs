@@ -3,16 +3,16 @@ using CodeGen.Intermediate.Codes.Common;
 
 namespace CodeGen.Intermediate.Codes
 {
-    public class OperationAssignment : Assignment
+    public class ArithmeticAssignment : Assignment
     {
-        public OperationAssignment(OperationKind operation, Reference target, Reference left, Reference right) : base(target)
+        public ArithmeticAssignment(ArithmeticOperator operation, Reference target, Reference left, Reference right) : base(target)
         {
             Operation = operation;
             Left = left;
             Right = right;
         }
 
-        public OperationKind Operation { get; }
+        public ArithmeticOperator Operation { get; }
         public Reference Left { get; }
         public Reference Right { get; }
 

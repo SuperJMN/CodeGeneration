@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using CodeGen.Ast.Parsers;
+using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
@@ -20,7 +21,8 @@ namespace CodeGen.Ast.Tests
 
         public static IEnumerable<object[]> TestData => new List<object[]>()
         {
-            new object[] {"a=1;", new Statement[] {new AssignmentStatement(new Reference("a"), new ConstantExpression(1)), }},
+            new object[]
+                {"a=1;", new Statement[] {new AssignmentStatement(new Reference("a"), new ConstantExpression(1)),}},
             new object[] {"{}", new Statement[] {new Block()}},
             new object[]
             {
@@ -55,9 +57,29 @@ namespace CodeGen.Ast.Tests
             {
                 "if (a) b=3;", new Statement[]
                 {
-                   new IfStatement(new ReferenceExpression(new Reference("a")), new AssignmentStatement(new Reference("b"), new ConstantExpression(3) )), 
+                    new IfStatement(new ReferenceExpression(new Reference("a")),
+                        new AssignmentStatement(new Reference("b"), new ConstantExpression(3))),
                 }
             },
-        };      
+            new object[]
+            {
+                "a=b*c;", new Statement[]
+                {
+                    new AssignmentStatement(new Reference("a"),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("b")),
+                            new ReferenceExpression(new Reference("c")))),
+                }
+            },
+            new object[]
+            {
+                "a=b*(c+d);", new Statement[]
+                {
+                    new AssignmentStatement(new Reference("a"),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("b")),
+                            new ExpressionNode(nameof(Operators.Add), new ReferenceExpression(new Reference("c")),
+                                new ReferenceExpression(new Reference("d"))))),
+                }
+            },
+        };
     }
 }
