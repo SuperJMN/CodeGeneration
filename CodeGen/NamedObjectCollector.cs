@@ -53,6 +53,11 @@ namespace CodeGen.Intermediate
             AddReference(boolExpressionAssignment.Right);
         }
 
+        public void Visit(Jump code)
+        {
+            AddLabel(code.Label);
+        }
+
         private void AddReference(Reference reference)
         {
             references.Add(reference);

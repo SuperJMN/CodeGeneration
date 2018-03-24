@@ -1,4 +1,5 @@
-﻿using CodeGen.Ast.Units.Expressions;
+﻿using CodeGen.Ast.Parsers;
+using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 
 namespace CodeGen.Ast.Units
@@ -10,5 +11,6 @@ namespace CodeGen.Ast.Units
         void Visit(IfStatement expression);
         void Visit(ReferenceExpression expression);
         void Visit(AssignmentStatement expression);
+        void Visit(ForLoop code);
     }
 }

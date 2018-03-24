@@ -22,6 +22,7 @@ namespace CodeGen.Ast
                 .Match(Character.EqualTo(';'), LangToken.Semicolon)
                 .Match(Span.EqualTo("if"), LangToken.If, true)
                 .Match(Span.EqualTo("while"), LangToken.While, true)
+                .Match(Span.EqualTo("for"), LangToken.For, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
                 .Match(Span.Regex(@"\d*"), LangToken.Number, true)

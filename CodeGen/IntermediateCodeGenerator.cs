@@ -11,7 +11,7 @@ namespace CodeGen.Intermediate
         private int implicitReferenceCount;
         private int labelCount;
 
-        public IReadOnlyCollection<IntermediateCode> Generate(IEnumerable<ICodeUnit> units)
+        public IEnumerable<IntermediateCode> Generate(IEnumerable<ICodeUnit> units)
         {
             implicitReferenceCount = 0;
             labelCount = 0;

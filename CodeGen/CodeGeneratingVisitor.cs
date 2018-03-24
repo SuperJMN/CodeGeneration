@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Ast.Parsers;
 using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
@@ -71,6 +72,20 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.Label(label));
         }
 
+        public void Visit(ForLoop forLoop)
+        {
+            var exitLoopLabel = new Label();
+            var continueLoopLabel = new Label();
+
+            forLoop.Initialization.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.Label(continueLoopLabel));
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.Condition.Reference, exitLoopLabel));
+            forLoop.Statement.Accept(this);
+            forLoop.Step.Accept(this);
+            InnerCode.Add(new Jump(continueLoopLabel));
+            InnerCode.Add(IntermediateCode.Emit.Label(exitLoopLabel));
+        }
+
         public void Visit(ReferenceExpression expression)
         {
         }
@@ -82,4 +97,6 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
     }
+
+    
 }

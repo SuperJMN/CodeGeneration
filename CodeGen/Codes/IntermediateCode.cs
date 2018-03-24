@@ -53,6 +53,6 @@ namespace CodeGen.Intermediate.Codes
             {
                 return new BoolConstantAssignment(destination, value);
             }
-        }     
+        }             
     }
 }

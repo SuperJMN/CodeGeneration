@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
@@ -168,7 +169,7 @@ namespace CodeGen.Intermediate.Tests
         {
             var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(new[] {expr});
-            return actual;
+            return actual.ToList().AsReadOnly();
         }
     }
 }

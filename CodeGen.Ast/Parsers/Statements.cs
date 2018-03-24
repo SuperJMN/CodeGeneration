@@ -7,12 +7,16 @@ namespace CodeGen.Ast.Parsers
 {
     public class Statements
     {
-        public static readonly TokenListParser<LangToken, Statement> AssignmentExpression =
+        public static readonly TokenListParser<LangToken, Statement> Assignment =
             from identifier in Basics.Identifier
             from eq in Token.EqualTo(LangToken.Equal)
             from expr in Expressions.Expr
-            from sc in Token.EqualTo(LangToken.Semicolon)
             select (Statement)new AssignmentStatement(new Reference(identifier), expr);
+
+        public static readonly TokenListParser<LangToken, Statement> AssignmentExpression =
+            from assignment in Assignment
+            from sc in Token.EqualTo(LangToken.Semicolon)
+            select assignment;
 
         public static readonly TokenListParser<LangToken, Statement> EmptyBlock =
             from lb in Token.EqualTo(LangToken.LeftBrace)
@@ -34,7 +38,20 @@ namespace CodeGen.Ast.Parsers
             select (Statement)new IfStatement(expr, statement);
 
         public static readonly TokenListParser<LangToken, Statement> 
-            SingleStatement = ConditionalStatement.Or(AssignmentExpression);
+            Loop =
+                from keywork in Token.EqualTo(LangToken.For)
+                from expr in (
+                    from initialization in Assignment
+                    from sc1 in Token.EqualTo(LangToken.Semicolon)
+                    from condition in Expressions.Expr
+                    from sc2 in Token.EqualTo(LangToken.Semicolon)
+                    from step in Assignment select new {initialization, condition, step})
+                    .Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+                from statement in Statement
+                select (Statement)new ForLoop(expr.initialization, expr.condition, expr.step, statement);
+
+        public static readonly TokenListParser<LangToken, Statement> 
+            SingleStatement = ConditionalStatement.Or(AssignmentExpression).Or(Loop);
 
         public static readonly TokenListParser<LangToken, Statement> 
             Statement = Block.Or(SingleStatement);

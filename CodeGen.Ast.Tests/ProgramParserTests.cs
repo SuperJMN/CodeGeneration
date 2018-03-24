@@ -80,6 +80,17 @@ namespace CodeGen.Ast.Tests
                                 new ReferenceExpression(new Reference("d"))))),
                 }
             },
+            new object[]
+            {
+                "for (t=0;t==1;t=t+1) { a=3; }", new Statement[]
+                {
+                    new ForLoop(new AssignmentStatement(new Reference("t"), new ConstantExpression(0)),
+                        new ExpressionNode(Operators.Eq, new ReferenceExpression(new Reference("t")), new ConstantExpression(1)),
+                        new AssignmentStatement(new Reference("t"),
+                            new ExpressionNode(Operators.Add, new ReferenceExpression(new Reference("t")),
+                                new ConstantExpression(1))), new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(3)))),
+                }
+            },
         };
     }
 }
