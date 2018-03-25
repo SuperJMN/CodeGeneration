@@ -24,6 +24,11 @@ namespace CodeGen.Intermediate.Codes
                 return new BoolExpressionAssignment(BooleanOperation.IsEqual, destination, left, right);
             }
 
+            public static IntermediateCode Boolean(Reference destination, Reference left, Reference right)
+            {
+                return new BoolExpressionAssignment(BooleanOperation.IsEqual, destination, left, right);
+            }
+
             public static IntermediateCode Mult(Reference destination, Reference left, Reference right)
             {
                 return new ArithmeticAssignment(ArithmeticOperator.Mult, destination, left, right);

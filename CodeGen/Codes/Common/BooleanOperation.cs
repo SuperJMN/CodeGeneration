@@ -5,7 +5,11 @@
         public int Value { get; }
         public string Symbol { get; }
         public string Description { get; }
-        public static BooleanOperation IsEqual = new BooleanOperation(1, "==", "is equal to");
+        
+        public static BooleanOperation IsEqual = new BooleanOperation(2, "==", "is equal to");
+        public static BooleanOperation IsLessThan = new BooleanOperation(1, "<", "is less than");
+        public static BooleanOperation IsGreaterThan = new BooleanOperation(1, ">", "is greater than");
+        
 
         private BooleanOperation(int value, string symbol, string description)
         {

@@ -6,6 +6,7 @@ using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Intermediate.Codes;
+using CodeGen.Intermediate.Codes.Common;
 
 namespace CodeGen.Intermediate
 {
@@ -19,35 +20,37 @@ namespace CodeGen.Intermediate
         {
             expressionNode.Operands.ToList().ForEach(x => x.Accept(this));
 
+            var destination = expressionNode.Reference;
+            var left = expressionNode.Operands[0].Reference;
+            var right = expressionNode.Operands[1].Reference;
+
             IntermediateCode emitted;
 
-            switch (expressionNode.OperatorName)
+            if (IsBoolean(expressionNode))
             {
-                case nameof(Operators.Add):
-                    emitted = IntermediateCode.Emit.Add(expressionNode.Reference, expressionNode.Operands[0].Reference,
-                        expressionNode.Operands[1].Reference);
-                    break;
-
-                case nameof(Operators.Subtract):
-                    emitted = IntermediateCode.Emit.Substract(expressionNode.Reference, expressionNode.Operands[0].Reference,
-                        expressionNode.Operands[1].Reference);
-
-                    break;
-                case nameof(Operators.Multiply):
-                    emitted = IntermediateCode.Emit.Mult(expressionNode.Reference, expressionNode.Operands[0].Reference,
-                        expressionNode.Operands[1].Reference);
-                    break;
-
-                case nameof(Operators.Eq):
-                    emitted = IntermediateCode.Emit.IsEqual(expressionNode.Reference, expressionNode.Operands[0].Reference,
-                        expressionNode.Operands[1].Reference);
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
+                emitted = new BoolExpressionAssignment(expressionNode.OperatorName.ToBooleanOperator(), destination, left, right);
             }
+            else
+            {
+                emitted = new ArithmeticAssignment(expressionNode.OperatorName.ToArithmeticOperator(), destination, left, right);
+            }
+            
+            InnerCode.Add(emitted);           
+        }
 
-            InnerCode.Add(emitted);
+        private static bool IsBoolean(ExpressionNode expressionNode)
+        {
+            var booleanOperartors = new[]
+            {
+                Operators.Eq,
+                Operators.Lt, 
+                Operators.Gt, 
+                Operators.Gte, 
+                Operators.Not, 
+                Operators.Lte
+            };
+
+            return booleanOperartors.Contains(expressionNode.OperatorName);
         }
 
         public void Visit(ConstantExpression expression)

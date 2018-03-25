@@ -5,6 +5,7 @@ using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
+using CodeGen.Intermediate.Codes.Common;
 using DeepEqual.Syntax;
 using Xunit;
 
@@ -101,15 +102,33 @@ namespace CodeGen.Intermediate.Tests
         }
 
         [Fact]
-        public void BinaryBooleanExpression()
+        public void IsEqual()
         {
-            var sut = new ExpressionNode(Operators.Eq, new ReferenceExpression(new Reference("a")), new ReferenceExpression(new Reference("b")));
+            TestBooleanOperation(BooleanOperation.IsEqual);
+        }
+
+        [Fact]
+        public void IsLessThan()
+        {
+            TestBooleanOperation(BooleanOperation.IsLessThan);
+        }
+
+        [Fact]
+        public void IsGreaterThan()
+        {
+            TestBooleanOperation(BooleanOperation.IsGreaterThan);
+        }
+
+        private static void TestBooleanOperation(BooleanOperation booleanOperation)
+        {
+            var sut = new ExpressionNode(booleanOperation.ToOperatorName(), new ReferenceExpression(new Reference("a")),
+                new ReferenceExpression(new Reference("b")));
 
             var actual = Generate(sut);
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.IsEqual(new Reference("T1"), new Reference("a"), new Reference("b")),
+                new BoolExpressionAssignment(booleanOperation, new Reference("T1"), new Reference("a"), new Reference("b"))
             };
 
             actual.ShouldDeepEqual(expected);
