@@ -82,6 +82,7 @@ namespace CodeGen.Intermediate
 
             forLoop.Initialization.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(continueLoopLabel));
+            forLoop.Condition.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.Condition.Reference, exitLoopLabel));
             forLoop.Statement.Accept(this);
             forLoop.Step.Accept(this);
@@ -99,7 +100,5 @@ namespace CodeGen.Intermediate
 
             InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
-    }
-
-    
+    }    
 }

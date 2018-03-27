@@ -1,4 +1,7 @@
-﻿namespace CodeGen.Intermediate.Codes
+﻿using CodeGen.Core;
+using CodeGen.Intermediate.Codes.Common;
+
+namespace CodeGen.Intermediate.Codes
 {
     public class Jump : IntermediateCode
     {
@@ -12,6 +15,11 @@
         public override void Accept(IIntermediateCodeVisitor visitor)
         {
             visitor.Visit(this);
+        }
+
+        public override string ToString()
+        {
+            return $"Jump to {Label}";
         }
     }
 }
