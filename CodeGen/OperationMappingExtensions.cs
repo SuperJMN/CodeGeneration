@@ -49,6 +49,10 @@ namespace CodeGen.Intermediate
                     return  BooleanOperation.IsLessThan;
                 case Operators.Gt:
                     return  BooleanOperation.IsGreaterThan;
+                case Operators.Gte:
+                    return  BooleanOperation.IsGreaterOrEqual;
+                case Operators.Lte:
+                    return  BooleanOperation.IsLessOrEqual;
             }
 
             throw new ArgumentOutOfRangeException(nameof(op));
