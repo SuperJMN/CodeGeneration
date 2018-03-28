@@ -68,11 +68,26 @@ namespace CodeGen.Intermediate
 
         public void Visit(IfStatement statement)
         {
-            statement.Condition.Accept(this);
-            var label = new Label();
-            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
-            statement.Statement.Accept(this);
-            InnerCode.Add(IntermediateCode.Emit.Label(label));
+            if (statement.ElseStatement == null)
+            {
+                statement.Condition.Accept(this);
+                var label = new Label();
+                InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, label));
+                statement.Statement.Accept(this);
+                InnerCode.Add(IntermediateCode.Emit.Label(label));
+            }
+            else
+            {
+                statement.Condition.Accept(this);
+                var elseLabel = new Label();
+                var endLabel = new Label();
+                InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(statement.Condition.Reference, elseLabel));
+                statement.Statement.Accept(this);
+                InnerCode.Add(new Jump(endLabel));
+                InnerCode.Add(IntermediateCode.Emit.Label(elseLabel));
+                statement.ElseStatement.Accept(this);
+                InnerCode.Add(IntermediateCode.Emit.Label(endLabel));
+            }
         }
 
         public void Visit(ForLoop forLoop)
@@ -80,12 +95,12 @@ namespace CodeGen.Intermediate
             var exitLoopLabel = new Label();
             var continueLoopLabel = new Label();
 
-            forLoop.Initialization.Accept(this);
+            forLoop.ForLoopOptions.Initialization.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(continueLoopLabel));
-            forLoop.Condition.Accept(this);
-            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.Condition.Reference, exitLoopLabel));
+            forLoop.ForLoopOptions.Condition.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.ForLoopOptions.Condition.Reference, exitLoopLabel));
             forLoop.Statement.Accept(this);
-            forLoop.Step.Accept(this);
+            forLoop.ForLoopOptions.Step.Accept(this);
             InnerCode.Add(new Jump(continueLoopLabel));
             InnerCode.Add(IntermediateCode.Emit.Label(exitLoopLabel));
         }

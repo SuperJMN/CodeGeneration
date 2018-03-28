@@ -40,6 +40,7 @@ namespace CodeGen.Ast
         NotEqual,
         Caret,
         Not,
-        Null
+        Null,
+        Else
     }
 }

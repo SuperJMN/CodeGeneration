@@ -6,11 +6,13 @@ namespace CodeGen.Ast.Units.Statements
     {
         public Expression Condition { get; }
         public Statement Statement { get; }
+        public Statement ElseStatement { get; }
 
-        public IfStatement(Expression condition, Statement statement)
+        public IfStatement(Expression condition, Statement statement, Statement elseStatement = null)
         {
             Condition = condition;
             Statement = statement;
+            ElseStatement = elseStatement;
         }
         
         public override void Accept(ICodeVisitor visitor)

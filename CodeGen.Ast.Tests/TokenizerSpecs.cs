@@ -30,6 +30,11 @@ namespace CodeGen.Ast.Tests
                 new object[] {"a14", new List<LangToken>() {LangToken.Identifier},},
                 new object[] {"=", new List<LangToken>() {LangToken.Equal},},
                 new object[] {"ifSomething", new List<LangToken>() {LangToken.Identifier},},
+                new object[] {"<=", new List<LangToken>() {LangToken.LessThanOrEqual},},
+                new object[] {">=", new List<LangToken>() {LangToken.GreaterThanOrEqual},},
+                new object[] {"<", new List<LangToken>() {LangToken.LessThan},},
+                new object[] {">", new List<LangToken>() {LangToken.GreaterThan},},
+                
                 new object[]
                 {
                     "if whileRunning == true", 

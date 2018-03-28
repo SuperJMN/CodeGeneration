@@ -30,12 +30,18 @@ namespace CodeGen.Ast.Parsers
                         .Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace))
                     select (Statement)new Block(statements));
 
+        private static readonly TokenListParser<LangToken, Statement>
+            Else = from keyworkd in Token.EqualTo(LangToken.Else)
+                from statement in Statement
+                select statement;
+
         public static readonly TokenListParser<LangToken, Statement> 
             ConditionalStatement =
             from keywork in Token.EqualTo(LangToken.If)
             from expr in Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
             from statement in Statement
-            select (Statement)new IfStatement(expr, statement);
+            from elseStatement in Else.OptionalOrDefault()
+            select (Statement)new IfStatement(expr, statement, elseStatement);
 
         public static readonly TokenListParser<LangToken, Statement> 
             Loop =
@@ -48,7 +54,7 @@ namespace CodeGen.Ast.Parsers
                     from step in Assignment select new {initialization, condition, step})
                     .Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
                 from statement in Statement
-                select (Statement)new ForLoop(expr.initialization, expr.condition, expr.step, statement);
+                select (Statement)new ForLoop(new ForLoopOptions(expr.initialization, expr.condition, expr.step), statement);
 
         public static readonly TokenListParser<LangToken, Statement> 
             SingleStatement = ConditionalStatement.Or(AssignmentExpression).Or(Loop);

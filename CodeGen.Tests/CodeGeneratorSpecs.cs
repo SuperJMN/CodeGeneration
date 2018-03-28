@@ -35,9 +35,9 @@ namespace CodeGen.Intermediate.Tests
             var expr = new AssignmentStatement(
                 new Reference("a"),
                 new ExpressionNode(nameof(Operators.Add),
-                    new ReferenceExpression(new Reference("b")),
-                    new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("c")),
-                        new ReferenceExpression(new Reference("d")))
+                    new ReferenceExpression("b"),
+                    new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("c"),
+                        new ReferenceExpression("d"))
                 )
             );
 
@@ -61,12 +61,12 @@ namespace CodeGen.Intermediate.Tests
                 new Reference("x"),
                 new ExpressionNode(nameof(Operators.Add),
                     new ExpressionNode(nameof(Operators.Multiply),
-                        new ReferenceExpression(new Reference("y")),
-                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("z")),
-                            new ReferenceExpression(new Reference("w")))
+                        new ReferenceExpression("y"),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("z"),
+                            new ReferenceExpression("w"))
                     ),
-                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression(new Reference("y")),
-                        new ReferenceExpression(new Reference("x")))
+                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression("y"),
+                        new ReferenceExpression("x"))
                 )
             );
         }
@@ -78,12 +78,12 @@ namespace CodeGen.Intermediate.Tests
                 new Reference("x"),
                 new ExpressionNode(nameof(Operators.Add),
                     new ExpressionNode(nameof(Operators.Multiply),
-                        new ReferenceExpression(new Reference("y")),
-                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("z")),
-                            new ReferenceExpression(new Reference("w")))
+                        new ReferenceExpression("y"),
+                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("z"),
+                            new ReferenceExpression("w"))
                     ),
-                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression(new Reference("y")),
-                        new ReferenceExpression(new Reference("x")))
+                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression("y"),
+                        new ReferenceExpression("x"))
                 )
             );
 
@@ -121,8 +121,8 @@ namespace CodeGen.Intermediate.Tests
 
         private static void TestBooleanOperation(BooleanOperation booleanOperation)
         {
-            var sut = new ExpressionNode(booleanOperation.ToOperatorName(), new ReferenceExpression(new Reference("a")),
-                new ReferenceExpression(new Reference("b")));
+            var sut = new ExpressionNode(booleanOperation.ToOperatorName(), new ReferenceExpression("a"),
+                new ReferenceExpression("b"));
 
             var actual = Generate(sut);
 
@@ -138,7 +138,7 @@ namespace CodeGen.Intermediate.Tests
         public void IfSentence()
         {
 
-            var statement = new AssignmentStatement(new Reference("b"), new ReferenceExpression(new Reference("c")));
+            var statement = new AssignmentStatement(new Reference("b"), new ReferenceExpression("c"));
 
             var expr = new IfStatement(new ConstantExpression(true),
                 new Block(new List<Statement> { statement }));
@@ -161,11 +161,11 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var left = new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression(new Reference("x")), new ReferenceExpression(new Reference("y")));
-            var right = new ReferenceExpression(new Reference("z"));
+            var left = new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("x"), new ReferenceExpression("y"));
+            var right = new ReferenceExpression("z");
             var condition = new ExpressionNode(nameof(Operators.Eq), left, right);
             
-            var statement = new IfStatement(condition, new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression(new Reference("b")))));
+            var statement = new IfStatement(condition, new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression("b"))));
 
             var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(new[] {statement});
