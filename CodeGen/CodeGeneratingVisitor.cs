@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Ast.Parsers;
 using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Intermediate.Codes.Common;
 
 namespace CodeGen.Intermediate
 {
@@ -34,8 +32,8 @@ namespace CodeGen.Intermediate
             {
                 emitted = new ArithmeticAssignment(expressionNode.OperatorName.ToArithmeticOperator(), destination, left, right);
             }
-            
-            InnerCode.Add(emitted);           
+
+            InnerCode.Add(emitted);
         }
 
         private static bool IsBoolean(ExpressionNode expressionNode)
@@ -43,10 +41,10 @@ namespace CodeGen.Intermediate
             var booleanOperartors = new[]
             {
                 Operators.Eq,
-                Operators.Lt, 
-                Operators.Gt, 
-                Operators.Gte, 
-                Operators.Not, 
+                Operators.Lt,
+                Operators.Gt,
+                Operators.Gte,
+                Operators.Not,
                 Operators.Lte
             };
 
@@ -95,14 +93,39 @@ namespace CodeGen.Intermediate
             var exitLoopLabel = new Label();
             var continueLoopLabel = new Label();
 
-            forLoop.ForLoopOptions.Initialization.Accept(this);
+            forLoop.Header.Initialization.Accept(this);
             InnerCode.Add(IntermediateCode.Emit.Label(continueLoopLabel));
-            forLoop.ForLoopOptions.Condition.Accept(this);
-            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.ForLoopOptions.Condition.Reference, exitLoopLabel));
+            forLoop.Header.Condition.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(forLoop.Header.Condition.Reference, exitLoopLabel));
             forLoop.Statement.Accept(this);
-            forLoop.ForLoopOptions.Step.Accept(this);
+            forLoop.Header.Step.Accept(this);
             InnerCode.Add(new Jump(continueLoopLabel));
             InnerCode.Add(IntermediateCode.Emit.Label(exitLoopLabel));
+        }
+
+        public void Visit(WhileStatement whileStatement)
+        {
+            var exitLabel = new Label();
+            var continueLabel = new Label();
+
+            InnerCode.Add(IntermediateCode.Emit.Label(continueLabel));
+            whileStatement.Condition.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(whileStatement.Condition.Reference, exitLabel));
+            whileStatement.Statement.Accept(this);
+            InnerCode.Add(new Jump(continueLabel));
+            InnerCode.Add(IntermediateCode.Emit.Label(exitLabel));        }
+
+        public void Visit(DoStatement doStatement)
+        {
+            var exitLabel = new Label();
+            var continueLabel = new Label();
+
+            InnerCode.Add(IntermediateCode.Emit.Label(continueLabel));
+            doStatement.Statement.Accept(this);
+            doStatement.Condition.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(doStatement.Condition.Reference, exitLabel));
+            InnerCode.Add(new Jump(continueLabel));
+            InnerCode.Add(IntermediateCode.Emit.Label(exitLabel));
         }
 
         public void Visit(ReferenceExpression expression)
@@ -115,5 +138,5 @@ namespace CodeGen.Intermediate
 
             InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
         }
-    }    
+    }
 }

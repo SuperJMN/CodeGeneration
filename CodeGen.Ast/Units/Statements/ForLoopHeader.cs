@@ -1,11 +1,10 @@
 ﻿using CodeGen.Ast.Units.Expressions;
-using CodeGen.Ast.Units.Statements;
 
-namespace CodeGen.Ast.Parsers
+namespace CodeGen.Ast.Units.Statements
 {
-    public class ForLoopOptions
+    public class ForLoopHeader
     {
-        public ForLoopOptions(Statement initialization, Expression condition, Statement step)
+        public ForLoopHeader(Statement initialization, Expression condition, Statement step)
         {
             Initialization = initialization;
             Condition = condition;

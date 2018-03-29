@@ -1,4 +1,6 @@
-﻿using CodeGen.Ast.Units.Statements;
+﻿using System.Security.Cryptography;
+using CodeGen.Ast.Units.Expressions;
+using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
 using Superpower;
 using Superpower.Parsers;
@@ -35,18 +37,36 @@ namespace CodeGen.Ast.Parsers
                 from statement in Statement
                 select statement;
 
-        public static readonly TokenListParser<LangToken, Statement> 
-            ConditionalStatement =
-            from keywork in Token.EqualTo(LangToken.If)
-            from expr in Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+        private static readonly TokenListParser<LangToken, Statement> IfStatement = from keywork in Token.EqualTo(LangToken.If)
+            from cond in Condition
             from statement in Statement
             from elseStatement in Else.OptionalOrDefault()
-            select (Statement)new IfStatement(expr, statement, elseStatement);
+            select (Statement)new IfStatement(cond, statement, elseStatement);
+
+        private static readonly TokenListParser<LangToken, Statement> DoStatement = 
+            from keywork in Token.EqualTo(LangToken.Do)
+            from statement in Statement
+            from keyword in Token.EqualTo(LangToken.While)
+            from cond in Condition
+            from sc in Token.EqualTo(LangToken.Semicolon)
+            select (Statement)new DoStatement(cond, statement);
+
+        private static readonly TokenListParser<LangToken, Expression> Condition = Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis));
+
+        private static readonly TokenListParser<LangToken, Statement> WhileStatement =
+            from keywork in Token.EqualTo(LangToken.While)
+            from cond in Condition
+            from statement in Statement
+            select (Statement) new WhileStatement(cond, statement);
+            
+        public static readonly TokenListParser<LangToken, Statement> 
+            ConditionalStatement =
+                IfStatement.Or(WhileStatement).Or(DoStatement);
 
         public static readonly TokenListParser<LangToken, Statement> 
             Loop =
                 from keywork in Token.EqualTo(LangToken.For)
-                from expr in (
+                from header in (
                     from initialization in Assignment
                     from sc1 in Token.EqualTo(LangToken.Semicolon)
                     from condition in Expressions.Expr
@@ -54,7 +74,7 @@ namespace CodeGen.Ast.Parsers
                     from step in Assignment select new {initialization, condition, step})
                     .Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
                 from statement in Statement
-                select (Statement)new ForLoop(new ForLoopOptions(expr.initialization, expr.condition, expr.step), statement);
+                select (Statement)new ForLoop(new ForLoopHeader(header.initialization, header.condition, header.step), statement);
 
         public static readonly TokenListParser<LangToken, Statement> 
             SingleStatement = ConditionalStatement.Or(AssignmentExpression).Or(Loop);

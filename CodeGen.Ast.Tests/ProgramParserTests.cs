@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CodeGen.Ast.Parsers;
 using CodeGen.Ast.Units;
@@ -5,6 +6,8 @@ using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
 using DeepEqual.Syntax;
+using FluentAssertions;
+using Superpower;
 using Xunit;
 
 namespace CodeGen.Ast.Tests
@@ -30,6 +33,59 @@ namespace CodeGen.Ast.Tests
             };
 
             AssertCode("if (a==0) b=0; ", expected);
+        }
+
+        [Fact]       
+        public void String()
+        {
+            var expected = new[]
+            {
+                new AssignmentStatement(new Reference("a"), new ConstantExpression("This is fine"))
+            };
+
+            AssertCode(@"a = ""This is fine"";", expected);
+        }
+
+        [Fact]       
+        public void While()
+        {
+            var expected = new[]
+            {
+                new WhileStatement(new ExpressionNode(Operators.Lt, new ReferenceExpression("a"),
+                        new ConstantExpression(4)),
+                    new AssignmentStatement(new Reference("b"), new ExpressionNode(Operators.Add, new ReferenceExpression("b"),
+                        new ConstantExpression(1)))), 
+            };
+
+            AssertCode("while (a<4) b=b+1;", expected);
+        }
+
+        [Fact]       
+        public void Do()
+        {
+            var expected = new[]
+            {
+                new DoStatement(new ExpressionNode(Operators.Lt, new ReferenceExpression("a"),
+                        new ConstantExpression(4)),
+                    new AssignmentStatement(new Reference("b"), new ExpressionNode(Operators.Add, new ReferenceExpression("b"),
+                        new ConstantExpression(1)))), 
+            };      
+
+            AssertCode("do b=b+1; while (a < 4);", expected);
+        }
+
+        [Fact]       
+        public void DoWithoutSemicolon()
+        {
+            Action parse = () => Parse("do b=b+1; while (a < 4)", Statements.ProgramParser);
+            parse.Should().Throw<ParseException>();
+        }
+
+        [Fact]       
+        public void WhileWithoutSemicolon()
+        {
+            Action parse = () => Parse("while (a<4) b=b+1", Statements.ProgramParser);
+            parse.Should().Throw<ParseException>();
         }
 
         [Theory]
@@ -59,7 +115,7 @@ namespace CodeGen.Ast.Tests
             var step = new AssignmentStatement(new Reference("t"), new ExpressionNode(Operators.Add, new ReferenceExpression("t"), new ConstantExpression(1)));
             
             var forLoopOptions =
-                new ForLoopOptions(initialization, condition, step);
+                new ForLoopHeader(initialization, condition, step);
                 
 
             var expected = new[]
@@ -168,7 +224,7 @@ namespace CodeGen.Ast.Tests
             {
                 "for (t=0;t==1;t=t+1) { a=3; }", new Statement[]
                 {
-                    new ForLoop(new ForLoopOptions(
+                    new ForLoop(new ForLoopHeader(
                             new AssignmentStatement(new Reference("t"), new ConstantExpression(0)),
                             new ExpressionNode(Operators.Eq, new ReferenceExpression("t"),
                                 new ConstantExpression(1)),

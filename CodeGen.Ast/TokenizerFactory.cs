@@ -8,7 +8,10 @@ namespace CodeGen.Ast
     {
         public static Tokenizer<LangToken> Create()
         {
+            var stringParser = Span.Regex("[\\w\\s]*").Between(Character.EqualTo('"'), Character.EqualTo('"'));
+
             return new TokenizerBuilder<LangToken>()
+                .Match(stringParser, LangToken.Text)
                 .Ignore(Span.WhiteSpace)
                 .Match(Span.EqualTo("=="), LangToken.DoubleEqual)
                 .Match(Span.EqualTo(">="), LangToken.GreaterThanOrEqual)
@@ -16,6 +19,7 @@ namespace CodeGen.Ast
                 .Match(Span.EqualTo("!="), LangToken.NotEqual)
                 .Match(Span.EqualTo("<"), LangToken.LessThan)
                 .Match(Span.EqualTo(">"), LangToken.GreaterThan)
+                .Match(Span.EqualTo("\""), LangToken.Quote)
                 .Match(Character.EqualTo('='), LangToken.Equal)
                 .Match(Character.EqualTo('*'), LangToken.Asterisk)
                 .Match(Character.EqualTo('+'), LangToken.Plus)
@@ -27,12 +31,14 @@ namespace CodeGen.Ast
                 .Match(Character.EqualTo(';'), LangToken.Semicolon)
                 .Match(Span.EqualTo("if"), LangToken.If, true)
                 .Match(Span.EqualTo("else"), LangToken.Else, true)
+                .Match(Span.EqualTo("do"), LangToken.Do, true)
                 .Match(Span.EqualTo("while"), LangToken.While, true)
                 .Match(Span.EqualTo("for"), LangToken.For, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
+                
                 .Match(Span.Regex(@"\d*"), LangToken.Number, true)
-                .Match(Span.Regex(@"\w[\w\d]*"), LangToken.Identifier, true)
+                .Match(Span.Regex(@"\w[\w\d]*"), LangToken.Identifier, true)                
                 .Build();
         }
     }

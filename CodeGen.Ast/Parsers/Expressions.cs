@@ -37,10 +37,15 @@ namespace CodeGen.Ast.Parsers
             Token.EqualTo(LangToken.True).Value((Expression) new ConstantExpression(true))
                 .Or(Token.EqualTo(LangToken.False).Value((Expression) new ConstantExpression(false)))
             .Named("boolean");
+
+        private static readonly TokenListParser<LangToken, Expression> Text = 
+            Token.EqualTo(LangToken.Text)
+                .Select(x => (Expression)new ConstantExpression(x.ToStringValue().Substring(1, x.ToStringValue().Length-2)));
         
         private static readonly TokenListParser<LangToken, Expression> Literal =
             Number
                 .Or(Identifier)
+                .Or(Text)
                 .Or(Token.EqualTo(LangToken.Null).Value((Expression) new ConstantExpression(null)))
                 .Or(BooleanValue)
                 .Named("literal");

@@ -8,12 +8,13 @@ namespace CodeGen.Ast
         Number,
         [Token(Category = "separator", Example = ",")]
         Comma,
-        [Token(Category = "text", Example = "abc")]
+        [Token(Category = "myIdentifier", Example = "abc")]
         Identifier,
-        [Token(Category = "text", Example = ":")]
+        [Token(Category = "text", Example = "abc")]
         Colon,
         [Token(Category = "operator", Example = "+")]
         Plus,
+        [Token(Category = "operator", Example = "*")]
         Asterisk,
         Semicolon,
         LeftBrace,
@@ -41,6 +42,9 @@ namespace CodeGen.Ast
         Caret,
         Not,
         Null,
-        Else
+        Else,
+        [Token(Category = "separator", Example = "\"")]
+        Quote,
+        Text
     }
 }
