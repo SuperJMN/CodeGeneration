@@ -13,6 +13,8 @@ namespace CodeGen.Ast
             return new TokenizerBuilder<LangToken>()
                 .Match(stringParser, LangToken.Text)
                 .Ignore(Span.WhiteSpace)
+                .Match(Span.EqualTo("++"), LangToken.DoublePlus)
+                .Match(Span.EqualTo("--"), LangToken.DoubleMinus)
                 .Match(Span.EqualTo("=="), LangToken.DoubleEqual)
                 .Match(Span.EqualTo(">="), LangToken.GreaterThanOrEqual)
                 .Match(Span.EqualTo("<="), LangToken.LessThanOrEqual)

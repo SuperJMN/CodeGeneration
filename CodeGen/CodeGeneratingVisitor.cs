@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Ast.Parsers;
 using CodeGen.Ast.Units;
 using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
@@ -126,6 +127,11 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(doStatement.Condition.Reference, exitLabel));
             InnerCode.Add(new Jump(continueLabel));
             InnerCode.Add(IntermediateCode.Emit.Label(exitLabel));
+        }
+
+        public void Visit(AssignmentOperatorStatement statement)
+        {
+            throw new NotImplementedException();
         }
 
         public void Visit(ReferenceExpression expression)

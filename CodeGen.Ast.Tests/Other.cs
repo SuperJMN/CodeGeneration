@@ -18,7 +18,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("{a=b;c=d;e=f+g*3;}")]
         public void Block(string code)
         {
-            Parse(code, Statements.Block);
+            Parse(code, Parsers.Parsers.Block);
         }
         
         [Theory]
@@ -27,7 +27,7 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c+d;")]
         public void Assignment(string code)
         {
-            Parse(code, Statements.AssignmentExpression);
+            Parse(code, Parsers.Parsers.Assignment);
         }
 
         [Theory]
@@ -35,14 +35,14 @@ namespace CodeGen.Ast.Tests
         [InlineData("a=b+c;")]
         public void Statement(string code)
         {
-            Parse(code, Statements.AssignmentExpression);
+            Parse(code, Parsers.Parsers.Assignment);
         }
 
         [Theory]
         [InlineData("if (a==b) {c=3;}")]
         public void If(string code)
         {
-            Parse(code, Statements.ConditionalStatement);
+            Parse(code, Parsers.Parsers.ConditionalStatement);
         }
 
         [Theory]

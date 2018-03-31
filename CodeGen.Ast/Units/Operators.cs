@@ -18,5 +18,7 @@
         public const string Subtract = nameof(Subtract);
         public const string Neq = nameof(Neq);
         public const string Negate = nameof(Negate);
+        public const string Decrement = nameof(Decrement);
+        public const string Increment = nameof(Increment);
     }
 }

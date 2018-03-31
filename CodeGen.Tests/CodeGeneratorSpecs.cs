@@ -54,22 +54,27 @@ namespace CodeGen.Intermediate.Tests
             actual.ShouldDeepEqual(expected);
         }
 
-        [Fact]
-        public void Multiply()
-        {
-            var expr = new AssignmentStatement(
-                new Reference("x"),
-                new ExpressionNode(nameof(Operators.Add),
-                    new ExpressionNode(nameof(Operators.Multiply),
-                        new ReferenceExpression("y"),
-                        new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("z"),
-                            new ReferenceExpression("w"))
-                    ),
-                    new ExpressionNode(nameof(Operators.Add), new ReferenceExpression("y"),
-                        new ReferenceExpression("x"))
-                )
-            );
-        }
+        //[Fact]
+        //public void Multiply()
+        //{
+        //    var expr = new AssignmentStatement(
+        //        new Reference("x"),
+        //        new ExpressionNode(nameof(Operators.Add),
+        //            new ExpressionNode(nameof(Operators.Multiply),
+        //                new ReferenceExpression("y"),
+        //                new ExpressionNode(nameof(Operators.Multiply), new ReferenceExpression("z"),
+        //                    new ReferenceExpression("w"))
+        //            ),
+        //            new ExpressionNode(nameof(Operators.Add), new ReferenceExpression("y"),
+        //                new ReferenceExpression("x"))
+        //        )
+        //    );
+
+        //    var sut = new IntermediateCodeGenerator();
+        //    var actual = sut.Generate(new[] {expr});
+
+        //    actual.ShouldDeepEqual(expected);
+        //}
 
         [Fact]
         public void ComplexAssignment()

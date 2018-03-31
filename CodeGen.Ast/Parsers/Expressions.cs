@@ -9,22 +9,24 @@ namespace CodeGen.Ast.Parsers
 {
     public class Expressions
     {
-        static readonly TokenListParser<LangToken, string> Add = Token.EqualTo(LangToken.Plus).Value(Operators.Add);
-        static readonly TokenListParser<LangToken, string> Subtract = Token.EqualTo(LangToken.Minus).Value(Operators.Subtract);
-        static readonly TokenListParser<LangToken, string> Or = Token.EqualTo(LangToken.Or).Value(Operators.Or);
-        static readonly TokenListParser<LangToken, string> And = Token.EqualTo(LangToken.And).Value(Operators.And);
-        static readonly TokenListParser<LangToken, string> Multiply = Token.EqualTo(LangToken.Asterisk).Value(Operators.Multiply);
-        static readonly TokenListParser<LangToken, string> Divide = Token.EqualTo(LangToken.Slash).Value(Operators.Divide);
-        static readonly TokenListParser<LangToken, string> Modulo = Token.EqualTo(LangToken.Mod).Value(Operators.Module);
-        static readonly TokenListParser<LangToken, string> Lte = Token.EqualTo(LangToken.LessThanOrEqual).Value(Operators.Lte);
-        static readonly TokenListParser<LangToken, string> Lt = Token.EqualTo(LangToken.LessThan).Value(Operators.Lt);
-        static readonly TokenListParser<LangToken, string> Gt = Token.EqualTo(LangToken.GreaterThan).Value(Operators.Gt);
-        static readonly TokenListParser<LangToken, string> Gte = Token.EqualTo(LangToken.GreaterThanOrEqual).Value(Operators.Gte);
-        static readonly TokenListParser<LangToken, string> Eq = Token.EqualTo(LangToken.DoubleEqual).Value(Operators.Eq);
-        static readonly TokenListParser<LangToken, string> Neq = Token.EqualTo(LangToken.NotEqual).Value(Operators.Neq);
-        static readonly TokenListParser<LangToken, string> Power = Token.EqualTo(LangToken.Caret).Value(Operators.Power);
-        static readonly TokenListParser<LangToken, string> Not = Token.EqualTo(LangToken.Not).Value(Operators.Not);
-        static readonly TokenListParser<LangToken, string> Negate = Token.EqualTo(LangToken.Minus).Value(Operators.Negate);
+        public static readonly TokenListParser<LangToken, string> Add = Token.EqualTo(LangToken.Plus).Value(Operators.Add);
+        public static readonly TokenListParser<LangToken, string> Subtract = Token.EqualTo(LangToken.Minus).Value(Operators.Subtract);
+        public static readonly TokenListParser<LangToken, string> Or = Token.EqualTo(LangToken.Or).Value(Operators.Or);
+        public static readonly TokenListParser<LangToken, string> And = Token.EqualTo(LangToken.And).Value(Operators.And);
+        public static readonly TokenListParser<LangToken, string> Multiply = Token.EqualTo(LangToken.Asterisk).Value(Operators.Multiply);
+        public static readonly TokenListParser<LangToken, string> Divide = Token.EqualTo(LangToken.Slash).Value(Operators.Divide);
+        public static readonly TokenListParser<LangToken, string> Modulo = Token.EqualTo(LangToken.Mod).Value(Operators.Module);
+        public static readonly TokenListParser<LangToken, string> Lte = Token.EqualTo(LangToken.LessThanOrEqual).Value(Operators.Lte);
+        public static readonly TokenListParser<LangToken, string> Lt = Token.EqualTo(LangToken.LessThan).Value(Operators.Lt);
+        public static readonly TokenListParser<LangToken, string> Gt = Token.EqualTo(LangToken.GreaterThan).Value(Operators.Gt);
+        public static readonly TokenListParser<LangToken, string> Gte = Token.EqualTo(LangToken.GreaterThanOrEqual).Value(Operators.Gte);
+        public static readonly TokenListParser<LangToken, string> Eq = Token.EqualTo(LangToken.DoubleEqual).Value(Operators.Eq);
+        public static readonly TokenListParser<LangToken, string> Neq = Token.EqualTo(LangToken.NotEqual).Value(Operators.Neq);
+        public static readonly TokenListParser<LangToken, string> Power = Token.EqualTo(LangToken.Caret).Value(Operators.Power);
+        public static readonly TokenListParser<LangToken, string> Not = Token.EqualTo(LangToken.Not).Value(Operators.Not);
+        public static readonly TokenListParser<LangToken, string> Negate = Token.EqualTo(LangToken.Minus).Value(Operators.Negate);
+        public static readonly TokenListParser<LangToken, string> Increment = Token.EqualTo(LangToken.DoublePlus).Value(Operators.Increment);
+        public static readonly TokenListParser<LangToken, string> Decrement = Token.EqualTo(LangToken.DoubleMinus).Value(Operators.Decrement);
 
         private static readonly TokenListParser<LangToken, Expression> Number = Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32)
             .Select(d => (Expression)new ConstantExpression(d));
@@ -40,7 +42,7 @@ namespace CodeGen.Ast.Parsers
 
         private static readonly TokenListParser<LangToken, Expression> Text = 
             Token.EqualTo(LangToken.Text)
-                .Select(x => (Expression)new ConstantExpression(x.ToStringValue().Substring(1, x.ToStringValue().Length-2)));
+                .Select(x => (Expression)new ConstantExpression(x));
         
         private static readonly TokenListParser<LangToken, Expression> Literal =
             Number
@@ -53,13 +55,11 @@ namespace CodeGen.Ast.Parsers
         static readonly TokenListParser<LangToken, Expression> Item = Literal;
 
         private static readonly TokenListParser<LangToken, Expression> Factor =
-            (from lparen in Token.EqualTo(LangToken.LeftParenthesis)
-                from expr in Parse.Ref(() => Expr)
-                from rparen in Token.EqualTo(LangToken.RightParenthesis)
-                select expr).Or(Item);
+            Parse.Ref(() => Expr).Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+                .Or(Item);
 
         static readonly TokenListParser<LangToken, Expression> Operand =
-            (from op in Negate.Or(Not)
+            (from op in Negate.Or(Not).Or(Increment).Or(Decrement)
                 from factor in Factor
                 select MakeUnary(op)).Or(Factor).Named("expression");
 

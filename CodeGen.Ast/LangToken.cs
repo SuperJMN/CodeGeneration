@@ -45,6 +45,12 @@ namespace CodeGen.Ast
         Else,
         [Token(Category = "separator", Example = "\"")]
         Quote,
-        Text
+        Text,
+        [Token(Category = "operator", Example = "++")]
+        DoublePlus,
+        [Token(Category = "operator", Example = "--")]
+        DoubleMinus,
+        Int,
+        Char,
     }
 }

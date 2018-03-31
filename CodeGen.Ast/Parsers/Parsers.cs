@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using CodeGen.Ast.Units.Expressions;
+﻿using CodeGen.Ast.Units.Expressions;
 using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
 using Superpower;
@@ -7,16 +6,21 @@ using Superpower.Parsers;
 
 namespace CodeGen.Ast.Parsers
 {
-    public class Statements
+    public class Parsers
     {
-        public static readonly TokenListParser<LangToken, Statement> Assignment =
+        public static readonly TokenListParser<LangToken, Statement> RegularAssignment =
             from identifier in Basics.Identifier
             from eq in Token.EqualTo(LangToken.Equal)
             from expr in Expressions.Expr
             select (Statement)new AssignmentStatement(new Reference(identifier), expr);
 
-        public static readonly TokenListParser<LangToken, Statement> AssignmentExpression =
-            from assignment in Assignment
+        public static readonly TokenListParser<LangToken, Statement> OperatorAssignment =
+            from identifier in Basics.Identifier
+            from eq in Expressions.Increment.Or(Expressions.Decrement)            
+            select (Statement)new AssignmentOperatorStatement(eq, new Reference(identifier));
+
+        public static readonly TokenListParser<LangToken, Statement> Assignment =
+            from assignment in RegularAssignment.Try().Or(OperatorAssignment)
             from sc in Token.EqualTo(LangToken.Semicolon)
             select assignment;
 
@@ -67,22 +71,47 @@ namespace CodeGen.Ast.Parsers
             Loop =
                 from keywork in Token.EqualTo(LangToken.For)
                 from header in (
-                    from initialization in Assignment
+                    from initialization in RegularAssignment
                     from sc1 in Token.EqualTo(LangToken.Semicolon)
                     from condition in Expressions.Expr
                     from sc2 in Token.EqualTo(LangToken.Semicolon)
-                    from step in Assignment select new {initialization, condition, step})
+                    from step in RegularAssignment select new {initialization, condition, step})
                     .Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
                 from statement in Statement
                 select (Statement)new ForLoop(new ForLoopHeader(header.initialization, header.condition, header.step), statement);
 
         public static readonly TokenListParser<LangToken, Statement> 
-            SingleStatement = ConditionalStatement.Or(AssignmentExpression).Or(Loop);
+            SingleStatement = ConditionalStatement.Or(Assignment).Or(Loop);
 
         public static readonly TokenListParser<LangToken, Statement> 
             Statement = Block.Or(SingleStatement);
 
+        public static readonly TokenListParser<LangToken, VariableType> Int = Token.EqualTo(LangToken.Int).Value(VariableType.Int);
+        public static readonly TokenListParser<LangToken, VariableType> Char = Token.EqualTo(LangToken.Char).Value(VariableType.Char);
+
+        public static readonly TokenListParser<LangToken, VariableType> VarType = Int.Or(Char);
+
+        public static readonly TokenListParser<LangToken, DeclarationStatement> Declaration = 
+            from type in VarType
+            from r in Basics.Identifier
+            select new DeclarationStatement(type, new Reference(r));
+
+        public static readonly TokenListParser<LangToken, DeclarationStatement[]>
+            Declarations = Declaration.Many();
+
         public static readonly TokenListParser<LangToken, Statement[]> 
-            ProgramParser = Statement.Many();
+            Statements = Statement.Many();
+
+        public static readonly TokenListParser<LangToken, object>
+            Params = from lp in Token.EqualTo(LangToken.LeftParenthesis)
+                from rp in Token.EqualTo(LangToken.RightParenthesis)
+                select new object();
+        
+        public static readonly TokenListParser<LangToken, Unit> Unit =
+            from name in Basics.Identifier
+            from p in Params
+            from decls in Declarations.OptionalOrDefault()
+            from statements in Statement
+            select new Unit(name, decls, statements);
     }
 }

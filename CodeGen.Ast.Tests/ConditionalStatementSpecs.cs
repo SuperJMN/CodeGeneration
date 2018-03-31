@@ -14,7 +14,7 @@ namespace CodeGen.Ast.Tests
         [MemberData(nameof(TestData))]
         public void Test(string str, Statement expectation)
         {
-            var actual = Parse(str, Statements.ConditionalStatement);
+            var actual = Parse(str, Parsers.Parsers.ConditionalStatement);
             actual.ShouldDeepEqual(expectation);
         }
 
