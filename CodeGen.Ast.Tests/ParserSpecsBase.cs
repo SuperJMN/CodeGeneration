@@ -23,8 +23,8 @@ namespace CodeGen.Ast.Tests
         [Fact]
         public void Test()
         {
-            var source = "int a;\nint b;";
-            var actual = Parse(source, Parsers.Parsers.Declarations);            
+            var source = "int a;";
+            var actual = Parse(source, Parsers.Parsers.Declaration);            
         }
     }
 

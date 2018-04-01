@@ -77,6 +77,8 @@ namespace CodeGen.Ast.Parsers
 
         public static readonly TokenListParser<LangToken, Expression> Expr = Disjunction;
 
+        public static readonly TokenListParser<LangToken, Expression> Condition = Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis));
+
         private static Expression MakeBinary(string operatorName, Expression leftOperand, Expression rightOperand)
         {
             return new ExpressionNode(operatorName, leftOperand, rightOperand);

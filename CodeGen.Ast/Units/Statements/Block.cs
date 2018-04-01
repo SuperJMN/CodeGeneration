@@ -27,6 +27,11 @@ namespace CodeGen.Ast.Units.Statements
             Statements = statements;
         }
 
+        public Block(Statement[] statements, DeclarationStatement[][] declarations)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void Accept(ICodeVisitor visitor)
         {
             foreach (var statement in Statements)

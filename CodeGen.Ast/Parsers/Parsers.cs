@@ -1,5 +1,4 @@
-﻿using CodeGen.Ast.Units.Expressions;
-using CodeGen.Ast.Units.Statements;
+﻿using CodeGen.Ast.Units.Statements;
 using CodeGen.Core;
 using Superpower;
 using Superpower.Parsers;
@@ -24,19 +23,10 @@ namespace CodeGen.Ast.Parsers
             from sc in Token.EqualTo(LangToken.Semicolon)
             select assignment;
 
-        public static readonly TokenListParser<LangToken, Statement> EmptyBlock =
-            from lb in Token.EqualTo(LangToken.LeftBrace)
-            from rb in Token.EqualTo(LangToken.RightBrace)
-            select (Statement)new Block();
-
-        public static readonly TokenListParser<LangToken, Statement> BlockInnerList =
-            (from decls in Parse.Ref(() => Declarations).Try()
+        public static readonly TokenListParser<LangToken, Statement> Block =
+            (from decls in Parse.Ref(() => Declaration).Many()
             from statements in Parse.Ref(() => Statement).Many()
             select (Statement)new Block(statements, decls)).Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace));
-
-        public static readonly TokenListParser<LangToken, Statement> Block =
-            EmptyBlock.Try()
-                .Or(BlockInnerList);
 
         private static readonly TokenListParser<LangToken, Statement>
             Else = from keyworkd in Token.EqualTo(LangToken.Else)
@@ -44,7 +34,7 @@ namespace CodeGen.Ast.Parsers
                    select statement;
 
         private static readonly TokenListParser<LangToken, Statement> IfStatement = from keywork in Token.EqualTo(LangToken.If)
-                                                                                    from cond in Condition
+                                                                                    from cond in Expressions.Condition
                                                                                     from statement in Statement
                                                                                     from elseStatement in Else.OptionalOrDefault()
                                                                                     select (Statement)new IfStatement(cond, statement, elseStatement);
@@ -53,15 +43,13 @@ namespace CodeGen.Ast.Parsers
             from keywork in Token.EqualTo(LangToken.Do)
             from statement in Statement
             from keyword in Token.EqualTo(LangToken.While)
-            from cond in Condition
+            from cond in Expressions.Condition
             from sc in Token.EqualTo(LangToken.Semicolon)
             select (Statement)new DoStatement(cond, statement);
 
-        private static readonly TokenListParser<LangToken, Expression> Condition = Expressions.Expr.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis));
-
         private static readonly TokenListParser<LangToken, Statement> WhileStatement =
             from keywork in Token.EqualTo(LangToken.While)
-            from cond in Condition
+            from cond in Expressions.Condition
             from statement in Statement
             select (Statement)new WhileStatement(cond, statement);
 
@@ -76,7 +64,7 @@ namespace CodeGen.Ast.Parsers
                 from statement in Statement
                 select (Statement) new ForLoop(header, statement);
 
-        private static TokenListParser<LangToken, ForLoopHeader> ForLoopHeader => (
+        private static readonly TokenListParser<LangToken, ForLoopHeader> ForLoopHeader = (
                 from initialization in RegularAssignment
                 from sc1 in Token.EqualTo(LangToken.Semicolon)
                 from condition in Expressions.Expr
@@ -101,9 +89,6 @@ namespace CodeGen.Ast.Parsers
             from r in Basics.Identifier
             from sm in Token.EqualTo(LangToken.Semicolon)
             select new DeclarationStatement(type, new Reference(r));
-
-        public static readonly TokenListParser<LangToken, DeclarationStatement[]>
-            Declarations = Declaration.Many();
 
         public static readonly TokenListParser<LangToken, Statement[]>
             Statements = Statement.Many();
