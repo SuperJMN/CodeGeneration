@@ -38,6 +38,8 @@ namespace CodeGen.Ast
                 .Match(Span.EqualTo("for"), LangToken.For, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
+                .Match(Span.EqualTo("int"), LangToken.Int, true)
+                .Match(Span.EqualTo("char"), LangToken.Char, true)
                 
                 .Match(Span.Regex(@"\d*"), LangToken.Number, true)
                 .Match(Span.Regex(@"\w[\w\d]*"), LangToken.Identifier, true)                

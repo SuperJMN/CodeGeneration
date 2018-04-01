@@ -1,15 +1,25 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using CodeGen.Ast.Parsers;
 
 namespace CodeGen.Ast.Units.Statements
 {
     public class Block : Statement
     {
         public IList<Statement> Statements { get; }
+        public IList<DeclarationStatement> Declarations { get; set; }
 
-        public Block(params Statement[] statements)
+        public Block() : this(new List<Statement>(), new List<DeclarationStatement>())
+        {
+        }
+
+        public Block(params Statement[] statements): this(statements, new List<DeclarationStatement>())
+        {            
+        }
+
+        public Block(IList<Statement> statements, IList<DeclarationStatement> declarations = null)
         {
             Statements = statements;
+            Declarations = declarations;
         }
 
         public Block(IList<Statement> statements)

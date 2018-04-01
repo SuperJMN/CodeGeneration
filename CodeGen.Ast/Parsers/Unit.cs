@@ -5,13 +5,11 @@ namespace CodeGen.Ast.Parsers
     public class Unit
     {
         public string Name { get; }
-        public DeclarationStatement[] Decls { get; }
-        public Statement Statements { get; }
+        public Block Statements { get; }
 
-        public Unit(string name, DeclarationStatement[] decls, Statement statements)
+        public Unit(string name, Block statements)
         {
             Name = name;
-            Decls = decls;
             Statements = statements;
         }
     }
