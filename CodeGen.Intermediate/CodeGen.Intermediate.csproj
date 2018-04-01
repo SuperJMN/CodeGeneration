@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGen.Core\CodeGen.Core.csproj" />
+    <ProjectReference Include="..\CodeGen.Parsing\CodeGen.Parsing.csproj" />
+  </ItemGroup>
+
+</Project>
