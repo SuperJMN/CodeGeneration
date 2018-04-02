@@ -17,8 +17,11 @@ namespace CodeGen.Intermediate
 
         public void Visit(ExpressionNode expressionNode)
         {
-            expressionNode.Operands.ToList().ForEach(x => x.Accept(this));
-
+            foreach (var x in expressionNode.Operands)
+            {
+                x.Accept(this);
+            }
+            
             var destination = expressionNode.Reference;
             var left = expressionNode.Operands[0].Reference;
             var right = expressionNode.Operands[1].Reference;

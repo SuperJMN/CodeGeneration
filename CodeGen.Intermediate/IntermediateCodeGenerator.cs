@@ -31,7 +31,10 @@ namespace CodeGen.Intermediate
         {
             var intermediateVisitor = new NamedObjectCollector();
             
-            code.ForEach(x => x.Accept(intermediateVisitor));
+            foreach (var x in code)
+            {
+                x.Accept(intermediateVisitor);
+            }
 
             AssignIdentifiersToImplicityReferences(intermediateVisitor.References);
             AssignIdentifiersToLabels(intermediateVisitor.Labels);
@@ -44,7 +47,10 @@ namespace CodeGen.Intermediate
                 .Distinct()
                 .ToList();
 
-            toGiveName.ForEach(r => r.Name = GetNewLabelName());
+            foreach (var r in toGiveName)
+            {
+                r.Name = GetNewLabelName();
+            }
         }
 
         private void AssignIdentifiersToImplicityReferences(IEnumerable<Reference> references)
@@ -54,7 +60,10 @@ namespace CodeGen.Intermediate
                 .Distinct()
                 .ToList();
 
-            toGiveName.ForEach(r => r.Identifier = GetNewIdentifier());
+            foreach (var r in toGiveName)
+            {
+                r.Identifier = GetNewIdentifier();
+            }
         }
 
         private string GetNewIdentifier()
