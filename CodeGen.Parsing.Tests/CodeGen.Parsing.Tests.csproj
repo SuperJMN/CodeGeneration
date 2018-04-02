@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DeepEqual.SuperJMN" Version="2.0.0" />
     <PackageReference Include="FluentAssertions" Version="5.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
@@ -16,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGen.Parsing\CodeGen.Parsing.csproj" />
-    <ProjectReference Include="..\DeepEqual\src\DeepEqual\DeepEqual.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -21,7 +19,7 @@ namespace CodeGen.Intermediate
             {
                 x.Accept(this);
             }
-            
+
             var destination = expressionNode.Reference;
             var left = expressionNode.Operands[0].Reference;
             var right = expressionNode.Operands[1].Reference;
@@ -117,7 +115,8 @@ namespace CodeGen.Intermediate
             InnerCode.Add(IntermediateCode.Emit.JumpIfFalse(whileStatement.Condition.Reference, exitLabel));
             whileStatement.Statement.Accept(this);
             InnerCode.Add(new Jump(continueLabel));
-            InnerCode.Add(IntermediateCode.Emit.Label(exitLabel));        }
+            InnerCode.Add(IntermediateCode.Emit.Label(exitLabel));
+        }
 
         public void Visit(DoStatement doStatement)
         {
@@ -134,7 +133,6 @@ namespace CodeGen.Intermediate
 
         public void Visit(AssignmentOperatorStatement statement)
         {
-            throw new NotImplementedException();
         }
 
         public void Visit(Unit unit)
@@ -175,6 +173,10 @@ namespace CodeGen.Intermediate
             {
                 unit.Accept(this);
             }
+        }
+
+        public void Visit(MethodCall expressionNode)
+        {
         }
 
         public void Visit(ReferenceExpression expression)

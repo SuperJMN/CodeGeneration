@@ -1,6 +1,4 @@
-﻿using CodeGen.Parsing.Ast;
-
-namespace CodeGen.Parsing
+﻿namespace CodeGen.Parsing.Ast
 {
     public class Program : ICodeUnit
     {

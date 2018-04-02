@@ -18,5 +18,6 @@ namespace CodeGen.Parsing.Ast
         void Visit(DeclarationStatement expressionNode);
         void Visit(VariableDeclaration expressionNode);
         void Visit(Program program);
+        void Visit(MethodCall expressionNode);
     }
 }
