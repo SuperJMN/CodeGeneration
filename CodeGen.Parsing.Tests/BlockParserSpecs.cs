@@ -47,6 +47,17 @@ namespace CodeGen.Parsing.Tests
             actual.ShouldDeepEqual(expected);           
         }
 
+        [Fact]
+        public void MethodCallAndAssignment()
+        {
+            var block = new Block(
+                new MethodCall("func", new ReferenceExpression("a"), new ReferenceExpression("b")),
+                new AssignmentStatement("a",
+                    new ExpressionNode(Operator.Add, new ReferenceExpression("b"), new ReferenceExpression("c"))));
+
+            AssertCode("{ func(a, b); a=b+c; }", block);
+        }
+
         [Theory]
         [InlineData("{a=b;}")]
         [InlineData("{a=b;c=d;}")]

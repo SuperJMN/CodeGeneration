@@ -160,14 +160,14 @@ namespace CodeGen.Parsing
             Expression.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
 
 
-        private static readonly TokenListParser<LangToken, Statement> MethodCall =
+        public static readonly TokenListParser<LangToken, Statement> MethodCall =
             from name in Identifier
-            from parameters in Parameters
+            from parameters in Parameters.BetweenParenthesis()
             from sm in Token.EqualTo(LangToken.Semicolon)
             select (Statement) new MethodCall(name, parameters);
 
         public static readonly TokenListParser<LangToken, Statement>
-            SingleStatement = ConditionalStatement.Or(AssignmentStatement).Or(ForLoop).Or(MethodCall);
+            SingleStatement = MethodCall.Try().Or(ConditionalStatement).Or(AssignmentStatement).Or(ForLoop);
 
         private static readonly TokenListParser<LangToken, VariableType> Int = Token.EqualTo(LangToken.Int).Value(VariableType.Int);
         private static readonly TokenListParser<LangToken, VariableType> Char = Token.EqualTo(LangToken.Char).Value(VariableType.Char);

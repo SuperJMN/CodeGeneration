@@ -9,7 +9,7 @@ namespace CodeGen.Parsing.Ast
         public string MethodName { get; }
         public IEnumerable<Expression> Parameters { get; }
 
-        public MethodCall(string methodName, IEnumerable<Expression> parameters)
+        public MethodCall(string methodName, params Expression[] parameters)
         {
             MethodName = methodName;
             Parameters = parameters;
