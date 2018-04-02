@@ -2,15 +2,20 @@
 
 namespace CodeGen.Parsing.Ast
 {
-    public class Unit
+    public class Unit : ICodeUnit
     {
         public string Name { get; }
-        public Block Statements { get; }
+        public Block Block { get; }
 
-        public Unit(string name, Block statements)
+        public Unit(string name, Block block)
         {
             Name = name;
-            Statements = statements;
+            Block = block;
+        }
+
+        public void Accept(ICodeVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

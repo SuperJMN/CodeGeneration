@@ -14,5 +14,6 @@ namespace CodeGen.Parsing.Ast
         void Visit(WhileStatement expressionNode);
         void Visit(DoStatement expressionNode);
         void Visit(AssignmentOperatorStatement statement);
+        void Visit(Unit unit);
     }
 }

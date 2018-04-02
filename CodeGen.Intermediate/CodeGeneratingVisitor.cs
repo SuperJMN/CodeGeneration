@@ -133,6 +133,14 @@ namespace CodeGen.Intermediate
             throw new NotImplementedException();
         }
 
+        public void Visit(Unit unit)
+        {
+            foreach (var st in unit.Block.Statements)
+            {
+                st.Accept(this);
+            }
+        }
+
         public void Visit(ReferenceExpression expression)
         {
         }
