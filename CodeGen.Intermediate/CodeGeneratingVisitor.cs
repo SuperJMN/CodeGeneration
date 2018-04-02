@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
+using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -10,7 +11,7 @@ namespace CodeGen.Intermediate
 {
     public class CodeGeneratingVisitor : ICodeVisitor
     {
-        public IReadOnlyCollection<IntermediateCode> Code => InnerCode.AsReadOnly();
+        public IEnumerable<IntermediateCode> Code => InnerCode.AsReadOnly();
 
         private List<IntermediateCode> InnerCode { get; } = new List<IntermediateCode>();
 
@@ -135,9 +136,41 @@ namespace CodeGen.Intermediate
 
         public void Visit(Unit unit)
         {
+            foreach (var decl in unit.Block.Declarations)
+            {
+                decl.Accept(this);
+            }
+
             foreach (var st in unit.Block.Statements)
             {
                 st.Accept(this);
+            }
+        }
+
+        public void Visit(DeclarationStatement expressionNode)
+        {
+            foreach (var decl in expressionNode.Declarations)
+            {
+                decl.Accept(this);
+            }
+        }
+
+        public void Visit(VariableDeclaration expressionNode)
+        {
+            if (expressionNode.Initialization == null)
+            {
+                return;
+            }
+
+            var assignment = new AssignmentStatement(expressionNode.Reference, expressionNode.Initialization);
+            assignment.Accept(this);
+        }
+
+        public void Visit(Program program)
+        {
+            foreach (var unit in program.Units)
+            {
+                unit.Accept(this);
             }
         }
 

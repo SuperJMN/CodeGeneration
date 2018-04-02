@@ -31,6 +31,8 @@ namespace CodeGen.Parsing.Tokenizer
                 .Match(Character.EqualTo('{'), LangToken.LeftBrace)
                 .Match(Character.EqualTo('}'), LangToken.RightBrace)
                 .Match(Character.EqualTo(';'), LangToken.Semicolon)
+                .Match(Character.EqualTo(':'), LangToken.Colon)
+                .Match(Character.EqualTo(','), LangToken.Comma)
                 .Match(Span.EqualTo("if"), LangToken.If, true)
                 .Match(Span.EqualTo("else"), LangToken.Else, true)
                 .Match(Span.EqualTo("do"), LangToken.Do, true)
@@ -38,6 +40,7 @@ namespace CodeGen.Parsing.Tokenizer
                 .Match(Span.EqualTo("for"), LangToken.For, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
+                .Match(Span.EqualTo("void"), LangToken.Void, true)
                 .Match(Span.EqualTo("int"), LangToken.Int, true)
                 .Match(Span.EqualTo("char"), LangToken.Char, true)
                 

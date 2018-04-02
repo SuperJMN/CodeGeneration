@@ -14,6 +14,6 @@ namespace CodeGen.Parsing.Tests
             var actual = Parse(source);            
         }
 
-        protected override TokenListParser<LangToken, DeclarationStatement> Parser => Parsers.Declaration;
+        protected override TokenListParser<LangToken, DeclarationStatement> Parser => Parsers.DeclarationStatement;
     }
 }

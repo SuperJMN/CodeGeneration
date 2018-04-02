@@ -1,20 +1,19 @@
-﻿using CodeGen.Core;
-
-namespace CodeGen.Parsing.Ast.Statements
+﻿namespace CodeGen.Parsing.Ast.Statements
 {
     public class DeclarationStatement : Statement
     {
         public VariableType Type { get; }
-        public Reference Reference { get; }
+        public VariableDeclaration[] Declarations { get; }
 
-        public DeclarationStatement(VariableType type, Reference reference)
+        public DeclarationStatement(VariableType type, VariableDeclaration[] declarations)
         {
             Type = type;
-            Reference = reference;
+            Declarations = declarations;
         }
 
         public override void Accept(ICodeVisitor visitor)
         {
+            visitor.Visit(this);
         }
     }
 }

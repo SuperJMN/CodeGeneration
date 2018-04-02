@@ -7,7 +7,7 @@ namespace CodeGen.Parsing.Ast
         public string Name { get; }
         public Block Block { get; }
 
-        public Unit(string name, Block block)
+        public Unit(string name, VariableType returnType, Block block)
         {
             Name = name;
             Block = block;

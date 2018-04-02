@@ -1,7 +1,7 @@
-﻿using CodeGen.Parsing.Ast;
+﻿using System.Collections.Generic;
+using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Statements;
-using CodeGen.Parsing.Tokenizer;
-using DeepEqual.Syntax;
+using CodeGen.Parsing.Tokenizer;        
 using Superpower;
 using Xunit;
 
@@ -12,29 +12,24 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Main()
         {
-            AssertCode("Main() {}", new Unit("Main", new Block()));
+            AssertCode("void main() {}", new Unit("main", VariableType.Void, new Block()));
         }
 
         [Fact]
         public void MainWithDeclarations()
         {
-            var expected = new Unit("Main", new Block()
+            var declarationStatements = new List<DeclarationStatement>()
             {
-                Declarations = new[]
-                {
-                    new DeclarationStatement(VariableType.Int, "a"),
-                    new DeclarationStatement(VariableType.Int, "b")
-                }
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("a"),  }),
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("b"),  }),
+            };
+
+            var expected = new Unit("main", VariableType.Void, new Block()
+            {
+                Declarations = declarationStatements,
             });
 
-            AssertCode("Main() { int a; int b; }", expected);
-        }
-
-        private static void AssertCode(string source, Unit expected)
-        {
-            var tokenList = TokenizerFactory.Create().Tokenize(source);
-            var actual = Parsers.Unit.Parse(tokenList);
-            actual.ShouldDeepEqual(expected);
+            AssertCode("void main() { int a; int b; }", expected);
         }
 
         protected override TokenListParser<LangToken, Unit> Parser => Parsers.Unit;

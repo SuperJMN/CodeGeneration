@@ -57,7 +57,7 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, Expression> Item = Literal;
 
         private static readonly TokenListParser<LangToken, Expression> Factor =
-            Parse.Ref(() => Expression).Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis))
+            Parse.Ref(() => Expression).BetweenParenthesis()
                 .Or(Item);
 
         private static readonly TokenListParser<LangToken, Expression> Operand =
@@ -79,7 +79,7 @@ namespace CodeGen.Parsing
 
         public static readonly TokenListParser<LangToken, Expression> Expression = Disjunction;
 
-        private static readonly TokenListParser<LangToken, Expression> Condition = Expression.Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis));
+        private static readonly TokenListParser<LangToken, Expression> Condition = Expression.BetweenParenthesis();
 
         private static Expression MakeBinary(string operatorName, Expression leftOperand, Expression rightOperand)
         {
@@ -90,13 +90,12 @@ namespace CodeGen.Parsing
         {
             return new ExpressionNode(operatorName);
         }
-
-
+        
         private static readonly TokenListParser<LangToken, Statement> RegularAssignment =
-            from identifier in Identifier
+            from r in Identifier
             from eq in Token.EqualTo(LangToken.Equal)
             from expr in Expression
-            select (Statement)new AssignmentStatement(new Reference(identifier), expr);
+            select (Statement)new AssignmentStatement(new Reference(r), expr);
 
         private static readonly TokenListParser<LangToken, Statement> OperatorAssignment =
             from identifier in Identifier
@@ -105,10 +104,13 @@ namespace CodeGen.Parsing
 
         public static readonly TokenListParser<LangToken, Statement> Assignment =
             from assignment in RegularAssignment.Try().Or(OperatorAssignment)
-            from sc in Token.EqualTo(LangToken.Semicolon)
             select assignment;
 
-
+        public static readonly TokenListParser<LangToken, Statement> AssignmentStatement =
+            from assignment in Assignment
+            from sc in Token.EqualTo(LangToken.Semicolon)
+            select assignment;
+        
         private static readonly TokenListParser<LangToken, Statement>
             Else = from keyworkd in Token.EqualTo(LangToken.Else)
                    from statement in Statement
@@ -152,30 +154,46 @@ namespace CodeGen.Parsing
                 from sc2 in Token.EqualTo(LangToken.Semicolon)
                 from step in RegularAssignment
                 select new ForLoopHeader(initialization, condition, step))
-            .Between(Token.EqualTo(LangToken.LeftParenthesis), Token.EqualTo(LangToken.RightParenthesis));
+            .BetweenParenthesis();
 
         public static readonly TokenListParser<LangToken, Statement>
-            SingleStatement = ConditionalStatement.Or(Assignment).Or(ForLoop);
-
+            SingleStatement = ConditionalStatement.Or(AssignmentStatement).Or(ForLoop);
 
         private static readonly TokenListParser<LangToken, VariableType> Int = Token.EqualTo(LangToken.Int).Value(VariableType.Int);
         private static readonly TokenListParser<LangToken, VariableType> Char = Token.EqualTo(LangToken.Char).Value(VariableType.Char);
+        private static readonly TokenListParser<LangToken, VariableType> Void = Token.EqualTo(LangToken.Void).Value(VariableType.Void);
 
         private static readonly TokenListParser<LangToken, VariableType> VarType = Int.Or(Char);
 
-        public static readonly TokenListParser<LangToken, DeclarationStatement> Declaration =
+        private static readonly TokenListParser<LangToken, VariableDeclaration> DeclarationWithAssignment =
+            from ass in Assignment
+            select new VariableDeclaration((AssignmentStatement) ass);
+
+        private static readonly TokenListParser<LangToken, VariableDeclaration> NakedDeclaration =
+            from ass in Identifier
+            select new VariableDeclaration(new Reference(ass));
+
+        public static readonly TokenListParser<LangToken, VariableDeclaration> Declaration =
+            DeclarationWithAssignment.Try()
+                .Or(NakedDeclaration);
+
+        private static readonly TokenListParser<LangToken, VariableDeclaration[]> VariableDeclarations =
+            Declaration
+                .AtLeastOnceDelimitedBy(Token.EqualTo(LangToken.Comma));                
+
+        public static readonly TokenListParser<LangToken, DeclarationStatement> DeclarationStatement =
             from type in VarType
-            from r in Identifier
+            from decls in VariableDeclarations
             from sm in Token.EqualTo(LangToken.Semicolon)
-            select new DeclarationStatement(type, new Reference(r));
+            select new DeclarationStatement(type, decls);
 
         private static readonly TokenListParser<LangToken, DeclarationStatement[]> Declarations =
-            Declaration.Many();
+            DeclarationStatement.Many();
 
         public static readonly TokenListParser<LangToken, Statement> Block =
             (from decls in Parse.Ref(() => Declarations)
              from statements in Parse.Ref(() => Statements)
-             select (Statement)new Block(statements, decls)).Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace));
+             select (Statement)new Block(statements, decls)).BetweenBraces();
 
 
         private static readonly TokenListParser<LangToken, Statement>
@@ -184,15 +202,27 @@ namespace CodeGen.Parsing
         public static readonly TokenListParser<LangToken, Statement[]>
             Statements = Statement.Many();
 
-        private static readonly TokenListParser<LangToken, object>
-            Params = from lp in Token.EqualTo(LangToken.LeftParenthesis)
-                     from rp in Token.EqualTo(LangToken.RightParenthesis)
-                     select new object();
+        private static readonly TokenListParser<LangToken, VariableType> ArgumentType = Int.Or(Char);
+
+        private static readonly TokenListParser<LangToken, Argument> Argument =
+            from t in ArgumentType
+            from name in Identifier
+            select new Argument(t, name);
+
+        private static readonly TokenListParser<LangToken, Argument[]>
+            Arguments = Argument.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
+        
+        private static readonly TokenListParser<LangToken, VariableType> ReturnType = Int.Or(Char).Or(Void);
 
         public static readonly TokenListParser<LangToken, Unit> Unit =
+            from returnType in ReturnType
             from name in Identifier
-            from p in Params
+            from p in Arguments.BetweenParenthesis()
             from block in Block
-            select new Unit(name, (Block)block);
+            select new Unit(name, returnType, (Block)block);
+
+        public static readonly TokenListParser<LangToken, Program> Program =
+            from units in Unit.Many()
+            select new Program(units);
     }
 }

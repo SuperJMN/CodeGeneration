@@ -15,11 +15,14 @@ namespace CodeGen.Parsing.Tests
         public void DeclarationsOnly()
         {
             var actual = Parse("{ int a;\nint b; }");
-            var expected = new Block(new List<Statement>(), new List<DeclarationStatement>()
+
+            var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(VariableType.Int, "a"),
-                new DeclarationStatement(VariableType.Int, "b"),
-            });
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("a"),  }),
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("b"),  }),
+            };
+
+            var expected = new Block(new List<Statement>(), declarationStatements);
 
             actual.ShouldDeepEqual(expected);
         }    
@@ -28,15 +31,18 @@ namespace CodeGen.Parsing.Tests
         public void DeclarationsAndStatements()
         {
             var actual = Parse("{ int a;\nint b; a = a + 1; }");
+
+            var declarationStatements = new List<DeclarationStatement>()
+            {
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("a"),  }),
+                new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("b"),  }),
+            };
+
             var expected = new Block(new List<Statement>()
                 {
                     new AssignmentStatement("a", new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ConstantExpression(1)))
                 }, 
-                new List<DeclarationStatement>()
-            {
-                new DeclarationStatement(VariableType.Int, "a"),
-                new DeclarationStatement(VariableType.Int, "b"),
-            });
+                declarationStatements);
 
             actual.ShouldDeepEqual(expected);           
         }
