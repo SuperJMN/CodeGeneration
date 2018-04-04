@@ -12,5 +12,6 @@ namespace CodeGen.Intermediate
         void Visit(ReferenceAssignment code);
         void Visit(BoolExpressionAssignment code);
         void Visit(Jump code);
+        void Visit(FunctionDefinitionCode def);
     }
 }

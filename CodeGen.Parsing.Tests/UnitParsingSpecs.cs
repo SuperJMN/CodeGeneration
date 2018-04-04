@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Statements;
 using CodeGen.Parsing.Tokenizer;        
@@ -7,12 +8,12 @@ using Xunit;
 
 namespace CodeGen.Parsing.Tests
 {
-    public class UnitParsingSpecs : ParserSpecsBase<Unit>
+    public class UnitParsingSpecs : ParserSpecsBase<Function>
     {
         [Fact]
         public void Main()
         {
-            AssertCode("void main() {}", new Unit("main", VariableType.Void, new Block()));
+            AssertCode("void main() {}", new Function("main", VariableType.Void, new List<Argument>(), new Block()));
         }
 
         [Fact]
@@ -24,7 +25,7 @@ namespace CodeGen.Parsing.Tests
                 new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("b"),  }),
             };
 
-            var expected = new Unit("main", VariableType.Void, new Block()
+            var expected = new Function("main", VariableType.Void, new List<Argument>(), new Block()
             {
                 Declarations = declarationStatements,
             });
@@ -32,6 +33,6 @@ namespace CodeGen.Parsing.Tests
             AssertCode("void main() { int a; int b; }", expected);
         }
 
-        protected override TokenListParser<LangToken, Unit> Parser => Parsers.Unit;
+        protected override TokenListParser<LangToken, Function> Parser => Parsers.Function;
     }
 }

@@ -12,5 +12,10 @@ namespace CodeGen.Parsing.Ast.Expressions
         {            
             codeVisitor.Visit(this);
         }
+
+        public static implicit operator ReferenceExpression(string str)
+        {
+            return new ReferenceExpression(str);
+        }
     }
 }

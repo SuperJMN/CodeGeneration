@@ -164,7 +164,7 @@ namespace CodeGen.Parsing
             from name in Identifier
             from parameters in Parameters.BetweenParenthesis()
             from sm in Token.EqualTo(LangToken.Semicolon)
-            select (Statement) new MethodCall(name, parameters);
+            select (Statement) new Call(name, parameters);
 
         public static readonly TokenListParser<LangToken, Statement>
             SingleStatement = MethodCall.Try().Or(ConditionalStatement).Or(AssignmentStatement).Or(ForLoop);
@@ -224,15 +224,15 @@ namespace CodeGen.Parsing
         
         private static readonly TokenListParser<LangToken, VariableType> ReturnType = Int.Or(Char).Or(Void);
 
-        public static readonly TokenListParser<LangToken, Unit> Unit =
+        public static readonly TokenListParser<LangToken, Function> Function =
             from returnType in ReturnType
             from name in Identifier
-            from p in Arguments.BetweenParenthesis()
+            from args in Arguments.BetweenParenthesis()
             from block in Block
-            select new Unit(name, returnType, (Block)block);
+            select new Function(name, returnType, args, (Block)block);
 
         public static readonly TokenListParser<LangToken, Program> Program =
-            from units in Unit.Many()
-            select new Program(units);
+            from funcs in Function.Many()
+            select new Program(funcs);
     }
 }

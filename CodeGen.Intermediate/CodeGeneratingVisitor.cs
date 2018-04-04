@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
@@ -135,14 +136,17 @@ namespace CodeGen.Intermediate
         {
         }
 
-        public void Visit(Unit unit)
+        public void Visit(Function function)
         {
-            foreach (var decl in unit.Block.Declarations)
+            InnerCode.Add(IntermediateCode.Emit.FunctionDefinition(function));
+
+
+            foreach (var decl in function.Block.Declarations)
             {
                 decl.Accept(this);
             }
 
-            foreach (var st in unit.Block.Statements)
+            foreach (var st in function.Block.Statements)
             {
                 st.Accept(this);
             }
@@ -169,14 +173,38 @@ namespace CodeGen.Intermediate
 
         public void Visit(Program program)
         {
-            foreach (var unit in program.Units)
+            var main = program.Functions.Single(x => x.Name == "main");
+            InnerCode.Add(IntermediateCode.Emit.Call(main.Name));
+
+            foreach (var unit in program.Functions)
             {
                 unit.Accept(this);
             }
         }
 
-        public void Visit(MethodCall expressionNode)
+        public void Visit(Call call)
         {
+            foreach (var parameter in call.Parameters)
+            {                
+                parameter.Accept(this);
+                InnerCode.Add(IntermediateCode.Emit.Parameter(parameter.Reference));
+            }
+
+            InnerCode.Add(IntermediateCode.Emit.Call(call.FunctionName, call.Reference));
+
+            if (call.Target != null)
+            {
+                InnerCode.Add(IntermediateCode.Emit.Set(call.Target, call.Reference));
+            }
+        }
+
+        public void Visit(ReturnStatement returnStatement)
+        {
+            InnerCode.Add(IntermediateCode.Emit.Return(returnStatement.Reference));
+        }
+
+        public void Visit(Argument argument)
+        {          
         }
 
         public void Visit(ReferenceExpression expression)

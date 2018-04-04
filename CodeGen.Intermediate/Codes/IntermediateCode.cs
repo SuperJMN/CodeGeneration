@@ -1,5 +1,6 @@
 ﻿using CodeGen.Core;
 using CodeGen.Intermediate.Codes.Common;
+using CodeGen.Parsing.Ast;
 
 namespace CodeGen.Intermediate.Codes
 {
@@ -44,6 +45,11 @@ namespace CodeGen.Intermediate.Codes
                 return new LabelCode(label);
             }
 
+            public static IntermediateCode Jump(Label label)
+            {
+                return new LabelCode(label);
+            }
+
             public static IntermediateCode Set(Reference destination, Reference left)
             {
                 return new ReferenceAssignment(destination, left);
@@ -58,6 +64,36 @@ namespace CodeGen.Intermediate.Codes
             {
                 return new BoolConstantAssignment(destination, value);
             }
+
+            public static IntermediateCode Return(Reference reference)
+            {
+                return new ReturnCode(reference);
+            }
+
+            public static IntermediateCode Parameter(Reference reference)
+            {
+                return new ReferenceParameterCode(reference);
+            }
+
+            public static IntermediateCode Parameter(int value)
+            {
+                return new IntParameterCode(value);
+            }
+
+            public static IntermediateCode Call(string functionName, Reference reference)
+            {
+                return new CallCode(functionName, reference);
+            }
+
+            public static IntermediateCode Call(string functionName)
+            {
+                return new CallCode(functionName);
+            }
+
+            public static IntermediateCode FunctionDefinition(Function function)
+            {
+                return new FunctionDefinitionCode(function);
+            }           
         }             
     }
 }

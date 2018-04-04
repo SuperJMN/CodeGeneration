@@ -12,7 +12,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MethodCall()
         {
-            AssertCode("func(a, b);", new MethodCall("func", new ReferenceExpression("a"), new ReferenceExpression("b")));
+            AssertCode("func(a, b);", new Call("func", new ReferenceExpression("a"), new ReferenceExpression("b")));
         }        
 
         protected override TokenListParser<LangToken, Statement> Parser => Parsers.SingleStatement;

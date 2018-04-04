@@ -1,14 +1,21 @@
-﻿namespace CodeGen.Parsing.Ast
+﻿using CodeGen.Core;
+
+namespace CodeGen.Parsing.Ast
 {
-    internal class Argument
+    public class Argument : ICodeUnit
     {
         public VariableType Type { get; }
-        public string Name { get; }
+        public Reference Reference { get; }
 
-        public Argument(VariableType type, string name)
+        public Argument(VariableType type, Reference reference)
         {
             Type = type;
-            Name = name;
+            Reference = reference;
+        }
+
+        public void Accept(ICodeVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

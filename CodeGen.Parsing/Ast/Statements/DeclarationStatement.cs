@@ -5,7 +5,7 @@
         public VariableType Type { get; }
         public VariableDeclaration[] Declarations { get; }
 
-        public DeclarationStatement(VariableType type, VariableDeclaration[] declarations)
+        public DeclarationStatement(VariableType type, params VariableDeclaration[] declarations)
         {
             Type = type;
             Declarations = declarations;

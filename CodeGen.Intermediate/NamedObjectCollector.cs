@@ -58,6 +58,10 @@ namespace CodeGen.Intermediate
             AddLabel(code.Label);
         }
 
+        public void Visit(FunctionDefinitionCode def)
+        {            
+        }
+
         private void AddReference(Reference reference)
         {
             references.Add(reference);

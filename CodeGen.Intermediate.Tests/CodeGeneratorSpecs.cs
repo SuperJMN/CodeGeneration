@@ -18,12 +18,72 @@ namespace CodeGen.Intermediate.Tests
         {
             var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(new Unit("main", VariableType.Void, new Block(st)));
+            var actual = sut.Generate(st);
 
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Set(new Reference("T1"), 123),
                 IntermediateCode.Emit.Set(new Reference("a"), new Reference("T1"))
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void Program()
+        {
+            //int add(int a, int b)
+            //{
+            //    int c = a + b;
+            //    return c;
+            //}
+
+            //void main()
+            //{
+            //    int r = add(1, 2);
+            //}
+
+            var addFunc = new Function("add", VariableType.Int, new List<Argument>
+            {
+                new Argument(VariableType.Int, "a"),
+                new Argument(VariableType.Int, "b"),
+            }, new Block(new List<Statement>()
+            {
+                new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
+                new ReturnStatement("c")
+            }, new List<DeclarationStatement>()));
+
+            var mainFunc = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            {
+                new Call("add", "r", new ConstantExpression(1), new ConstantExpression(2)),
+            }, new List<DeclarationStatement>()));
+
+            var ast = new Program(new[]
+            {
+                addFunc,
+                mainFunc,
+            });
+
+            var actual = new IntermediateCodeGenerator().Generate(ast);
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.Call("main"),
+
+                // comienzo función "add"
+                IntermediateCode.Emit.FunctionDefinition(addFunc),
+                IntermediateCode.Emit.Add("T1", "a", "b"),
+                IntermediateCode.Emit.Set("c", "T1"),
+                IntermediateCode.Emit.Return("c"),
+
+                //main
+                IntermediateCode.Emit.FunctionDefinition(mainFunc),
+                IntermediateCode.Emit.Set("T2", 1),
+                IntermediateCode.Emit.Parameter("T2"),
+                IntermediateCode.Emit.Set("T3", 2),
+                IntermediateCode.Emit.Parameter("T3"),
+                IntermediateCode.Emit.Call("add", "T4"),
+                IntermediateCode.Emit.Set("r", "T4"),
             };
 
             actual.ShouldDeepEqual(expected);
@@ -42,7 +102,7 @@ namespace CodeGen.Intermediate.Tests
             );
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(new Unit("main", VariableType.Void, new Block(expr)));
+            var actual = sut.Generate(expr);
 
             var expected = new List<IntermediateCode>
             {
@@ -71,7 +131,7 @@ namespace CodeGen.Intermediate.Tests
             );
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(new Unit("main", VariableType.Void, new Block(expr)));
+            var actual = sut.Generate(expr);
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("z"), new Reference("w")),
@@ -111,7 +171,8 @@ namespace CodeGen.Intermediate.Tests
 
             var expected = new List<IntermediateCode>
             {
-                new BoolExpressionAssignment(booleanOperation, new Reference("T1"), new Reference("a"), new Reference("b"))
+                new BoolExpressionAssignment(booleanOperation, new Reference("T1"), new Reference("a"),
+                    new Reference("b"))
             };
 
             actual.ShouldDeepEqual(expected);
@@ -120,11 +181,10 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfSentence()
         {
-
             var statement = new AssignmentStatement(new Reference("b"), new ReferenceExpression("c"));
 
             var expr = new IfStatement(new ConstantExpression(true),
-                new Block(new List<Statement> { statement }));
+                new Block(new List<Statement> {statement}));
 
             var actual = Generate(expr);
 
@@ -144,14 +204,16 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var left = new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("x"), new ReferenceExpression("y"));
+            var left = new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("x"),
+                new ReferenceExpression("y"));
             var right = new ReferenceExpression("z");
             var condition = new ExpressionNode(nameof(Operator.Eq), left, right);
-            
-            var statement = new IfStatement(condition, new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression("b"))));
+
+            var statement = new IfStatement(condition,
+                new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression("b"))));
 
             var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(new Unit("main", VariableType.Void, new Block(statement)));
+            var actual = sut.Generate(statement);
 
             var label = new Label("label1");
 

@@ -1,12 +1,15 @@
-﻿namespace CodeGen.Parsing.Ast
+﻿using System.Collections.Generic;
+using CodeGen.Core;
+
+namespace CodeGen.Parsing.Ast
 {
     public class Program : ICodeUnit
     {
-        public Unit[] Units { get; }
+        public ICollection<Function> Functions { get; }
 
-        public Program(Unit[] units)
+        public Program(ICollection<Function> functions)
         {
-            Units = units;
+            Functions = functions;
         }
 
         public void Accept(ICodeVisitor visitor)

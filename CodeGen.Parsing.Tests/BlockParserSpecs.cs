@@ -51,7 +51,7 @@ namespace CodeGen.Parsing.Tests
         public void MethodCallAndAssignment()
         {
             var block = new Block(
-                new MethodCall("func", new ReferenceExpression("a"), new ReferenceExpression("b")),
+                new Call("func", new ReferenceExpression("a"), new ReferenceExpression("b")),
                 new AssignmentStatement("a",
                     new ExpressionNode(Operator.Add, new ReferenceExpression("b"), new ReferenceExpression("c"))));
 

@@ -1,4 +1,5 @@
-﻿using CodeGen.Parsing.Ast.Expressions;
+﻿using CodeGen.Core;
+using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
@@ -14,10 +15,12 @@ namespace CodeGen.Parsing.Ast
         void Visit(WhileStatement expressionNode);
         void Visit(DoStatement expressionNode);
         void Visit(AssignmentOperatorStatement statement);
-        void Visit(Unit unit);
+        void Visit(Function function);
         void Visit(DeclarationStatement expressionNode);
         void Visit(VariableDeclaration expressionNode);
         void Visit(Program program);
-        void Visit(MethodCall expressionNode);
+        void Visit(Call call);
+        void Visit(ReturnStatement returnStatement);
+        void Visit(Argument argument);
     }
 }
