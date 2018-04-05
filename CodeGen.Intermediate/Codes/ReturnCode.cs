@@ -12,7 +12,8 @@ namespace CodeGen.Intermediate.Codes
         }
 
         public override void Accept(IIntermediateCodeVisitor visitor)
-        {            
+        {
+            visitor.Visit(this);
         }
 
         public override string ToString()

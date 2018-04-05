@@ -31,11 +31,11 @@ namespace CodeGen.Parsing.Ast.Statements
             throw new System.NotImplementedException();
         }
 
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
             foreach (var statement in Statements)
             {
-                statement.Accept(visitor);
+                statement.Accept(unitVisitor);
             }
         }
     }

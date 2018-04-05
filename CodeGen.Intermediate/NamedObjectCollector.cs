@@ -62,9 +62,22 @@ namespace CodeGen.Intermediate
         {            
         }
 
+        public void Visit(CallCode code)
+        {
+            AddReference(code.Reference);
+        }
+
+        public void Visit(ReturnCode code)
+        {
+            AddReference(code.Reference);
+        }
+
         private void AddReference(Reference reference)
         {
-            references.Add(reference);
+            if (reference!= null)
+            {
+                references.Add(reference);
+            }
         }
 
         private void AddLabel(Label label)

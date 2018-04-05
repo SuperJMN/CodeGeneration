@@ -16,7 +16,7 @@ namespace CodeGen.Intermediate
             implicitReferenceCount = 0;
             labelCount = 0;
 
-            var codeGeneratingVisitor = new CodeGeneratingVisitor();
+            var codeGeneratingVisitor = new CodeUnitGeneratingVisitor();
 
             codeUnit.Accept(codeGeneratingVisitor);  
 
@@ -36,7 +36,6 @@ namespace CodeGen.Intermediate
                 x.Accept(intermediateVisitor);
             }
 
-            AssignIdentifiersToImplicityReferences(intermediateVisitor.References);
             AssignIdentifiersToLabels(intermediateVisitor.Labels);
         }
 

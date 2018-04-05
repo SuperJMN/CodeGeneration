@@ -13,9 +13,9 @@ namespace CodeGen.Parsing.Ast
             Reference = reference;
         }
 
-        public void Accept(ICodeVisitor visitor)
+        public void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

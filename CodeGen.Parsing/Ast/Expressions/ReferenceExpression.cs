@@ -8,9 +8,9 @@ namespace CodeGen.Parsing.Ast.Expressions
         {
         }
 
-        public override void Accept(ICodeVisitor codeVisitor)
+        public override void Accept(ICodeUnitVisitor codeUnitVisitor)
         {            
-            codeVisitor.Visit(this);
+            codeUnitVisitor.Visit(this);
         }
 
         public static implicit operator ReferenceExpression(string str)

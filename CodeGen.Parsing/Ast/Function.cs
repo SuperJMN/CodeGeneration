@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Core;
 using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
@@ -11,7 +10,6 @@ namespace CodeGen.Parsing.Ast
         public VariableType ReturnType { get; }
         public ICollection<Argument> Arguments { get; }
         public Block Block { get; }
-        public Reference Reference { get; }
 
         public Function(string name, VariableType returnType, ICollection<Argument> arguments, Block block)
         {
@@ -19,12 +17,11 @@ namespace CodeGen.Parsing.Ast
             ReturnType = returnType;
             Arguments = arguments;
             Block = block;
-            Reference = new Reference();
         }
 
-        public void Accept(ICodeVisitor visitor)
+        public void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
 
         public override string ToString()

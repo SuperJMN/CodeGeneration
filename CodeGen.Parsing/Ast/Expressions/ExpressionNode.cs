@@ -17,9 +17,9 @@ namespace CodeGen.Parsing.Ast.Expressions
         }
 
         public string OperatorName { get; }
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

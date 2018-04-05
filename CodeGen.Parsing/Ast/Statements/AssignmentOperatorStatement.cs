@@ -5,17 +5,17 @@ namespace CodeGen.Parsing.Ast.Statements
     public class AssignmentOperatorStatement : Statement
     {
         public string Operator { get; }
-        public Reference Reference { get; }
+        public Reference Target { get; }
 
-        public AssignmentOperatorStatement(string @operator, Reference reference)
+        public AssignmentOperatorStatement(string @operator, Reference target)
         {
             Operator = @operator;
-            Reference = reference;
+            Target = target;
         }
 
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

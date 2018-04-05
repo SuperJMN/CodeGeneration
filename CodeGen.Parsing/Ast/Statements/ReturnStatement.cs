@@ -4,21 +4,26 @@ namespace CodeGen.Parsing.Ast.Statements
 {
     public class ReturnStatement : Statement
     {
-        public Reference Reference { get; }
+        public Reference Target { get; }
 
-        public ReturnStatement(Reference reference)
+        public ReturnStatement(Reference target)
         {
-            Reference = reference;
+            Target = target;
         }
 
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
 
         public override string ToString()
         {
-            return $"return to caller";
+            if (Target == null)
+            {
+                return "return to caller";
+            }
+
+            return $"return {Target} to caller";
         }
     }
 }

@@ -1,26 +1,43 @@
-﻿using System;
-using CodeGen.Core;
+﻿using CodeGen.Core;
+using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
-namespace CodeGen.Parsing.Ast
+namespace CodeGen.Parsing
 {
-    public class ScopeScanner : ICodeVisitor
+    public class ScopeScanner : ICodeUnitVisitor
     {
+        private int addressCount;
+
+        public ScopeScanner()
+        {
+            Scope = new Scope();
+            Current = Scope;
+        }
+
+        private Scope Current { get; set; }
+        public Scope Scope { get; }
+
         public void Visit(ExpressionNode expressionNode)
         {
+            AddReference(expressionNode.Reference);
+
             foreach (var op in expressionNode.Operands)
             {
                 op.Accept(this);
-            }
+            }            
         }
 
         public void Visit(ConstantExpression expression)
         {
+            AddReference(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
         {
+            expression.Condition.Accept(this);
+            expression.Statement.Accept(this);
+            expression.ElseStatement?.Accept(this);            
         }
 
         public void Visit(ReferenceExpression expression)
@@ -30,26 +47,28 @@ namespace CodeGen.Parsing.Ast
 
         public void Visit(AssignmentStatement expression)
         {
-            AddReference(expression.Target);
             expression.Assignment.Accept(this);
-        }
-
-        private void AddReference(Reference reference)
-        {
-            Current.AddReference(reference, currentAddress);
-            currentAddress++;
+            AddReference(expression.Target);
         }
 
         public void Visit(ForLoop code)
         {
+            code.Header.Initialization.Accept(this);
+            code.Header.Condition.Accept(this);
+            code.Header.Step.Accept(this);
+            code.Statement.Accept(this);
         }
 
         public void Visit(WhileStatement expressionNode)
         {
+            expressionNode.Condition.Accept(this);
+            expressionNode.Statement.Accept(this);
         }
 
         public void Visit(DoStatement expressionNode)
         {
+            expressionNode.Condition.Accept(this);
+            expressionNode.Statement.Accept(this);
         }
 
         public void Visit(AssignmentOperatorStatement statement)
@@ -60,12 +79,6 @@ namespace CodeGen.Parsing.Ast
         {
             CreateScope(function);
             function.Block.Accept(this);
-        }
-
-        private void CreateScope(ICodeUnit scopeOwner)
-        {
-            currentAddress = 0;
-            Current = Current.CreateChildScope(scopeOwner);
         }
 
         public void Visit(DeclarationStatement expressionNode)
@@ -96,14 +109,16 @@ namespace CodeGen.Parsing.Ast
         {
         }
 
-        public ScopeScanner()
+        private void AddReference(Reference reference)
         {
-            Scope = new Scope();
-            Current = Scope;
+            Current.AddReference(reference, addressCount);
+            addressCount++;
         }
 
-        int currentAddress = 0;
-        private Scope Current { get; set; }
-        public Scope Scope { get; } 
+        private void CreateScope(ICodeUnit scopeOwner)
+        {
+            addressCount = 0;
+            Current = Current.CreateChildScope(scopeOwner);
+        }
     }
 }

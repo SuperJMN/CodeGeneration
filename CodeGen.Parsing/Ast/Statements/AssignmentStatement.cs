@@ -13,9 +13,9 @@ namespace CodeGen.Parsing.Ast.Statements
 
         public Reference Target { get; }
         public Expression Assignment { get; }
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

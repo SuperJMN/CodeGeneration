@@ -19,9 +19,9 @@ namespace CodeGen.Parsing.Ast.Statements
         }
 
         public Reference Reference { get; }
-        public void Accept(ICodeVisitor visitor)
+        public void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

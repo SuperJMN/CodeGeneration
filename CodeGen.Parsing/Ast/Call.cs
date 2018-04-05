@@ -24,9 +24,9 @@ namespace CodeGen.Parsing.Ast
             Target = target;            
         }
 
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

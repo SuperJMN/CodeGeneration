@@ -8,6 +8,7 @@ namespace CodeGen.Parsing.Ast
     public class Scope
     {
         public ICodeUnit Owner { get; }
+        public Scope Parent { get; }
         private readonly List<Scope> children = new List<Scope>();
         private readonly IDictionary<Reference, Symbol> symbols = new Dictionary<Reference, Symbol>();
 
@@ -15,9 +16,10 @@ namespace CodeGen.Parsing.Ast
         {
         }
 
-        public Scope(ICodeUnit owner)
+        public Scope(ICodeUnit owner, Scope parent)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            Parent = parent;
         }
 
         public IEnumerable<Scope> Children => children.AsReadOnly();
@@ -26,7 +28,7 @@ namespace CodeGen.Parsing.Ast
 
         public Scope CreateChildScope(ICodeUnit scopeOwner)
         {
-            var scope = new Scope(scopeOwner);
+            var scope = new Scope(scopeOwner, this);
             children.Add(scope);
             return scope;
         }

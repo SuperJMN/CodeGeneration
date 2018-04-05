@@ -12,9 +12,9 @@ namespace CodeGen.Parsing.Ast
             Functions = functions;
         }
 
-        public void Accept(ICodeVisitor visitor)
+        public void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

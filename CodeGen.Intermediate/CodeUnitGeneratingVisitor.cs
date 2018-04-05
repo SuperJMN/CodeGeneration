@@ -8,7 +8,7 @@ using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Intermediate
 {
-    public class CodeGeneratingVisitor : ICodeVisitor
+    public class CodeUnitGeneratingVisitor : ICodeUnitVisitor
     {
         public IEnumerable<IntermediateCode> Code => InnerCode.AsReadOnly();
 
@@ -200,7 +200,7 @@ namespace CodeGen.Intermediate
 
         public void Visit(ReturnStatement returnStatement)
         {
-            InnerCode.Add(IntermediateCode.Emit.Return(returnStatement.Reference));
+            InnerCode.Add(IntermediateCode.Emit.Return(returnStatement.Target));
         }
 
         public void Visit(Argument argument)

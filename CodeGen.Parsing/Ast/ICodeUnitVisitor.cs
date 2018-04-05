@@ -4,7 +4,7 @@ using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
 {
-    public interface ICodeVisitor
+    public interface ICodeUnitVisitor
     {
         void Visit(ExpressionNode expressionNode);
         void Visit(ConstantExpression expression);

@@ -11,9 +11,9 @@ namespace CodeGen.Parsing.Ast.Expressions
             Value = value;
         }
 
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

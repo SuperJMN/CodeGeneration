@@ -15,9 +15,9 @@ namespace CodeGen.Parsing.Ast.Statements
             ElseStatement = elseStatement;
         }
         
-        public override void Accept(ICodeVisitor visitor)
+        public override void Accept(ICodeUnitVisitor unitVisitor)
         {
-            visitor.Visit(this);
+            unitVisitor.Visit(this);
         }
     }
 }

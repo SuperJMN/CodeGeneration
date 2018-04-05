@@ -7,18 +7,19 @@ namespace CodeGen.Intermediate.Codes
         public string FunctionName { get; }
         public Reference Reference { get; }
 
-        public CallCode(string functionNameName, Reference reference) : this(functionNameName)
-        {            
+        public CallCode(string functionName, Reference reference) : this(functionName)
+        {
             Reference = reference;
         }
 
-        public CallCode(string functionNameName)
+        public CallCode(string functionName)
         {
-            FunctionName = functionNameName;
+            FunctionName = functionName;
         }
 
         public override void Accept(IIntermediateCodeVisitor visitor)
-        {            
+        {
+            visitor.Visit(this);
         }
 
         public override string ToString()

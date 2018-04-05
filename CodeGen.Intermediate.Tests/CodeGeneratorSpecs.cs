@@ -3,6 +3,7 @@ using System.Linq;
 using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Intermediate.Codes.Common;
+using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -17,8 +18,7 @@ namespace CodeGen.Intermediate.Tests
         public void ConstantAssignment()
         {
             var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(st);
+            var actual = Generate(st);
 
             var expected = new List<IntermediateCode>
             {
@@ -64,7 +64,7 @@ namespace CodeGen.Intermediate.Tests
                 mainFunc,
             });
 
-            var actual = new IntermediateCodeGenerator().Generate(ast);
+            var actual = Generate(ast);
 
             var expected = new List<IntermediateCode>
             {
@@ -101,8 +101,7 @@ namespace CodeGen.Intermediate.Tests
                 )
             );
 
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(expr);
+            var actual = Generate(expr);
 
             var expected = new List<IntermediateCode>
             {
@@ -130,8 +129,7 @@ namespace CodeGen.Intermediate.Tests
                 )
             );
 
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(expr);
+            var actual = Generate(expr);
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("z"), new Reference("w")),
@@ -212,8 +210,7 @@ namespace CodeGen.Intermediate.Tests
             var statement = new IfStatement(condition,
                 new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression("b"))));
 
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(statement);
+            var actual = Generate(statement);
 
             var label = new Label("label1");
 
@@ -233,6 +230,9 @@ namespace CodeGen.Intermediate.Tests
         {
             var sut = new IntermediateCodeGenerator();
             var actual = sut.Generate(unit);
+            var namer = new ImplicitReferenceNameAssigner();
+            namer.AssignNames(unit);
+
             return actual.ToList().AsReadOnly();
         }
     }

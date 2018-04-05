@@ -15,10 +15,9 @@ namespace CodeGen.Parsing.Tests
             var ast = new Program(new List<Function>());
             var sut = new ScopeScanner();
             ast.Accept(sut);
-            var actual = sut.Scope;
-
-            var expected = new Scope();
-            actual.ShouldDeepEqual(expected);
+            var scope = sut.Scope;
+            
+            AssertScope(ast, scope);
         }
 
         [Fact]
@@ -30,20 +29,13 @@ namespace CodeGen.Parsing.Tests
             {
                 function
             });
-
-            var sut = new ScopeScanner();
-            ast.Accept(sut);
-
-            var actual = sut.Scope;
-
+            
             var scope = new Scope();
             scope.CreateChildScope(function);
             
-            var expected = scope;
-            
-            actual.ShouldDeepEqual(expected);
-        }      
-        
+            AssertScope(ast, scope);
+        }
+
         [Fact]
         public void FunctionWithStatements()
         {
@@ -51,19 +43,57 @@ namespace CodeGen.Parsing.Tests
             {
                 new AssignmentStatement("a", new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c"))
             }));
-            var ast = new Program(new List<Function> {function});
-            var sut = new ScopeScanner();
-
-            ast.Accept(sut);
-
-            var actual = sut.Scope;
+            var ast = new Program(new List<Function> { function });
+            
             var scope = new Scope();
             var child = scope.CreateChildScope(function);
-            child.AddReference("a", 0);
+            child.AddReference("T1", 0);
             child.AddReference("b", 1);
             child.AddReference("c", 2);
-            var expected = scope;
-            actual.ShouldDeepEqual(expected);
-        }      
+            child.AddReference("a", 3);
+
+            AssertScope(ast, scope);
+        }
+
+        [Fact]
+        public void Assignment()
+        {
+            var ast = new AssignmentStatement("a", new ConstantExpression(1));
+
+            var scope = new Scope();
+            scope.AddReference("T1", 0);
+            scope.AddReference("a", 1);
+
+            AssertScope(ast, scope);
+        }
+
+        [Fact]
+        public void Expression()
+        {
+            var scope = new Scope();
+            scope.AddReference("T1", 0);
+            scope.AddReference("a", 1);
+            scope.AddReference("b", 2);
+
+            var ast = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"));
+
+            AssertScope(ast, scope);
+        }
+
+        private static void AssertScope(ICodeUnit expressionNode, Scope expectedScope)
+        {
+            var sut = new ScopeScanner();
+
+            var nameAssigner = new ImplicitReferenceNameAssigner();
+            nameAssigner.AssignNames(expressionNode);
+
+            expressionNode.Accept(sut);
+
+            var actual = sut.Scope;
+
+            actual.WithDeepEqual(expectedScope)
+                .IgnoreProperty(r => r.Name == "Parent")
+                .Assert();
+        }
     }
 }

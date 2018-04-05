@@ -2,6 +2,6 @@
 {
     public interface ICodeUnit
     {
-        void Accept(ICodeVisitor visitor);
+        void Accept(ICodeUnitVisitor unitVisitor);
     }
 }
