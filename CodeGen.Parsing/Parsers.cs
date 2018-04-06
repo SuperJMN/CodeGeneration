@@ -54,7 +54,13 @@ namespace CodeGen.Parsing
                 .Or(BooleanValue)
                 .Named("literal");
 
-        private static readonly TokenListParser<LangToken, Expression> Item = Literal;
+
+        public static readonly TokenListParser<LangToken, Expression> FunctionCall =
+            from name in Identifier
+            from parameters in Parameters.BetweenParenthesis()
+            select (Expression) new Call(name, parameters);
+
+        private static readonly TokenListParser<LangToken, Expression> Item = FunctionCall.Try().Or(Literal);
 
         private static readonly TokenListParser<LangToken, Expression> Factor =
             Parse.Ref(() => Expression).BetweenParenthesis()
@@ -77,6 +83,8 @@ namespace CodeGen.Parsing
 
         private static readonly TokenListParser<LangToken, Expression> Disjunction = Parse.Chain(Or, Conjunction, MakeBinary);
 
+
+        
         public static readonly TokenListParser<LangToken, Expression> Expression = Disjunction;
 
         private static readonly TokenListParser<LangToken, Expression> Condition = Expression.BetweenParenthesis();
@@ -159,15 +167,20 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, Expression[]> Parameters =
             Expression.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
 
-
-        public static readonly TokenListParser<LangToken, Statement> MethodCall =
-            from name in Identifier
-            from parameters in Parameters.BetweenParenthesis()
+        public static readonly TokenListParser<LangToken, Statement> Return =
+            from keyw in Token.EqualTo(LangToken.Return)
+            from expr in Expression.OptionalOrDefault()
             from sm in Token.EqualTo(LangToken.Semicolon)
-            select (Statement) new Call(name, parameters);
+            select (Statement) new ReturnStatement(expr);
+            
+
+        public static readonly TokenListParser<LangToken, Statement> FunctionStatement =
+            from call in FunctionCall
+            from sc in Token.EqualTo(LangToken.Semicolon)
+            select (Statement) call;
 
         public static readonly TokenListParser<LangToken, Statement>
-            SingleStatement = MethodCall.Try().Or(ConditionalStatement).Or(AssignmentStatement).Or(ForLoop);
+            SingleStatement = FunctionStatement.Try().Or(ConditionalStatement).Or(AssignmentStatement).Or(ForLoop).Or(Return);
 
         private static readonly TokenListParser<LangToken, VariableType> Int = Token.EqualTo(LangToken.Int).Value(VariableType.Int);
         private static readonly TokenListParser<LangToken, VariableType> Char = Token.EqualTo(LangToken.Char).Value(VariableType.Char);

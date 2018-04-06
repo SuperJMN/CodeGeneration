@@ -1,14 +1,14 @@
-using CodeGen.Core;
+using CodeGen.Parsing.Ast.Expressions;
 
 namespace CodeGen.Parsing.Ast.Statements
 {
     public class ReturnStatement : Statement
     {
-        public Reference Target { get; }
+        public Expression Expression { get; }
 
-        public ReturnStatement(Reference target)
+        public ReturnStatement(Expression expression)
         {
-            Target = target;
+            Expression = expression;
         }
 
         public override void Accept(ICodeUnitVisitor unitVisitor)
@@ -18,12 +18,12 @@ namespace CodeGen.Parsing.Ast.Statements
 
         public override string ToString()
         {
-            if (Target == null)
+            if (Expression == null)
             {
                 return "return to caller";
             }
 
-            return $"return {Target} to caller";
+            return $"return {Expression} to caller";
         }
     }
 }

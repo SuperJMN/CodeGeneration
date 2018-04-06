@@ -35,6 +35,21 @@ namespace CodeGen.Parsing.Tests
             AssertCode("if (a==0) b=0; ", expected);
         }
 
+        [Fact]
+        public void Func()
+        {
+            var assignment = new ExpressionNode(Operator.Add,
+                new ReferenceExpression("a"),
+                new Call("SomeFunc", new ReferenceExpression("b"), new ReferenceExpression("c")));
+
+            Statement[] expected =
+            {
+                new AssignmentStatement("d", assignment), 
+            };
+
+            AssertCode("d=a+SomeFunc(b, c);", expected);
+        }
+
         [Fact(Skip = "Not working")]
         public void String()
         {

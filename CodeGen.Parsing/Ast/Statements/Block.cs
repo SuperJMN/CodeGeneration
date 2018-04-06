@@ -15,20 +15,15 @@ namespace CodeGen.Parsing.Ast.Statements
         {            
         }
 
-        public Block(IList<Statement> statements, IList<DeclarationStatement> declarations = null)
+        public Block(IList<Statement> statements, IList<DeclarationStatement> declarations)
         {
             Statements = statements;
             Declarations = declarations;
         }
 
-        public Block(IList<Statement> statements)
+        public Block(IList<Statement> statements) : this(statements, new List<DeclarationStatement>())
         {
             Statements = statements;
-        }
-
-        public Block(Statement[] statements, DeclarationStatement[][] declarations)
-        {
-            throw new System.NotImplementedException();
         }
 
         public override void Accept(ICodeUnitVisitor unitVisitor)

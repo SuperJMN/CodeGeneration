@@ -33,14 +33,14 @@ namespace CodeGen.Parsing.Ast
             return scope;
         }
 
-        public void AddReference(Reference r, int address)
+        public void AddReference(Reference r)
         {
             if (symbols.ContainsKey(r))
             {
                 return;
             }
 
-            symbols.Add(r, new Symbol(address));
+            symbols.Add(r, new Symbol());
         }
     }
 }

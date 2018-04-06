@@ -1,4 +1,5 @@
-﻿using CodeGen.Core;
+﻿using System.ComponentModel;
+using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -12,11 +13,12 @@ namespace CodeGen.Parsing
         public ScopeScanner()
         {
             Scope = new Scope();
-            Current = Scope;
+            CurrentScope = Scope;
         }
 
-        private Scope Current { get; set; }
-        public Scope Scope { get; }
+        public Scope Scope { get; set; }
+
+        private Scope CurrentScope { get; set; }
 
         public void Visit(ExpressionNode expressionNode)
         {
@@ -77,8 +79,21 @@ namespace CodeGen.Parsing
 
         public void Visit(Function function)
         {
-            CreateScope(function);
+            PushScope(function);
+
+            foreach (var arg in function.Arguments)
+            {
+                AddReference(arg.Reference);
+            }
+
             function.Block.Accept(this);
+            
+            PopScope();
+        }
+
+        private void PopScope()
+        {
+            CurrentScope = CurrentScope.Parent;
         }
 
         public void Visit(DeclarationStatement expressionNode)
@@ -99,26 +114,34 @@ namespace CodeGen.Parsing
 
         public void Visit(Call call)
         {
+            foreach (var p in call.Parameters)
+            {
+                p.Accept(this);
+            }
+
+            AddReference(call.Reference);            
         }
 
         public void Visit(ReturnStatement returnStatement)
         {
+            returnStatement.Expression?.Accept(this);            
         }
 
         public void Visit(Argument argument)
         {
+            AddReference(argument.Reference);
         }
 
         private void AddReference(Reference reference)
         {
-            Current.AddReference(reference, addressCount);
+            CurrentScope.AddReference(reference);
             addressCount++;
         }
 
-        private void CreateScope(ICodeUnit scopeOwner)
+        private void PushScope(ICodeUnit scopeOwner)
         {
             addressCount = 0;
-            Current = Current.CreateChildScope(scopeOwner);
+            CurrentScope = CurrentScope.CreateChildScope(scopeOwner);
         }
     }
 }

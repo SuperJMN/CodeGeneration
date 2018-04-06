@@ -38,6 +38,7 @@ namespace CodeGen.Parsing.Tokenizer
                 .Match(Span.EqualTo("do"), LangToken.Do, true)
                 .Match(Span.EqualTo("while"), LangToken.While, true)
                 .Match(Span.EqualTo("for"), LangToken.For, true)
+                .Match(Span.EqualTo("return"), LangToken.Return, true)
                 .Match(Span.EqualTo("true"), LangToken.True, true)
                 .Match(Span.EqualTo("false"), LangToken.False, true)
                 .Match(Span.EqualTo("void"), LangToken.Void, true)

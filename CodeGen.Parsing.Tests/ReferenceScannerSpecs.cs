@@ -23,10 +23,10 @@ namespace CodeGen.Parsing.Tests
             {
                 new Argument(VariableType.Int, "a"),
                 new Argument(VariableType.Int, "b"),
-            }, new Block(new List<Statement>()
+            }, new Block(new List<Statement>
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
-                new ReturnStatement("c")
+                new ReturnStatement(new ReferenceExpression("c"))
             }, new List<DeclarationStatement>()));
 
             Assert(ast, 7);
@@ -35,8 +35,8 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MethodCall()
         {
-            var ast = new Call("main", "result", new ReferenceExpression("b"));
-            Assert(ast, 3);
+            var ast = new Call("main", new ReferenceExpression("b"));
+            Assert(ast, 2);
         }
 
         private static void Assert(ICodeUnit ast, int expectedRefCount)

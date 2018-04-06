@@ -113,21 +113,13 @@ namespace CodeGen.Parsing
             {
                 param.Accept(this);
             }
-
-            if (call.Target != null)
-            {
-                AddReference(call.Target);
-            }
-
+            
             AddReference(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
         {
-            if (returnStatement.Target!=null)
-            {
-                AddReference(returnStatement.Target);
-            }
+            returnStatement.Expression?.Accept(this);
         }
 
         public void Visit(Argument argument)

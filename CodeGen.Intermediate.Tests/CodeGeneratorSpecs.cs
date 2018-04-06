@@ -50,12 +50,12 @@ namespace CodeGen.Intermediate.Tests
             }, new Block(new List<Statement>()
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
-                new ReturnStatement("c")
+                new ReturnStatement(new ReferenceExpression("c"))
             }, new List<DeclarationStatement>()));
 
             var mainFunc = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
             {
-                new Call("add", "r", new ConstantExpression(1), new ConstantExpression(2)),
+                new AssignmentStatement("r", new Call("add", new ConstantExpression(1), new ConstantExpression(2))),
             }, new List<DeclarationStatement>()));
 
             var ast = new Program(new[]

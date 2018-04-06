@@ -52,6 +52,7 @@ namespace CodeGen.Parsing.Tokenizer
         DoubleMinus,
         Int,
         Char,
-        Void
+        Void,
+        Return
     }
 }

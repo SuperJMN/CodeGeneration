@@ -5,23 +5,15 @@ using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
 {
-    public class Call : Statement
+    public class Call : Expression
     {
         public string FunctionName { get; }
-        public Reference Target { get; }
-        public Reference Reference { get; }
         public IEnumerable<Expression> Parameters { get; }
 
-        public Call(string functionName, params Expression[] parameters)
+        public Call(string functionName, params Expression[] parameters) : base(new Reference())
         {
             FunctionName = functionName;
             Parameters = parameters;
-            Reference = new Reference();
-        }
-
-        public Call(string functionName, Reference target, params Expression[] parameters) : this(functionName, parameters)
-        {            
-            Target = target;            
         }
 
         public override void Accept(ICodeUnitVisitor unitVisitor)

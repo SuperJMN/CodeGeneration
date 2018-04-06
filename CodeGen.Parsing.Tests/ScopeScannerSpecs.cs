@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -37,6 +38,64 @@ namespace CodeGen.Parsing.Tests
         }
 
         [Fact]
+        public void TwoFunctions()
+        {
+            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            {
+                new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
+            }));
+            var add = new Function("add", VariableType.Void, new List<Argument> { new Argument(VariableType.Int, "a"), new Argument(VariableType.Int, "b")}, new Block(new List<Statement>()
+            {
+                new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))),
+            }));
+
+
+            var ast = new Program(new List<Function>()
+            {
+                function,
+                add
+            });
+            
+            var scope = new Scope();
+            var mainScope = scope.CreateChildScope(function);
+            mainScope.AddReference("T1");
+            mainScope.AddReference("T2");
+            mainScope.AddReference("T3");
+            mainScope.AddReference("c");
+
+            var addScope = scope.CreateChildScope(add);
+            addScope.AddReference("T4");
+            addScope.AddReference("a");
+            addScope.AddReference("b");            
+            
+            AssertScope(ast, scope);
+        }
+
+        [Fact]
+        public void MainWithConstants()
+        {
+            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            {
+                new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
+            }));
+            
+
+            var ast = new Program(new List<Function>()
+            {
+                function,
+            });
+            
+            var scope = new Scope();
+            var mainScope = scope.CreateChildScope(function);
+            mainScope.AddReference("T1");
+            mainScope.AddReference("T2");
+            mainScope.AddReference("T3");
+            mainScope.AddReference("c");
+
+            AssertScope(ast, scope);
+        }
+
+        [Fact]
         public void FunctionWithStatements()
         {
             var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
@@ -47,10 +106,10 @@ namespace CodeGen.Parsing.Tests
             
             var scope = new Scope();
             var child = scope.CreateChildScope(function);
-            child.AddReference("T1", 0);
-            child.AddReference("b", 1);
-            child.AddReference("c", 2);
-            child.AddReference("a", 3);
+            child.AddReference("T1");
+            child.AddReference("b");
+            child.AddReference("c");
+            child.AddReference("a");
 
             AssertScope(ast, scope);
         }
@@ -61,8 +120,8 @@ namespace CodeGen.Parsing.Tests
             var ast = new AssignmentStatement("a", new ConstantExpression(1));
 
             var scope = new Scope();
-            scope.AddReference("T1", 0);
-            scope.AddReference("a", 1);
+            scope.AddReference("T1");
+            scope.AddReference("a");
 
             AssertScope(ast, scope);
         }
@@ -71,9 +130,9 @@ namespace CodeGen.Parsing.Tests
         public void Expression()
         {
             var scope = new Scope();
-            scope.AddReference("T1", 0);
-            scope.AddReference("a", 1);
-            scope.AddReference("b", 2);
+            scope.AddReference("T1");
+            scope.AddReference("a");
+            scope.AddReference("b");
 
             var ast = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"));
 
@@ -97,3 +156,4 @@ namespace CodeGen.Parsing.Tests
         }
     }
 }
+

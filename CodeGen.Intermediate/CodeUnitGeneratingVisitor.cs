@@ -191,16 +191,17 @@ namespace CodeGen.Intermediate
             }
 
             InnerCode.Add(IntermediateCode.Emit.Call(call.FunctionName, call.Reference));
-
-            if (call.Target != null)
-            {
-                InnerCode.Add(IntermediateCode.Emit.Set(call.Target, call.Reference));
-            }
         }
 
         public void Visit(ReturnStatement returnStatement)
         {
-            InnerCode.Add(IntermediateCode.Emit.Return(returnStatement.Target));
+            if (returnStatement.Expression == null)
+            {
+                return;
+            }
+
+            returnStatement.Expression.Accept(this);
+            InnerCode.Add(IntermediateCode.Emit.Return(returnStatement.Expression.Reference));
         }
 
         public void Visit(Argument argument)
