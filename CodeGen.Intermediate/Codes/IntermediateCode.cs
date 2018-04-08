@@ -93,7 +93,12 @@ namespace CodeGen.Intermediate.Codes
             public static IntermediateCode FunctionDefinition(Function function)
             {
                 return new FunctionDefinitionCode(function);
-            }           
+            }
+
+            public static IntermediateCode Return()
+            {
+                return new ReturnCode();
+            }
         }             
     }
 }

@@ -11,6 +11,10 @@ namespace CodeGen.Intermediate.Codes
             Reference = reference;
         }
 
+        public ReturnCode()
+        {
+        }
+
         public override void Accept(IIntermediateCodeVisitor visitor)
         {
             visitor.Visit(this);

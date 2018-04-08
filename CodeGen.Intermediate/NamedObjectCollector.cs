@@ -58,7 +58,7 @@ namespace CodeGen.Intermediate
             AddLabel(code.Label);
         }
 
-        public void Visit(FunctionDefinitionCode def)
+        public void Visit(FunctionDefinitionCode code)
         {            
         }
 

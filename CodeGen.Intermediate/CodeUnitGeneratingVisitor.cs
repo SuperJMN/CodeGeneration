@@ -179,7 +179,7 @@ namespace CodeGen.Intermediate
             foreach (var unit in program.Functions)
             {
                 unit.Accept(this);
-            }
+            }            
         }
 
         public void Visit(Call call)
@@ -197,6 +197,7 @@ namespace CodeGen.Intermediate
         {
             if (returnStatement.Expression == null)
             {
+                InnerCode.Add(IntermediateCode.Emit.Return());
                 return;
             }
 

@@ -12,7 +12,7 @@ namespace CodeGen.Intermediate
         void Visit(ReferenceAssignment code);
         void Visit(BoolExpressionAssignment code);
         void Visit(Jump code);
-        void Visit(FunctionDefinitionCode def);
+        void Visit(FunctionDefinitionCode code);
         void Visit(CallCode code);
         void Visit(ReturnCode code);
     }
