@@ -175,11 +175,12 @@ namespace CodeGen.Intermediate
         {
             var main = program.Functions.Single(x => x.Name == "main");
             InnerCode.Add(IntermediateCode.Emit.Call(main.Name));
+            InnerCode.Add(IntermediateCode.Emit.Halt());
 
             foreach (var unit in program.Functions)
             {
                 unit.Accept(this);
-            }            
+            }                        
         }
 
         public void Visit(Call call)

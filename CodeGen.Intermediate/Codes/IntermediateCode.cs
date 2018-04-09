@@ -7,7 +7,7 @@ namespace CodeGen.Intermediate.Codes
     public abstract class IntermediateCode
     {
         public abstract void Accept(IIntermediateCodeVisitor visitor);
-      
+
         public static class Emit
         {
             public static IntermediateCode Add(Reference destination, Reference left, Reference right)
@@ -99,6 +99,11 @@ namespace CodeGen.Intermediate.Codes
             {
                 return new ReturnCode();
             }
-        }             
+
+            public static IntermediateCode Halt()
+            {
+                return new HaltCode();
+            }
+        }
     }
 }

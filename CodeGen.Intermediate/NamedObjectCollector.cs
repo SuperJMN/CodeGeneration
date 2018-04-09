@@ -72,6 +72,10 @@ namespace CodeGen.Intermediate
             AddReference(code.Reference);
         }
 
+        public void Visit(HaltCode code)
+        {            
+        }
+
         private void AddReference(Reference reference)
         {
             if (reference!= null)
