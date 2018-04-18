@@ -76,6 +76,11 @@ namespace CodeGen.Intermediate
         {            
         }
 
+        public void Visit(ReferenceParameterCode code)
+        {
+            AddReference(code.Reference);
+        }
+
         private void AddReference(Reference reference)
         {
             if (reference!= null)

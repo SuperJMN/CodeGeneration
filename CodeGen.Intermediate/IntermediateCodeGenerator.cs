@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Parsing.Ast;
 
@@ -50,24 +49,6 @@ namespace CodeGen.Intermediate
             {
                 r.Name = GetNewLabelName();
             }
-        }
-
-        private void AssignIdentifiersToImplicityReferences(IEnumerable<Reference> references)
-        {
-            var toGiveName = references
-                .Where(r => r.Identifier == null)
-                .Distinct()
-                .ToList();
-
-            foreach (var r in toGiveName)
-            {
-                r.Identifier = GetNewIdentifier();
-            }
-        }
-
-        private string GetNewIdentifier()
-        {
-            return "T" + ++implicitReferenceCount;
         }
 
         private string GetNewLabelName()

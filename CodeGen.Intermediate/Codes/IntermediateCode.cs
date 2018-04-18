@@ -75,11 +75,6 @@ namespace CodeGen.Intermediate.Codes
                 return new ReferenceParameterCode(reference);
             }
 
-            public static IntermediateCode Parameter(int value)
-            {
-                return new IntParameterCode(value);
-            }
-
             public static IntermediateCode Call(string functionName, Reference reference)
             {
                 return new CallCode(functionName, reference);

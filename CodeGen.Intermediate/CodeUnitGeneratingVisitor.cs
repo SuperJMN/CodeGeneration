@@ -140,7 +140,6 @@ namespace CodeGen.Intermediate
         {
             InnerCode.Add(IntermediateCode.Emit.FunctionDefinition(function));
 
-
             foreach (var decl in function.Block.Declarations)
             {
                 decl.Accept(this);
@@ -149,6 +148,14 @@ namespace CodeGen.Intermediate
             foreach (var st in function.Block.Statements)
             {
                 st.Accept(this);
+            }
+
+            if (function.ReturnType == VariableType.Void)
+            {
+                if (!function.Block.Statements.Any(statement => statement is ReturnStatement))
+                {
+                    InnerCode.Add(IntermediateCode.Emit.Return());
+                }
             }
         }
 
