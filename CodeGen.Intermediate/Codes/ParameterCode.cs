@@ -2,11 +2,11 @@
 
 namespace CodeGen.Intermediate.Codes
 {
-    public class ReferenceParameterCode : IntermediateCode
+    public class ParameterCode : IntermediateCode
     {
         public Reference Reference { get; }
 
-        public ReferenceParameterCode(Reference reference)
+        public ParameterCode(Reference reference)
         {
             Reference = reference;
         }

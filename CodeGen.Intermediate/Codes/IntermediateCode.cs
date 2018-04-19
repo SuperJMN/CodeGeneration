@@ -72,7 +72,7 @@ namespace CodeGen.Intermediate.Codes
 
             public static IntermediateCode Parameter(Reference reference)
             {
-                return new ReferenceParameterCode(reference);
+                return new ParameterCode(reference);
             }
 
             public static IntermediateCode Call(string functionName, Reference reference)
