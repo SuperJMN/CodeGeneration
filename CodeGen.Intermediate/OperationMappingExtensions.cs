@@ -44,15 +44,19 @@ namespace CodeGen.Intermediate
             switch (op)
             {
                 case Operator.Eq:
-                    return  BooleanOperation.IsEqual;
+                    return BooleanOperation.IsEqual;
                 case Operator.Lt:
-                    return  BooleanOperation.IsLessThan;
+                    return BooleanOperation.IsLessThan;
                 case Operator.Gt:
-                    return  BooleanOperation.IsGreaterThan;
+                    return BooleanOperation.IsGreaterThan;
                 case Operator.Gte:
-                    return  BooleanOperation.IsGreaterOrEqual;
+                    return BooleanOperation.IsGreaterOrEqual;
                 case Operator.Lte:
-                    return  BooleanOperation.IsLessOrEqual;
+                    return BooleanOperation.IsLessOrEqual;
+                case Operator.And:
+                    return BooleanOperation.And;
+                case Operator.Or:
+                    return BooleanOperation.Or;
             }
 
             throw new ArgumentOutOfRangeException(nameof(op));

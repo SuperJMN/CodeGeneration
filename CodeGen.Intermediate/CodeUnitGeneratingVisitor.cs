@@ -48,7 +48,9 @@ namespace CodeGen.Intermediate
                 Operator.Gt,
                 Operator.Gte,
                 Operator.Not,
-                Operator.Lte
+                Operator.Lte,
+                Operator.Or,
+                Operator.And,
             };
 
             return booleanOperartors.Contains(expressionNode.OperatorName);

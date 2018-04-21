@@ -12,6 +12,8 @@
         public static BooleanOperation IsGreaterThan = new BooleanOperation(1, ">", "is greater than");
         public static BooleanOperation IsGreaterOrEqual  = new BooleanOperation(1, ">=", "is greater than or equal to");
         public static BooleanOperation IsLessOrEqual  = new BooleanOperation(1, "<=", "is less than or equal to");
+        public static BooleanOperation And  = new BooleanOperation(1, "&&", "and");
+        public static BooleanOperation Or  = new BooleanOperation(1, "||", "and");
         
 
         private BooleanOperation(int value, string symbol, string description)

@@ -19,6 +19,8 @@ namespace CodeGen.Parsing.Tokenizer
                 .Match(Span.EqualTo(">="), LangToken.GreaterThanOrEqual)
                 .Match(Span.EqualTo("<="), LangToken.LessThanOrEqual)
                 .Match(Span.EqualTo("!="), LangToken.NotEqual)
+                .Match(Span.EqualTo("||"), LangToken.Or)
+                .Match(Span.EqualTo("&&"), LangToken.And)
                 .Match(Span.EqualTo("<"), LangToken.LessThan)
                 .Match(Span.EqualTo(">"), LangToken.GreaterThan)
                 .Match(Span.EqualTo("\""), LangToken.Quote)
