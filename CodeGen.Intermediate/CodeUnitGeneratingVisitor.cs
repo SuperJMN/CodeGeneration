@@ -140,7 +140,7 @@ namespace CodeGen.Intermediate
 
         public void Visit(Function function)
         {
-            InnerCode.Add(IntermediateCode.Emit.FunctionDefinition(function));
+            InnerCode.Add(IntermediateCode.Emit.FunctionDefinition(function.Firm));
 
             foreach (var decl in function.Block.Declarations)
             {

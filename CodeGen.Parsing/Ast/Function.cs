@@ -6,16 +6,15 @@ namespace CodeGen.Parsing.Ast
 {
     public class Function : ICodeUnit
     {
-        public string Name { get; }
-        public VariableType ReturnType { get; }
-        public ICollection<Argument> Arguments { get; }
+        public string Name => Firm.Name;
+        public VariableType ReturnType => Firm.ReturnType;
+        public ICollection<Argument> Arguments => Firm.Arguments;
+        public FunctionFirm Firm { get; }
         public Block Block { get; }
 
-        public Function(string name, VariableType returnType, ICollection<Argument> arguments, Block block)
+        public Function(FunctionFirm firm, Block block)
         {
-            Name = name;
-            ReturnType = returnType;
-            Arguments = arguments;
+            Firm = firm;
             Block = block;
         }
 

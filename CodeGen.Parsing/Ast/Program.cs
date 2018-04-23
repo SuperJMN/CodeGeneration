@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CodeGen.Core;
 
 namespace CodeGen.Parsing.Ast
 {

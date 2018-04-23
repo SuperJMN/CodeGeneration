@@ -5,11 +5,11 @@ namespace CodeGen.Intermediate.Codes
 {
     public class FunctionDefinitionCode : IntermediateCode
     {
-        public Function Function { get; }
+        public FunctionFirm Firm { get; }
 
-        public FunctionDefinitionCode(Function function)
+        public FunctionDefinitionCode(FunctionFirm firm)
         {
-            Function = function;
+            Firm = firm;
         }
 
         public override void Accept(IIntermediateCodeVisitor visitor)
@@ -19,7 +19,7 @@ namespace CodeGen.Intermediate.Codes
 
         public override string ToString()
         {
-            return $"Definition of function {Function}";
+            return $"Definition of function {Firm}";
         }
     }
 }

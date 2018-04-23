@@ -242,7 +242,7 @@ namespace CodeGen.Parsing
             from name in Identifier
             from args in Arguments.BetweenParenthesis()
             from block in Block
-            select new Function(name, returnType, args, (Block)block);
+            select new Function(new FunctionFirm(name, returnType, args), (Block)block);
 
         public static readonly TokenListParser<LangToken, Program> Program =
             from funcs in Function.Many()

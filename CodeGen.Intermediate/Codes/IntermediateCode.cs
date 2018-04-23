@@ -85,7 +85,7 @@ namespace CodeGen.Intermediate.Codes
                 return new CallCode(functionName);
             }
 
-            public static IntermediateCode FunctionDefinition(Function function)
+            public static IntermediateCode FunctionDefinition(FunctionFirm function)
             {
                 return new FunctionDefinitionCode(function);
             }
