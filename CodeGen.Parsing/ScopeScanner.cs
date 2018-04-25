@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using CodeGen.Core;
+﻿using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -8,8 +7,6 @@ namespace CodeGen.Parsing
 {
     public class ScopeScanner : ICodeUnitVisitor
     {
-        private int addressCount;
-
         public ScopeScanner()
         {
             Scope = new Scope();
@@ -135,12 +132,10 @@ namespace CodeGen.Parsing
         private void AddReference(Reference reference)
         {
             CurrentScope.AddReference(reference);
-            addressCount++;
         }
 
         private void PushScope(ICodeUnit scopeOwner)
         {
-            addressCount = 0;
             CurrentScope = CurrentScope.CreateChildScope(scopeOwner);
         }
     }
