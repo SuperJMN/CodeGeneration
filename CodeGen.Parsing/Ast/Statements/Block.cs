@@ -28,6 +28,11 @@ namespace CodeGen.Parsing.Ast.Statements
 
         public override void Accept(ICodeUnitVisitor unitVisitor)
         {
+            foreach (var decl in Declarations)
+            {
+                decl.Accept(unitVisitor);
+            }
+
             foreach (var statement in Statements)
             {
                 statement.Accept(unitVisitor);

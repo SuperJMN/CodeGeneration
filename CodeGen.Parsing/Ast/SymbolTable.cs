@@ -10,7 +10,7 @@ namespace CodeGen.Parsing.Ast
         public ICodeUnit Owner { get; }
         public Scope Parent { get; }
         private readonly List<Scope> children = new List<Scope>();
-        private readonly IDictionary<Reference, Symbol> symbols = new Dictionary<Reference, Symbol>();
+        private readonly IDictionary<Reference, Properties> symbols = new Dictionary<Reference, Properties>();
 
         public Scope()
         {
@@ -24,7 +24,7 @@ namespace CodeGen.Parsing.Ast
 
         public IEnumerable<Scope> Children => children.AsReadOnly();
 
-        public IReadOnlyDictionary<Reference, Symbol> Symbols => new ReadOnlyDictionary<Reference, Symbol>(symbols);
+        public IReadOnlyDictionary<Reference, Properties> Symbols => new ReadOnlyDictionary<Reference, Properties>(symbols);
 
         public Scope CreateChildScope(ICodeUnit scopeOwner)
         {
@@ -33,14 +33,24 @@ namespace CodeGen.Parsing.Ast
             return scope;
         }
 
-        public void AddReference(Reference r)
+        public void AnnotateSymbol(Reference reference)
         {
-            if (symbols.ContainsKey(r))
+            if (!symbols.ContainsKey(reference))
             {
-                return;
+                symbols.Add(reference, new Properties());
             }
+        }
 
-            symbols.Add(r, new Symbol());
+        public void AnnotateTypedSymbol(Reference reference, VariableType type)
+        {
+            if (!symbols.ContainsKey(reference))
+            {
+                symbols.Add(reference, new Properties());
+            }
+            else
+            {                
+                symbols[reference].AssignType(type);
+            }
         }
     }
 }

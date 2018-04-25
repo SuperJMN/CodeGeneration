@@ -1,5 +1,4 @@
-﻿using CodeGen.Core;
-using CodeGen.Parsing.Ast;
+﻿using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
@@ -19,7 +18,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ExpressionNode expressionNode)
         {
-            AddReference(expressionNode.Reference);
+            CurrentScope.AnnotateSymbol(expressionNode.Reference);
 
             foreach (var op in expressionNode.Operands)
             {
@@ -29,7 +28,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ConstantExpression expression)
         {
-            AddReference(expression.Reference);
+            CurrentScope.AnnotateSymbol(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
@@ -41,13 +40,13 @@ namespace CodeGen.Parsing
 
         public void Visit(ReferenceExpression expression)
         {
-            AddReference(expression.Reference);
+            CurrentScope.AnnotateSymbol(expression.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
         {
             expression.Assignment.Accept(this);
-            AddReference(expression.Target);
+            CurrentScope.AnnotateSymbol(expression.Target);
         }
 
         public void Visit(ForLoop code)
@@ -80,7 +79,7 @@ namespace CodeGen.Parsing
 
             foreach (var arg in function.Arguments)
             {
-                AddReference(arg.Reference);
+                arg.Accept(this);
             }
 
             function.Block.Accept(this);
@@ -95,10 +94,16 @@ namespace CodeGen.Parsing
 
         public void Visit(DeclarationStatement expressionNode)
         {
+            foreach (var d in expressionNode.Declarations)
+            {
+                CurrentScope.AnnotateTypedSymbol(d.Reference, expressionNode.Type);
+                d.Initialization?.Accept(this);
+            }
         }
 
         public void Visit(VariableDeclaration expressionNode)
         {
+            expressionNode.Initialization.Accept(this);
         }
 
         public void Visit(Program program)
@@ -116,7 +121,7 @@ namespace CodeGen.Parsing
                 p.Accept(this);
             }
 
-            AddReference(call.Reference);            
+            CurrentScope.AnnotateSymbol(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
@@ -126,12 +131,7 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            AddReference(argument.Reference);
-        }
-
-        private void AddReference(Reference reference)
-        {
-            CurrentScope.AddReference(reference);
+            CurrentScope.AnnotateTypedSymbol(argument.Reference, argument.Type);
         }
 
         private void PushScope(ICodeUnit scopeOwner)

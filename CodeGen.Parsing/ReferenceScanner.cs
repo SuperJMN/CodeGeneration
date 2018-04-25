@@ -95,6 +95,8 @@ namespace CodeGen.Parsing
 
         public void Visit(VariableDeclaration expressionNode)
         {
+            expressionNode.Initialization?.Accept(this);
+
             AddReference(expressionNode.Reference);
         }
 
