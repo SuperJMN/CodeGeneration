@@ -5,30 +5,30 @@ using CodeGen.Core;
 
 namespace CodeGen.Parsing.Ast
 {
-    public class Scope
+    public class SymbolTable
     {
         public ICodeUnit Owner { get; }
-        public Scope Parent { get; }
-        private readonly List<Scope> children = new List<Scope>();
+        public SymbolTable Parent { get; }
+        private readonly List<SymbolTable> children = new List<SymbolTable>();
         private readonly IDictionary<Reference, Properties> symbols = new Dictionary<Reference, Properties>();
 
-        public Scope()
+        public SymbolTable()
         {
         }
 
-        public Scope(ICodeUnit owner, Scope parent)
+        public SymbolTable(ICodeUnit owner, SymbolTable parent)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             Parent = parent;
         }
 
-        public IEnumerable<Scope> Children => children.AsReadOnly();
+        public IEnumerable<SymbolTable> Children => children.AsReadOnly();
 
         public IReadOnlyDictionary<Reference, Properties> Symbols => new ReadOnlyDictionary<Reference, Properties>(symbols);
 
-        public Scope CreateChildScope(ICodeUnit scopeOwner)
+        public SymbolTable CreateChildScope(ICodeUnit scopeOwner)
         {
-            var scope = new Scope(scopeOwner, this);
+            var scope = new SymbolTable(scopeOwner, this);
             children.Add(scope);
             return scope;
         }

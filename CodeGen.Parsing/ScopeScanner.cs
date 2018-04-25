@@ -8,17 +8,17 @@ namespace CodeGen.Parsing
     {
         public ScopeScanner()
         {
-            Scope = new Scope();
-            CurrentScope = Scope;
+            SymbolTable = new SymbolTable();
+            CurrentSymbolTable = SymbolTable;
         }
 
-        public Scope Scope { get; set; }
+        public SymbolTable SymbolTable { get; set; }
 
-        private Scope CurrentScope { get; set; }
+        private SymbolTable CurrentSymbolTable { get; set; }
 
         public void Visit(ExpressionNode expressionNode)
         {
-            CurrentScope.AnnotateSymbol(expressionNode.Reference);
+            CurrentSymbolTable.AnnotateSymbol(expressionNode.Reference);
 
             foreach (var op in expressionNode.Operands)
             {
@@ -28,7 +28,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ConstantExpression expression)
         {
-            CurrentScope.AnnotateSymbol(expression.Reference);
+            CurrentSymbolTable.AnnotateSymbol(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
@@ -40,13 +40,13 @@ namespace CodeGen.Parsing
 
         public void Visit(ReferenceExpression expression)
         {
-            CurrentScope.AnnotateSymbol(expression.Reference);
+            CurrentSymbolTable.AnnotateSymbol(expression.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
         {
             expression.Assignment.Accept(this);
-            CurrentScope.AnnotateSymbol(expression.Target);
+            CurrentSymbolTable.AnnotateSymbol(expression.Target);
         }
 
         public void Visit(ForLoop code)
@@ -89,14 +89,14 @@ namespace CodeGen.Parsing
 
         private void PopScope()
         {
-            CurrentScope = CurrentScope.Parent;
+            CurrentSymbolTable = CurrentSymbolTable.Parent;
         }
 
         public void Visit(DeclarationStatement expressionNode)
         {
             foreach (var d in expressionNode.Declarations)
             {
-                CurrentScope.AnnotateTypedSymbol(d.Reference, expressionNode.Type);
+                CurrentSymbolTable.AnnotateTypedSymbol(d.Reference, expressionNode.Type);
                 d.Initialization?.Accept(this);
             }
         }
@@ -121,7 +121,7 @@ namespace CodeGen.Parsing
                 p.Accept(this);
             }
 
-            CurrentScope.AnnotateSymbol(call.Reference);
+            CurrentSymbolTable.AnnotateSymbol(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
@@ -131,12 +131,12 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            CurrentScope.AnnotateTypedSymbol(argument.Reference, argument.Type);
+            CurrentSymbolTable.AnnotateTypedSymbol(argument.Reference, argument.Type);
         }
 
         private void PushScope(ICodeUnit scopeOwner)
         {
-            CurrentScope = CurrentScope.CreateChildScope(scopeOwner);
+            CurrentSymbolTable = CurrentSymbolTable.CreateChildScope(scopeOwner);
         }
     }
 }
