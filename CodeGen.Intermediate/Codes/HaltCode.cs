@@ -6,5 +6,10 @@
         {
             visitor.Visit(this);
         }
+
+        public override string ToString()
+        {
+            return $"Halt";
+        }
     }
 }

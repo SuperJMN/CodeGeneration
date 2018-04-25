@@ -19,11 +19,11 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Function()
         {
-            var ast = new Function("add", VariableType.Int, new List<Argument>
+            var ast = new Function(new FunctionFirm("add", VariableType.Int, new List<Argument>
             {
                 new Argument(VariableType.Int, "a"),
                 new Argument(VariableType.Int, "b"),
-            }, new Block(new List<Statement>
+            }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
                 new ReturnStatement(new ReferenceExpression("c"))

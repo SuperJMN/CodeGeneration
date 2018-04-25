@@ -14,5 +14,10 @@ namespace CodeGen.Parsing.Ast
         public string Name { get; }
         public VariableType ReturnType { get; }
         public ICollection<Argument> Arguments { get; }
+
+        public override string ToString()
+        {
+            return $"{Name}";
+        }
     }
 }

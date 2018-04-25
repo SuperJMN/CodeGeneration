@@ -16,7 +16,7 @@ namespace CodeGen.Parsing.Tests
             var ast = new Program(new List<Function>());
             var sut = new ScopeScanner();
             ast.Accept(sut);
-            var scope = sut.Scope;
+            var scope = sut.SymbolTable;
             
             AssertScope(ast, scope);
         }
@@ -24,14 +24,14 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Function()
         {
-            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block());
+            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block());
 
             var ast = new Program(new List<Function>()
             {
                 function
             });
             
-            var scope = new Scope();
+            var scope = new SymbolTable();
             scope.CreateChildScope(function);
             
             AssertScope(ast, scope);
@@ -40,14 +40,16 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void TwoFunctions()
         {
-            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
             }));
-            var add = new Function("add", VariableType.Void, new List<Argument> { new Argument(VariableType.Int, "a"), new Argument(VariableType.Int, "b")}, new Block(new List<Statement>()
-            {
-                new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))),
-            }));
+
+            var addFirm = new FunctionFirm("add", VariableType.Void, new List<Argument> {new Argument(VariableType.Int, "a"), new Argument(VariableType.Int, "b")});
+            var add = new Function(addFirm, new Block(new List<Statement>(){
+                    new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"),
+                        new ReferenceExpression("b"))),
+                }));
 
 
             var ast = new Program(new List<Function>()
@@ -56,17 +58,17 @@ namespace CodeGen.Parsing.Tests
                 add
             });
             
-            var scope = new Scope();
+            var scope = new SymbolTable();
             var mainScope = scope.CreateChildScope(function);
-            mainScope.AddReference("T1");
-            mainScope.AddReference("T2");
-            mainScope.AddReference("T3");
-            mainScope.AddReference("c");
+            mainScope.AnnotateSymbol("T1");
+            mainScope.AnnotateSymbol("T2");
+            mainScope.AnnotateSymbol("T3");
+            mainScope.AnnotateSymbol("c");
 
             var addScope = scope.CreateChildScope(add);
-            addScope.AddReference("T4");
-            addScope.AddReference("a");
-            addScope.AddReference("b");            
+            addScope.AnnotateSymbol("T4");
+            addScope.AnnotateSymbol("a");
+            addScope.AnnotateSymbol("b");            
             
             AssertScope(ast, scope);
         }
@@ -74,7 +76,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MainWithConstants()
         {
-            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
             }));
@@ -85,12 +87,12 @@ namespace CodeGen.Parsing.Tests
                 function,
             });
             
-            var scope = new Scope();
+            var scope = new SymbolTable();
             var mainScope = scope.CreateChildScope(function);
-            mainScope.AddReference("T1");
-            mainScope.AddReference("T2");
-            mainScope.AddReference("T3");
-            mainScope.AddReference("c");
+            mainScope.AnnotateSymbol("T1");
+            mainScope.AnnotateSymbol("T2");
+            mainScope.AnnotateSymbol("T3");
+            mainScope.AnnotateSymbol("c");
 
             AssertScope(ast, scope);
         }
@@ -98,18 +100,18 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void FunctionWithStatements()
         {
-            var function = new Function("main", VariableType.Void, new List<Argument>(), new Block(new List<Statement>()
+            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("a", new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c"))
             }));
             var ast = new Program(new List<Function> { function });
             
-            var scope = new Scope();
+            var scope = new SymbolTable();
             var child = scope.CreateChildScope(function);
-            child.AddReference("T1");
-            child.AddReference("b");
-            child.AddReference("c");
-            child.AddReference("a");
+            child.AnnotateSymbol("T1");
+            child.AnnotateSymbol("b");
+            child.AnnotateSymbol("c");
+            child.AnnotateSymbol("a");
 
             AssertScope(ast, scope);
         }
@@ -119,9 +121,9 @@ namespace CodeGen.Parsing.Tests
         {
             var ast = new AssignmentStatement("a", new ConstantExpression(1));
 
-            var scope = new Scope();
-            scope.AddReference("T1");
-            scope.AddReference("a");
+            var scope = new SymbolTable();
+            scope.AnnotateSymbol("T1");
+            scope.AnnotateSymbol("a");
 
             AssertScope(ast, scope);
         }
@@ -129,17 +131,17 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Expression()
         {
-            var scope = new Scope();
-            scope.AddReference("T1");
-            scope.AddReference("a");
-            scope.AddReference("b");
+            var scope = new SymbolTable();
+            scope.AnnotateSymbol("T1");
+            scope.AnnotateSymbol("a");
+            scope.AnnotateSymbol("b");
 
             var ast = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"));
 
             AssertScope(ast, scope);
         }
 
-        private static void AssertScope(ICodeUnit expressionNode, Scope expectedScope)
+        private static void AssertScope(ICodeUnit expressionNode, SymbolTable expectedScope)
         {
             var sut = new ScopeScanner();
 
@@ -148,7 +150,7 @@ namespace CodeGen.Parsing.Tests
 
             expressionNode.Accept(sut);
 
-            var actual = sut.Scope;
+            var actual = sut.SymbolTable;
 
             actual.WithDeepEqual(expectedScope)
                 .IgnoreProperty(r => r.Name == "Parent")

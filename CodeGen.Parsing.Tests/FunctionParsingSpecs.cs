@@ -14,17 +14,17 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Main()
         {
-            AssertCode("void main() {}", new Function("main", VariableType.Void, new List<Argument>(), new Block()));
+            AssertCode("void main() {}", new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block()));
         }
 
         [Fact]
         public void FuncWithReturn()
         {
-            AssertCode("int suma(int a, int b) { return a+b; }", new Function("suma", VariableType.Int, new List<Argument>
+            AssertCode("int suma(int a, int b) { return a+b; }", new Function(new FunctionFirm("suma", VariableType.Int, new List<Argument>
             {
                 new Argument(VariableType.Int, "a"),
                 new Argument(VariableType.Int, "b"),
-            }, new Block(new List<Statement>()
+            }), new Block(new List<Statement>()
             {
                 new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))),
             })));
@@ -39,7 +39,7 @@ namespace CodeGen.Parsing.Tests
                 new DeclarationStatement(VariableType.Int, new [] { new VariableDeclaration("b"),  }),
             };
 
-            var expected = new Function("main", VariableType.Void, new List<Argument>(), new Block()
+            var expected = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block()
             {
                 Declarations = declarationStatements,
             });
