@@ -40,7 +40,6 @@ namespace CodeGen.Parsing.Tokenizer
         GreaterThanOrEqual,
         NotEqual,
         Caret,
-        Not,
         Null,
         Else,
         [Token(Category = "separator", Example = "\"")]
@@ -53,6 +52,9 @@ namespace CodeGen.Parsing.Tokenizer
         Int,
         Char,
         Void,
-        Return
+        Return,
+        [Token(Category = "operator", Example = "&")]
+        Ampersand,
+        Exclamation
     }
 }

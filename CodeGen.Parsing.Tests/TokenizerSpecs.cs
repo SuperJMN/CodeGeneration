@@ -35,6 +35,7 @@ namespace CodeGen.Parsing.Tests
                 new object[] {">=", new List<LangToken>() {LangToken.GreaterThanOrEqual},},
                 new object[] {"<", new List<LangToken>() {LangToken.LessThan},},
                 new object[] {">", new List<LangToken>() {LangToken.GreaterThan},},
+                new object[] {"&", new List<LangToken>() {LangToken.Ampersand},},
                 new object[] {"\"Hello\"", new List<LangToken>() { LangToken.Text }},
                 
                 new object[]

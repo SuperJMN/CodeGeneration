@@ -81,6 +81,18 @@ namespace CodeGen.Intermediate
             AddReference(code.Reference);
         }
 
+        public void Visit(AddressOf code)
+        {
+            AddReference(code.Target);
+            AddReference(code.Source);
+        }
+
+        public void Visit(ContentOf code)
+        {
+            AddReference(code.Target);
+            AddReference(code.Source);
+        }
+
         private void AddReference(Reference reference)
         {
             if (reference!= null)

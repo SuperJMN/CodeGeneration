@@ -1,4 +1,3 @@
-using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Tokenizer;
 using DeepEqual.Syntax;
 using Superpower;
@@ -14,7 +13,8 @@ namespace CodeGen.Parsing.Tests
 
         public void AssertCode(string source, T expectation)
         {
-            Parse(source).ShouldDeepEqual(expectation);
+            var ast = Parse(source);
+            ast.ShouldDeepEqual(expectation);
         }
 
         protected abstract TokenListParser<LangToken, T> Parser { get; } 

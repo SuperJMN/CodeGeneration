@@ -25,10 +25,12 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, string> Eq = Token.EqualTo(LangToken.DoubleEqual).Value(Operator.Eq);
         private static readonly TokenListParser<LangToken, string> Neq = Token.EqualTo(LangToken.NotEqual).Value(Operator.Neq);
         private static readonly TokenListParser<LangToken, string> Power = Token.EqualTo(LangToken.Caret).Value(Operator.Power);
-        private static readonly TokenListParser<LangToken, string> Not = Token.EqualTo(LangToken.Not).Value(Operator.Not);
+        private static readonly TokenListParser<LangToken, string> Not = Token.EqualTo(LangToken.Exclamation).Value(Operator.Not);
         private static readonly TokenListParser<LangToken, string> Negate = Token.EqualTo(LangToken.Minus).Value(Operator.Negate);
         private static readonly TokenListParser<LangToken, string> Increment = Token.EqualTo(LangToken.DoublePlus).Value(Operator.Increment);
         private static readonly TokenListParser<LangToken, string> Decrement = Token.EqualTo(LangToken.DoubleMinus).Value(Operator.Decrement);
+        private static readonly TokenListParser<LangToken, string> PointerValue = Token.EqualTo(LangToken.Asterisk).Value(Operator.PointerValue);
+        private static readonly TokenListParser<LangToken, string> PointerAddress = Token.EqualTo(LangToken.Ampersand).Value(Operator.PointerAddress);
 
         private static readonly TokenListParser<LangToken, Expression> Number = Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32)
             .Select(d => (Expression)new ConstantExpression(d));
@@ -67,9 +69,9 @@ namespace CodeGen.Parsing
                 .Or(Item);
 
         private static readonly TokenListParser<LangToken, Expression> Operand =
-            (from op in Negate.Or(Not).Or(Increment).Or(Decrement)
+            (from op in Negate.Or(Not).Or(Increment).Or(Decrement).Or(PointerValue).Or(PointerAddress)
                 from factor in Factor
-                select MakeUnary(op)).Or(Factor).Named("expression");
+                select MakeUnary(op, factor)).Or(Factor).Named("expression");
 
         private static readonly TokenListParser<LangToken, Expression> InnerTerm = Parse.Chain(Power, Operand, MakeBinary);
 
@@ -94,9 +96,9 @@ namespace CodeGen.Parsing
             return new ExpressionNode(operatorName, leftOperand, rightOperand);
         }
 
-        private static Expression MakeUnary(string operatorName)
+        private static Expression MakeUnary(string operatorName, Expression factor)
         {
-            return new ExpressionNode(operatorName);
+            return new ExpressionNode(operatorName, factor);
         }
         
         private static readonly TokenListParser<LangToken, Statement> RegularAssignment =
@@ -182,15 +184,23 @@ namespace CodeGen.Parsing
         public static readonly TokenListParser<LangToken, Statement>
             SingleStatement = FunctionStatement.Try().Or(ConditionalStatement).Or(AssignmentStatement).Or(ForLoop).Or(Return);
 
-        private static readonly TokenListParser<LangToken, VariableType> Int = Token.EqualTo(LangToken.Int).Value(VariableType.Int);
-        private static readonly TokenListParser<LangToken, VariableType> Char = Token.EqualTo(LangToken.Char).Value(VariableType.Char);
-        private static readonly TokenListParser<LangToken, VariableType> Void = Token.EqualTo(LangToken.Void).Value(VariableType.Void);
+        private static readonly TokenListParser<LangToken, PrimitiveType> Int = Token.EqualTo(LangToken.Int).Value(PrimitiveType.Int);
+        private static readonly TokenListParser<LangToken, PrimitiveType> Char = Token.EqualTo(LangToken.Char).Value(PrimitiveType.Char);
+        private static readonly TokenListParser<LangToken, PrimitiveType> Void = Token.EqualTo(LangToken.Void).Value(PrimitiveType.Void);
 
-        private static readonly TokenListParser<LangToken, VariableType> VarType = Int.Or(Char);
+        public static readonly TokenListParser<LangToken, VariableType> VarType = 
+            from primitiveType in Int.Or(Char).Or(Void)
+            from pointer in PointerValue.OptionalOrDefault()
+            select CreateVariableType(primitiveType, pointer != null);
+
+        private static VariableType CreateVariableType(PrimitiveType primitiveType, bool isPointer)
+        {
+            return isPointer ? VariableType.GetPointer(primitiveType) : VariableType.GetPrimitive(primitiveType);
+        }
 
         private static readonly TokenListParser<LangToken, VariableDeclaration> DeclarationWithAssignment =
             from ass in Assignment
-            select new VariableDeclaration((AssignmentStatement) ass);
+            select new VariableDeclaration(((AssignmentStatement) ass).Target, ((AssignmentStatement) ass).Assignment);
 
         private static readonly TokenListParser<LangToken, VariableDeclaration> NakedDeclaration =
             from ass in Identifier
@@ -225,7 +235,7 @@ namespace CodeGen.Parsing
         public static readonly TokenListParser<LangToken, Statement[]>
             Statements = Statement.Many();
 
-        private static readonly TokenListParser<LangToken, VariableType> ArgumentType = Int.Or(Char);
+        private static readonly TokenListParser<LangToken, VariableType> ArgumentType = VarType;
 
         private static readonly TokenListParser<LangToken, Argument> Argument =
             from t in ArgumentType
@@ -235,7 +245,7 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, Argument[]>
             Arguments = Argument.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
         
-        private static readonly TokenListParser<LangToken, VariableType> ReturnType = Int.Or(Char).Or(Void);
+        private static readonly TokenListParser<LangToken, VariableType> ReturnType = VarType;
 
         public static readonly TokenListParser<LangToken, Function> Function =
             from returnType in ReturnType

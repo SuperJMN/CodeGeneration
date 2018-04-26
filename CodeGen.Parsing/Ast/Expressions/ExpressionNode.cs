@@ -17,6 +17,8 @@ namespace CodeGen.Parsing.Ast.Expressions
         }
 
         public string OperatorName { get; }
+        public bool IsUnary => Operands.Length == 1;
+
         public override void Accept(ICodeUnitVisitor unitVisitor)
         {
             unitVisitor.Visit(this);

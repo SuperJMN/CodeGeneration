@@ -259,7 +259,7 @@ namespace CodeGen.Parsing.Tests
                         new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(3)))),
                 }
             },
-        };
+        };       
 
         protected override TokenListParser<LangToken, Statement[]> Parser => Parsers.Statements;
     }

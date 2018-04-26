@@ -11,20 +11,79 @@ namespace CodeGen.Parsing.Tests
     public class ExpressionParserSpecs : ParserSpecsBase<Expression>
     {
 
-        [Theory]
-        [InlineData("b==1")]
-        [InlineData("true")]
-        [InlineData("false")]
-        public void Condition(string code)
+        [Fact]
+        public void BooleanExpression()
         {
-            Parse(code);
+            var actual = Parse("b==1");
+            var expected = new ExpressionNode(Operator.Eq, (ReferenceExpression)"b", new ConstantExpression(1));
+
+            actual.ShouldDeepEqual(expected);
         }
 
-        [Theory]
-        [InlineData("a+b*12")]
-        public void OperatorExpression(string str)
+        [Fact]
+        public void True()
         {
-            Parse(str);
+            var actual = Parse("true");
+            var expected = new ConstantExpression(true);
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void Condition()
+        {
+            var actual = Parse("false");
+            var expected = new ConstantExpression(false);
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void OperatorExpression()
+        {
+            var actual = Parse("a+b*12");
+            var mult = new ExpressionNode(Operator.Multiply, new ReferenceExpression("b"), new ConstantExpression(12));
+            var expected = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), mult);
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void AddressOfVariable()
+        {
+            var actual = Parse("*b + &variable");
+            var pointerVal = new ExpressionNode(Operator.PointerValue, new ReferenceExpression("b"));
+            var pointerRef = new ExpressionNode(Operator.PointerAddress, new ReferenceExpression("variable"));
+            var expected = new ExpressionNode(Operator.Add, pointerVal, pointerRef);
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void ContentsOfReference()
+        {
+            var actual = Parse("*a");
+            var expected = new ExpressionNode(Operator.PointerValue, new ReferenceExpression("a"));
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void NegateReference()
+        {
+            var actual = Parse("!a");
+            var expected = new ExpressionNode(Operator.Not, new ReferenceExpression("a"));
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void Negative()
+        {
+            var actual = Parse("-a");
+            var expected = new ExpressionNode(Operator.Negate, new ReferenceExpression("a"));
+
+            actual.ShouldDeepEqual(expected);
         }
 
         [Fact]
@@ -44,7 +103,7 @@ namespace CodeGen.Parsing.Tests
 
             actual.ShouldDeepEqual(expected);
         }
-        
+
         protected override TokenListParser<LangToken, Expression> Parser => Parsers.Expression;
     }
 }

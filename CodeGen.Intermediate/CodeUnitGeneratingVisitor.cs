@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CodeGen.Core;
 using CodeGen.Intermediate.Codes;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
@@ -21,22 +20,39 @@ namespace CodeGen.Intermediate
                 x.Accept(this);
             }
 
-            var destination = expressionNode.Reference;
-            var left = expressionNode.Operands[0].Reference;
-            var right = expressionNode.Operands[1].Reference;
-
-            IntermediateCode emitted;
-
-            if (IsBoolean(expressionNode))
+            if (expressionNode.IsUnary)
             {
-                emitted = new BoolExpressionAssignment(expressionNode.OperatorName.ToBooleanOperator(), destination, left, right);
+                switch (expressionNode.OperatorName)
+                {
+                    case Operator.PointerAddress:
+                        InnerCode.Add(new AddressOf(expressionNode.Reference, expressionNode.Operands.First().Reference));
+                        break;
+
+                    case Operator.PointerValue:
+                        InnerCode.Add(new ContentOf(expressionNode.Reference, expressionNode.Operands.First().Reference));
+                        break;
+
+                }                
             }
             else
             {
-                emitted = new ArithmeticAssignment(expressionNode.OperatorName.ToArithmeticOperator(), destination, left, right);
-            }
+                var destination = expressionNode.Reference;
+                var left = expressionNode.Operands[0].Reference;
+                var right = expressionNode.Operands[1].Reference;
 
-            InnerCode.Add(emitted);
+                IntermediateCode emitted;
+
+                if (IsBoolean(expressionNode))
+                {
+                    emitted = new BoolExpressionAssignment(expressionNode.OperatorName.ToBooleanOperator(), destination, left, right);
+                }
+                else
+                {
+                    emitted = new ArithmeticAssignment(expressionNode.OperatorName.ToArithmeticOperator(), destination, left, right);
+                }
+
+                InnerCode.Add(emitted);
+            }                       
         }
 
         private static bool IsBoolean(ExpressionNode expressionNode)

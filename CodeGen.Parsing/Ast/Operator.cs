@@ -20,5 +20,7 @@
         public const string Negate = nameof(Negate);
         public const string Decrement = nameof(Decrement);
         public const string Increment = nameof(Increment);
+        public const string PointerValue = nameof(PointerValue);
+        public const string PointerAddress = nameof(PointerAddress);
     }
 }

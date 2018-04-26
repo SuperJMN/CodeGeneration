@@ -17,5 +17,7 @@ namespace CodeGen.Intermediate
         void Visit(ReturnCode code);
         void Visit(HaltCode code);
         void Visit(ParameterCode code);
+        void Visit(AddressOf code);
+        void Visit(ContentOf code);
     }
 }
