@@ -4,7 +4,7 @@ Code Generation sample (courtesy of Javier JBM)
 
 This is a simple code generation example using C#. It has been created originally by **Javier (JBM)** in Java and ported to C# by me (@SuperJMN). So, all credits go to him :)
 
-The application translates high level expressions to **3 Address Code (3AC)**.
+The application translates high level expressions to **Intermediate Code**.
 
 # What's code generation?
 
