@@ -166,10 +166,11 @@ namespace CodeGen.Intermediate.Tests
             //    int r = add(1, 2);
             //}
 
-            var addFunc = new Function(new FunctionFirm("add", VariableType.Int, new List<Argument>
+            var i = ReferenceType.Int;
+            var addFunc = new Function(new FunctionFirm("add", i, new List<Argument>
             {
-                new Argument(VariableType.Int, "a"),
-                new Argument(VariableType.Int, "b")
+                new Argument(i, "a"),
+                new Argument(i, "b")
             }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c",
@@ -177,7 +178,7 @@ namespace CodeGen.Intermediate.Tests
                 new ReturnStatement(new ReferenceExpression("c"))
             }, new List<DeclarationStatement>()));
 
-            var mainFunc = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(
+            var mainFunc = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block(
                 new List<Statement>
                 {
                     new AssignmentStatement("r", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))

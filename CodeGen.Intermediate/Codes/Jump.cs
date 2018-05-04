@@ -1,7 +1,4 @@
-﻿using CodeGen.Core;
-using CodeGen.Intermediate.Codes.Common;
-
-namespace CodeGen.Intermediate.Codes
+﻿namespace CodeGen.Intermediate.Codes
 {
     public class Jump : IntermediateCode
     {

@@ -24,7 +24,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Function()
         {
-            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block());
+            var function = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block());
 
             var ast = new Program(new List<Function>()
             {
@@ -40,12 +40,14 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void TwoFunctions()
         {
-            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
+            var @void = ReferenceType.Void;
+            var function = new Function(new FunctionFirm("main", @void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
             }));
 
-            var addFirm = new FunctionFirm("add", VariableType.Void, new List<Argument> {new Argument(VariableType.Int, "a"), new Argument(VariableType.Int, "b")});
+            var i = ReferenceType.Int;
+            var addFirm = new FunctionFirm("add", @void, new List<Argument> {new Argument(i, "a"), new Argument(i, "b")});
             var add = new Function(addFirm, new Block(new List<Statement>(){
                     new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"),
                         new ReferenceExpression("b"))),
@@ -76,7 +78,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MainWithConstants()
         {
-            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
+            var function = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("c", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
             }));
@@ -100,7 +102,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void FunctionWithStatements()
         {
-            var function = new Function(new FunctionFirm("main", VariableType.Void, new List<Argument>()), new Block(new List<Statement>()
+            var function = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block(new List<Statement>()
             {
                 new AssignmentStatement("a", new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c"))
             }));
@@ -137,6 +139,20 @@ namespace CodeGen.Parsing.Tests
             scope.AnnotateSymbol("b");
 
             var ast = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"));
+
+            AssertScope(ast, scope);
+        }
+
+        [Fact]
+        public void DeclarationWithInitialization()
+        {
+            var scope = new SymbolTable();
+            scope.AnnotateSymbol("T1");
+            scope.AnnotateSymbol("a");
+            scope.AnnotateSymbol("b");
+            scope.AnnotateSymbol("c");
+
+            var ast = new DeclarationStatement(ReferenceType.Int, "c", new DirectInitialization(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))));
 
             AssertScope(ast, scope);
         }

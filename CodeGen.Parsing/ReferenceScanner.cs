@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
@@ -86,21 +85,6 @@ namespace CodeGen.Parsing
             function.Block.Accept(this);            
         }
 
-        public void Visit(DeclarationStatement expressionNode)
-        {
-            foreach (var decl in expressionNode.Declarations)
-            {
-                decl.Accept(this);
-            }
-        }
-
-        public void Visit(VariableDeclaration expressionNode)
-        {
-            expressionNode.Initialization?.Accept(this);
-
-            AddReference(expressionNode.Reference);
-        }
-
         public void Visit(Program program)
         {
             foreach (var func in program.Functions)
@@ -129,9 +113,20 @@ namespace CodeGen.Parsing
             AddReference(argument.Reference);
         }
 
-        public void Visit(DeclStatement statement)
+        public void Visit(DeclarationStatement unit)
         {
-            throw new NotImplementedException();
+            unit.Initialization?.Accept(this);
+
+            AddReference(unit.Identifier);
+        }
+
+        public void Visit(ListInitialization unit)
+        {            
+        }
+
+        public void Visit(DirectInitialization unit)
+        {
+            unit.Expression.Accept(this);
         }
     }
 }

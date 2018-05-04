@@ -17,12 +17,21 @@ namespace CodeGen.Parsing.Tests
         }
 
         [Fact]
+        public void Declarations()
+        {
+            var ast = new DeclarationStatement(ReferenceType.Int, "a", new DirectInitialization(new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c")));
+
+            Assert(ast, 4);
+        }
+
+        [Fact]
         public void Function()
         {
-            var ast = new Function(new FunctionFirm("add", VariableType.Int, new List<Argument>
+            var i = ReferenceType.Int;
+            var ast = new Function(new FunctionFirm("add", i, new List<Argument>
             {
-                new Argument(VariableType.Int, "a"),
-                new Argument(VariableType.Int, "b"),
+                new Argument(i, "a"),
+                new Argument(i, "b"),
             }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),

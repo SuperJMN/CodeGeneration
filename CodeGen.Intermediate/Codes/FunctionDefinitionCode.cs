@@ -1,5 +1,4 @@
-﻿using System;
-using CodeGen.Parsing.Ast;
+﻿using CodeGen.Parsing.Ast;
 
 namespace CodeGen.Intermediate.Codes
 {

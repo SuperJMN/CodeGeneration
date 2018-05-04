@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
-using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -170,32 +168,13 @@ namespace CodeGen.Intermediate
                 st.Accept(this);
             }
 
-            if (function.ReturnType == VariableType.Void)
+            if (Equals(function.ReturnType, ReferenceType.Void))
             {
                 if (!function.Block.Statements.Any(statement => statement is ReturnStatement))
                 {
                     InnerCode.Add(IntermediateCode.Emit.Return());
                 }
             }
-        }
-
-        public void Visit(DeclarationStatement expressionNode)
-        {
-            foreach (var decl in expressionNode.Declarations)
-            {
-                decl.Accept(this);
-            }
-        }
-
-        public void Visit(VariableDeclaration expressionNode)
-        {
-            if (expressionNode.Initialization == null)
-            {
-                return;
-            }
-
-            var assignment = new AssignmentStatement(expressionNode.Reference, expressionNode.Initialization);
-            assignment.Accept(this);
         }
 
         public void Visit(Program program)
@@ -237,9 +216,22 @@ namespace CodeGen.Intermediate
         {          
         }
 
-        public void Visit(DeclStatement statement)
+        public void Visit(DeclarationStatement declarationStatement)
         {
-            throw new NotImplementedException();
+            if (declarationStatement.Initialization is DirectInitialization a)
+            {
+                var assignment = new AssignmentStatement(declarationStatement.Identifier, a.Expression);
+                assignment.Accept(this);
+            }            
+        }
+
+        public void Visit(ListInitialization unit)
+        {            
+        }
+
+        public void Visit(DirectInitialization unit)
+        {
+            unit.Expression.Accept(this);
         }
 
         public void Visit(ReferenceExpression expression)

@@ -6,44 +6,44 @@ using Xunit;
 
 namespace CodeGen.Parsing.Tests
 {
-    public class VarTypeParserSpecs : ParserSpecsBase<VariableType>
+    public class VarTypeParserSpecs : ParserSpecsBase<ReferenceType>
     {
         [Fact]
         public void Int()
         {
-            AssertCode("int", VariableType.Int);
+            AssertCode("int", ReferenceType.Int);
         }
 
         [Fact]
         public void Char()
         {
-            AssertCode("char", VariableType.Char);
+            AssertCode("char", ReferenceType.Char);
         }
 
         [Fact]
         public void Void()
         {
-            AssertCode("void", VariableType.Void);
+            AssertCode("void", ReferenceType.Void);
         }
 
         [Fact]
         public void IntPointer()
         {
-            AssertCode("int *", VariableType.IntPointer);
+            AssertCode("int *", ReferenceType.IntPointer);
         }
 
         [Fact]
         public void CharPointer()
         {
-            AssertCode("char *", VariableType.CharPointer);
+            AssertCode("char *", ReferenceType.CharPointer);
         }
 
         [Fact]
         public void VoidPointer()
         {
-            AssertCode("void *", VariableType.VoidPointer);
+            AssertCode("void *", ReferenceType.VoidPointer);
         }
 
-        protected override TokenListParser<LangToken, VariableType> Parser => Parsers.VarType;
+        protected override TokenListParser<LangToken, ReferenceType> Parser => Parsers.ReferenceType;
     }
 }

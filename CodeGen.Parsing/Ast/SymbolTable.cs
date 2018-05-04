@@ -41,7 +41,7 @@ namespace CodeGen.Parsing.Ast
             }
         }
 
-        public void AnnotateTypedSymbol(Reference reference, VariableType type)
+        public void AnnotateTypedSymbol(Reference reference, ReferenceType type)
         {
             if (!symbols.ContainsKey(reference))
             {

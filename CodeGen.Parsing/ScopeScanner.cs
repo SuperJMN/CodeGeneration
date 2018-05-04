@@ -1,5 +1,4 @@
-﻿using System;
-using CodeGen.Parsing.Ast;
+﻿using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
@@ -13,7 +12,7 @@ namespace CodeGen.Parsing
             CurrentSymbolTable = SymbolTable;
         }
 
-        public SymbolTable SymbolTable { get; set; }
+        public SymbolTable SymbolTable { get; }
 
         private SymbolTable CurrentSymbolTable { get; set; }
 
@@ -93,20 +92,6 @@ namespace CodeGen.Parsing
             CurrentSymbolTable = CurrentSymbolTable.Parent;
         }
 
-        public void Visit(DeclarationStatement expressionNode)
-        {
-            foreach (var d in expressionNode.Declarations)
-            {
-                CurrentSymbolTable.AnnotateTypedSymbol(d.Reference, expressionNode.Type);
-                d.Initialization?.Accept(this);
-            }
-        }
-
-        public void Visit(VariableDeclaration expressionNode)
-        {
-            expressionNode.Initialization.Accept(this);
-        }
-
         public void Visit(Program program)
         {
             foreach (var function in program.Functions)
@@ -135,9 +120,20 @@ namespace CodeGen.Parsing
             CurrentSymbolTable.AnnotateTypedSymbol(argument.Reference, argument.Type);
         }
 
-        public void Visit(DeclStatement statement)
+        public void Visit(DeclarationStatement unit)
         {
-            throw new NotImplementedException();
+            unit.Initialization?.Accept(this);
+
+            CurrentSymbolTable.AnnotateTypedSymbol(unit.Identifier, unit.ReferenceType);
+        }
+
+        public void Visit(ListInitialization unit)
+        {
+        }
+
+        public void Visit(DirectInitialization unit)
+        {
+            unit.Expression.Accept(this);
         }
 
         private void PushScope(ICodeUnit scopeOwner)

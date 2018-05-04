@@ -7,7 +7,7 @@ namespace CodeGen.Parsing.Ast
     public class Function : ICodeUnit
     {
         public string Name => Firm.Name;
-        public VariableType ReturnType => Firm.ReturnType;
+        public ReferenceType ReturnType => Firm.ReturnType;
         public ICollection<Argument> Arguments => Firm.Arguments;
         public FunctionFirm Firm { get; }
         public Block Block { get; }

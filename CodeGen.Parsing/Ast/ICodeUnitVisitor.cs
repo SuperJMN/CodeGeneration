@@ -1,27 +1,26 @@
-﻿using CodeGen.Core;
-using CodeGen.Parsing.Ast.Expressions;
+﻿using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
 {
     public interface ICodeUnitVisitor
     {
-        void Visit(ExpressionNode expressionNode);
-        void Visit(ConstantExpression expression);
-        void Visit(IfStatement expression);
-        void Visit(ReferenceExpression expression);
-        void Visit(AssignmentStatement expression);
-        void Visit(ForLoop code);
-        void Visit(WhileStatement expressionNode);
-        void Visit(DoStatement expressionNode);
-        void Visit(AssignmentOperatorStatement statement);
-        void Visit(Function function);
-        void Visit(DeclarationStatement expressionNode);
-        void Visit(VariableDeclaration expressionNode);
-        void Visit(Program program);
-        void Visit(Call call);
-        void Visit(ReturnStatement returnStatement);
-        void Visit(Argument argument);
-        void Visit(DeclStatement statement);
+        void Visit(ExpressionNode unit);
+        void Visit(ConstantExpression unit);
+        void Visit(IfStatement unit);
+        void Visit(ReferenceExpression unit);
+        void Visit(AssignmentStatement unit);
+        void Visit(ForLoop unit);
+        void Visit(WhileStatement unit);
+        void Visit(DoStatement unit);
+        void Visit(AssignmentOperatorStatement unit);
+        void Visit(Function unit);
+        void Visit(Program unit);
+        void Visit(Call unit);
+        void Visit(ReturnStatement unit);
+        void Visit(Argument unit);
+        void Visit(DeclarationStatement unit);
+        void Visit(ListInitialization unit);
+        void Visit(DirectInitialization unit);
     }
 }

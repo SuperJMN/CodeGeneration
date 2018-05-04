@@ -4,10 +4,10 @@ namespace CodeGen.Parsing.Ast
 {
     public class Argument : ICodeUnit
     {
-        public VariableType Type { get; }
+        public ReferenceType Type { get; }
         public Reference Reference { get; }
 
-        public Argument(VariableType type, Reference reference)
+        public Argument(ReferenceType type, Reference reference)
         {
             Type = type;
             Reference = reference;

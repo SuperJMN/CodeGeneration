@@ -3,12 +3,12 @@
     public class DeclaratorAndInitializer
     {
         public Declarator Declarator { get; }
-        public InitExpression Init { get; }
+        public InitializationExpression Initialization { get; }
 
-        public DeclaratorAndInitializer(Declarator declarator, InitExpression init)
+        public DeclaratorAndInitializer(Declarator declarator, InitializationExpression initialization)
         {
             Declarator = declarator;
-            Init = init;
+            Initialization = initialization;
         }
     }
 }

@@ -1,3 +1,4 @@
+using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Tokenizer;
 using Superpower;
 using Xunit;
@@ -15,10 +16,9 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void NoSize()
         {
-            AssertCode("[]", new ArrayDeclarator(0));
+            AssertCode("[]", new ArrayDeclarator(null));
         }
-
-      
+        
         protected override TokenListParser<LangToken, ArrayDeclarator> Parser => Parsers.ArrayDeclarator;
     }
 }

@@ -2,9 +2,9 @@
 {
     public class Properties
     {
-        public VariableType Type { get; private set; }
+        public ReferenceType Type { get; private set; }
 
-        public void AssignType(VariableType type)
+        public void AssignType(ReferenceType type)
         {
             if (Type == null)
             {

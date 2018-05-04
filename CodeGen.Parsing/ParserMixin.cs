@@ -20,5 +20,10 @@ namespace CodeGen.Parsing
         {
             return self.Between(Token.EqualTo(LangToken.LeftBracket), Token.EqualTo(LangToken.RightBracket));
         }
+
+        public static TokenListParser<LangToken, T[]> CommaDelimited<T>(this TokenListParser<LangToken, T> self)
+        {
+            return self.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
+        }
     }
 }
