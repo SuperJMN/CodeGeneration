@@ -1,4 +1,4 @@
-﻿namespace CodeGen.Parsing
+﻿namespace CodeGen.Parsing.Ast
 {
     public class DeclaratorAndInitializer
     {

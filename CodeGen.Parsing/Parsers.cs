@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using CodeGen.Core;
+﻿using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 using CodeGen.Parsing.Tokenizer;
 using Superpower;
-using Superpower.Model;
 using Superpower.Parsers;
 
 namespace CodeGen.Parsing
 {
-    public class ParseNew
-    {
-
-    }
-
     public class Parsers
     {  
         private static readonly TokenListParser<LangToken, string> Identifier = Token.EqualTo(LangToken.Identifier).Select(token => token.ToStringValue());
