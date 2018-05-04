@@ -1,15 +1,23 @@
-﻿using CodeGen.Core;
+﻿using System;
+using System.Collections.Generic;
+using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 using CodeGen.Parsing.Tokenizer;
 using Superpower;
+using Superpower.Model;
 using Superpower.Parsers;
 
 namespace CodeGen.Parsing
 {
-    public class Parsers
+    public class ParseNew
     {
+
+    }
+
+    public class Parsers
+    {  
         private static readonly TokenListParser<LangToken, string> Identifier = Token.EqualTo(LangToken.Identifier).Select(token => token.ToStringValue());
         private static readonly TokenListParser<LangToken, string> Add = Token.EqualTo(LangToken.Plus).Value(Operator.Add);
         private static readonly TokenListParser<LangToken, string> Subtract = Token.EqualTo(LangToken.Minus).Value(Operator.Subtract);
@@ -188,6 +196,54 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, PrimitiveType> Char = Token.EqualTo(LangToken.Char).Value(PrimitiveType.Char);
         private static readonly TokenListParser<LangToken, PrimitiveType> Void = Token.EqualTo(LangToken.Void).Value(PrimitiveType.Void);
 
+        public static TokenListParser<LangToken, PrimitiveType> VType = Int.Or(Char).Or(Void);
+
+        public static readonly TokenListParser<LangToken, ArrayDeclarator> ArrayDeclarator =
+            from n in Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32).OptionalOrDefault().BetweenBrackets()
+            select new ArrayDeclarator(n);
+
+
+        private static readonly TokenListParser<LangToken, int> Integer  =
+            Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32);
+
+        private static readonly TokenListParser<LangToken, int[]> ListOfInts  =
+            Integer.ManyDelimitedBy(Token.EqualTo(LangToken.Comma));
+
+        private static readonly TokenListParser<LangToken, InitExpression> ListInit =
+        from ints in ListOfInts.BetweenBraces()
+        select (InitExpression)new ListInit(ints);
+
+        private static readonly TokenListParser<LangToken, InitExpression> DirectInit =
+            from n in Token.EqualTo(LangToken.Number).Apply(Numerics.IntegerInt32)
+            select (InitExpression)new DirectInit(n);
+
+        public static readonly TokenListParser<LangToken, InitExpression> InitExpr = DirectInit.Or(ListInit);
+
+        public static readonly TokenListParser<LangToken, InitExpression> Initializer =
+            from eq in Token.EqualTo(LangToken.Equal)
+            from initExpr in InitExpr
+            select initExpr;
+
+        public static readonly TokenListParser<LangToken, Declarator> Declarator =
+            from asterisks in Token.EqualTo(LangToken.Asterisk).Many()
+            from identifier in Identifier
+            from array in ArrayDeclarator.OptionalOrDefault()
+            select new Declarator(identifier, array, asterisks.Length);
+
+        public static readonly TokenListParser<LangToken, DeclaratorAndInitializer> DeclaratorAndInitializer =
+            from dec in Declarator
+            from init in Initializer.OptionalOrDefault()
+            select new DeclaratorAndInitializer(dec, init);
+        
+        private static readonly TokenListParser<LangToken, DeclaratorAndInitializer[]> DeclaratorsAndInitializers =
+            DeclaratorAndInitializer.Many();
+        
+        public static readonly TokenListParser<LangToken, DeclStatement> DeclSt =
+            from type in VType
+            from declsAndInits in DeclaratorsAndInitializers
+            from sm in Token.EqualTo(LangToken.Semicolon)
+            select new DeclStatement(type, declsAndInits);
+
         public static readonly TokenListParser<LangToken, VariableType> VarType = 
             from primitiveType in Int.Or(Char).Or(Void)
             from pointer in PointerValue.OptionalOrDefault()
@@ -257,5 +313,53 @@ namespace CodeGen.Parsing
         public static readonly TokenListParser<LangToken, Program> Program =
             from funcs in Function.Many()
             select new Program(funcs);
+    }
+
+    public class DirectInit : InitExpression
+    {
+        public int Number { get; }
+
+        public DirectInit(int number)
+        {
+            Number = number;
+        }
+    }
+
+    public class ListInit : InitExpression
+    {
+        public int[] Items { get; }
+
+        public ListInit(params int[] items)
+        {
+            Items = items;
+        }
+    }
+
+    public abstract class InitExpression
+    {
+    }
+
+    public class Declarator
+    {
+        public Reference Identifier { get; }
+        public ArrayDeclarator Array { get; }
+        public int Asterisks { get; }
+
+        public Declarator(Reference identifier, ArrayDeclarator array, int asterisks = 0)
+        {
+            Identifier = identifier;
+            Array = array;
+            Asterisks = asterisks;
+        }
+    }
+
+    public class ArrayDeclarator
+    {
+        public int? Lenght { get; }
+
+        public ArrayDeclarator(int? lenght)
+        {
+            Lenght = lenght;
+        }
     }
 }

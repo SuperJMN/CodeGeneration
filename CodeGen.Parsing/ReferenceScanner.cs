@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeGen.Core;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
@@ -126,6 +127,11 @@ namespace CodeGen.Parsing
         public void Visit(Argument argument)
         {
             AddReference(argument.Reference);
+        }
+
+        public void Visit(DeclStatement statement)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CodeGen.Parsing.Ast;
+﻿using System;
+using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 
@@ -132,6 +133,11 @@ namespace CodeGen.Parsing
         public void Visit(Argument argument)
         {
             CurrentSymbolTable.AnnotateTypedSymbol(argument.Reference, argument.Type);
+        }
+
+        public void Visit(DeclStatement statement)
+        {
+            throw new NotImplementedException();
         }
 
         private void PushScope(ICodeUnit scopeOwner)

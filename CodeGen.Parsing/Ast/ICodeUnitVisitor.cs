@@ -22,5 +22,6 @@ namespace CodeGen.Parsing.Ast
         void Visit(Call call);
         void Visit(ReturnStatement returnStatement);
         void Visit(Argument argument);
+        void Visit(DeclStatement statement);
     }
 }

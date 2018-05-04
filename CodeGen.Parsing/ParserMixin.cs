@@ -15,5 +15,10 @@ namespace CodeGen.Parsing
         {
             return self.Between(Token.EqualTo(LangToken.LeftBrace), Token.EqualTo(LangToken.RightBrace));
         }
+
+        public static TokenListParser<LangToken, T> BetweenBrackets<T>(this TokenListParser<LangToken, T> self)
+        {
+            return self.Between(Token.EqualTo(LangToken.LeftBracket), Token.EqualTo(LangToken.RightBracket));
+        }
     }
 }

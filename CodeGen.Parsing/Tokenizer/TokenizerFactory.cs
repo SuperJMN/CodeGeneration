@@ -31,6 +31,8 @@ namespace CodeGen.Parsing.Tokenizer
                 .Match(Character.EqualTo('-'), LangToken.Minus)
                 .Match(Character.EqualTo('('), LangToken.LeftParenthesis)
                 .Match(Character.EqualTo(')'), LangToken.RightParenthesis)
+                .Match(Character.EqualTo('['), LangToken.LeftBracket)
+                .Match(Character.EqualTo(']'), LangToken.RightBracket)
                 .Match(Character.EqualTo('{'), LangToken.LeftBrace)
                 .Match(Character.EqualTo('}'), LangToken.RightBrace)
                 .Match(Character.EqualTo(';'), LangToken.Semicolon)

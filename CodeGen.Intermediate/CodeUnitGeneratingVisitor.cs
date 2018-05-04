@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
+using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -233,6 +235,11 @@ namespace CodeGen.Intermediate
 
         public void Visit(Argument argument)
         {          
+        }
+
+        public void Visit(DeclStatement statement)
+        {
+            throw new NotImplementedException();
         }
 
         public void Visit(ReferenceExpression expression)

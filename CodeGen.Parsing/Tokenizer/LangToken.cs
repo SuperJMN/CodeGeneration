@@ -55,6 +55,8 @@ namespace CodeGen.Parsing.Tokenizer
         Return,
         [Token(Category = "operator", Example = "&")]
         Ampersand,
-        Exclamation
+        Exclamation,
+        RightBracket,
+        LeftBracket,
     }
 }
