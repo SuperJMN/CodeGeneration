@@ -322,9 +322,9 @@ namespace CodeGen.Parsing
             select GetRefType(b, asterisks.Length);
 
         private static readonly TokenListParser<LangToken, Argument> Argument =
-            from t in BaseType
-            from name in Identifier
-            select new Argument(t, name);
+            from primitiveType in BaseType
+            from name in ReferenceItem
+            select new Argument(primitiveType, (ReferenceItem)name);
 
         private static readonly TokenListParser<LangToken, Argument[]>
             Arguments = Argument.CommaDelimited();

@@ -183,7 +183,7 @@ namespace CodeGen.Parsing.Tests
 
             AssertCode("if (a==0) {b=0;} else {b=1;}", expected);
         }
-
+      
         public static IEnumerable<object[]> TestData => new List<object[]>()
         {
             new object[]

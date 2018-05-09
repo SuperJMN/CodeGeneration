@@ -47,6 +47,17 @@ namespace CodeGen.Parsing.Tests
             AssertCode("void main() { int a; int b; }", expected);
         }
 
+        [Fact]
+        public void FuctionWithArrayArgument()
+        {
+            var expected = new Function(new FunctionFirm("function", ReturnType.Void, new List<Argument>()
+            {
+                new Argument(PrimitiveType.Int, new ArrayReferenceItem("array", new ConstantExpression(10)))
+            }), new Block());
+
+            AssertCode("void function(int array[10]) { }", expected);
+        }
+
         protected override TokenListParser<LangToken, Function> Parser => Parsers.Function;
     }
 }
