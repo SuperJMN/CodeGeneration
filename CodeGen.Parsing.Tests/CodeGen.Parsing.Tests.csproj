@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CodeGen.Intermediate\CodeGen.Intermediate.csproj" />
     <ProjectReference Include="..\CodeGen.Parsing\CodeGen.Parsing.csproj" />
   </ItemGroup>
 

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace CodeGen.Core
+﻿namespace CodeGen.Core
 {
     public class Reference
     {
         public Reference()
-        {
-            
+        {            
         }
 
         public bool IsUnknown => Identifier == null;
@@ -63,5 +59,5 @@ namespace CodeGen.Core
         {
             return new Reference(str);
         }
-    }
+    }    
 }

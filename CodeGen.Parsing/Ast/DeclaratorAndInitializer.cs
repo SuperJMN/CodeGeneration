@@ -2,12 +2,12 @@
 {
     public class DeclaratorAndInitializer
     {
-        public Declarator Declarator { get; }
+        public ReferenceItem ReferenceItem { get; }
         public InitializationExpression Initialization { get; }
 
-        public DeclaratorAndInitializer(Declarator declarator, InitializationExpression initialization)
+        public DeclaratorAndInitializer(ReferenceItem referenceItem, InitializationExpression initialization)
         {
-            Declarator = declarator;
+            ReferenceItem = referenceItem;
             Initialization = initialization;
         }
     }

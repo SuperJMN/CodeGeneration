@@ -2,14 +2,19 @@
 {
     public class Properties
     {
-        public ReferenceType Type { get; private set; }
+        public PrimitiveType Type { get; private set; }
 
-        public void AssignType(ReferenceType type)
+        public int Size { get; private set; } = 1;
+        public int Offset { get; set; }
+
+        public void AssignType(PrimitiveType type)
         {
-            if (Type == null)
-            {
-                Type = type;
-            }
+            Type = type;
+        }
+
+        public void AssignLength(int arrayLength)
+        {
+            Size = arrayLength;
         }
     }
 }

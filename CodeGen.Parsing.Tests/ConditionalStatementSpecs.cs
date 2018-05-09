@@ -25,13 +25,13 @@ namespace CodeGen.Parsing.Tests
             {
                 "if (a) b=3;",
                 new IfStatement(new ReferenceExpression("a"),
-                    new AssignmentStatement(new Reference("b"), new ConstantExpression(3))),
+                    new AssignmentStatement("b", new ConstantExpression(3))),
             },
             new object[]
             {
                 "if (a) {b=3;}",
                 new IfStatement(new ReferenceExpression("a"),
-                    new Block(new AssignmentStatement(new Reference("b"), new ConstantExpression(3)))),
+                    new Block(new AssignmentStatement("b", new ConstantExpression(3)))),
 
             },
         };

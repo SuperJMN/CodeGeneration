@@ -1,16 +1,14 @@
-﻿using CodeGen.Core;
-
-namespace CodeGen.Parsing.Ast
+﻿namespace CodeGen.Parsing.Ast
 {
     public class Argument : ICodeUnit
     {
-        public ReferenceType Type { get; }
-        public Reference Reference { get; }
+        public PrimitiveType Type { get; }
+        public ReferenceItem Item { get; }
 
-        public Argument(ReferenceType type, Reference reference)
+        public Argument(PrimitiveType type, ReferenceItem item)
         {
             Type = type;
-            Reference = reference;
+            Item = item;
         }
 
         public void Accept(ICodeUnitVisitor unitVisitor)

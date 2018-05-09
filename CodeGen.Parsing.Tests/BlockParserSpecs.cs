@@ -18,8 +18,8 @@ namespace CodeGen.Parsing.Tests
 
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(ReferenceType.Int, "a"),
-                new DeclarationStatement(ReferenceType.Int, "b"),
+                new DeclarationStatement(PrimitiveType.Int, "a"),
+                new DeclarationStatement(PrimitiveType.Int, "b"),
             };
 
             var expected = new Block(new List<Statement>(), declarationStatements);
@@ -34,8 +34,8 @@ namespace CodeGen.Parsing.Tests
 
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(ReferenceType.Int, "a"),
-                new DeclarationStatement(ReferenceType.Int, "b"),
+                new DeclarationStatement(PrimitiveType.Int, "a"),
+                new DeclarationStatement(PrimitiveType.Int, "b"),
             };
 
             var expected = new Block(new List<Statement>()

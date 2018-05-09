@@ -1,21 +1,18 @@
-﻿using CodeGen.Core;
-using CodeGen.Parsing.Ast.Statements;
+﻿using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
 {
     public class DeclarationStatement : Statement
     {
-        public ReferenceType ReferenceType { get; }
-        public Reference Identifier { get; }
+        public PrimitiveType ReferenceType { get; }
+        public ReferenceItem ReferenceItem { get; }
         public InitializationExpression Initialization { get; }
-        public int? ArrayLenght { get; }
 
-        public DeclarationStatement(ReferenceType referenceType, Reference identifier, InitializationExpression initialization = null, int? arrayLenght = null)
+        public DeclarationStatement(PrimitiveType referenceType, ReferenceItem referenceItem, InitializationExpression initialization = null)
         {
             ReferenceType = referenceType;
-            Identifier = identifier;
+            ReferenceItem = referenceItem;
             Initialization = initialization;
-            ArrayLenght = arrayLenght;
         }
 
         public override void Accept(ICodeUnitVisitor unitVisitor)

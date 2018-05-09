@@ -14,17 +14,16 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Main()
         {
-            AssertCode("void main() {}", new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block()));
+            AssertCode("void main() {}", new Function(new FunctionFirm("main", ReturnType.Void, new List<Argument>()), new Block()));
         }
 
         [Fact]
         public void FuncWithReturn()
         {
-            var i = ReferenceType.Int;
-            AssertCode("int suma(int a, int b) { return a+b; }", new Function(new FunctionFirm("suma", i, new List<Argument>
+            AssertCode("int suma(int a, int b) { return a+b; }", new Function(new FunctionFirm("suma", ReturnType.Int, new List<Argument>
             {
-                new Argument(i, "a"),
-                new Argument(i, "b"),
+                new Argument(PrimitiveType.Int, "a"),
+                new Argument(PrimitiveType.Int, "b"),
             }), new Block(new List<Statement>()
             {
                 new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))),
@@ -36,11 +35,11 @@ namespace CodeGen.Parsing.Tests
         {
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(ReferenceType.Int, "a"),
-                new DeclarationStatement(ReferenceType.Int, "b"),
+                new DeclarationStatement(PrimitiveType.Int, "a"),
+                new DeclarationStatement(PrimitiveType.Int, "b"),
             };
 
-            var expected = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block()
+            var expected = new Function(new FunctionFirm("main", ReturnType.Void, new List<Argument>()), new Block()
             {
                 Declarations = declarationStatements,
             });

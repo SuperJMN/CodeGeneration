@@ -22,5 +22,7 @@ namespace CodeGen.Parsing.Ast
         void Visit(DeclarationStatement unit);
         void Visit(ListInitialization unit);
         void Visit(DirectInitialization unit);
+        void Visit(StandardReferenceItem unit);
+        void Visit(ArrayReferenceItem unit);
     }
 }

@@ -10,6 +10,7 @@ namespace CodeGen.Intermediate
         private readonly List<Reference> references = new List<Reference>();
 
         public IEnumerable<Reference> References => references.AsReadOnly();
+
         public IEnumerable<Label> Labels => labels.AsReadOnly();
 
         public void Visit(JumpIfFalse code)
@@ -91,6 +92,20 @@ namespace CodeGen.Intermediate
         {
             AddReference(code.Target);
             AddReference(code.Source);
+        }
+
+        public void Visit(LoadFromArray code)
+        {
+            AddReference(code.Source);
+            AddReference(code.Index);
+            AddReference(code.Target);
+        }
+
+        public void Visit(StoreToArray code)
+        {
+            AddReference(code.Source);
+            AddReference(code.Index);            
+            AddReference(code.Target);
         }
 
         private void AddReference(Reference reference)

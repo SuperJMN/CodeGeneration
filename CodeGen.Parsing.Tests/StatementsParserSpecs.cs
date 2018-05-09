@@ -29,7 +29,7 @@ namespace CodeGen.Parsing.Tests
             {
                 new IfStatement(new ExpressionNode(Operator.Eq, new ReferenceExpression("a"),
                         new ConstantExpression(0)),
-                    new AssignmentStatement(new Reference("b"), new ConstantExpression(0)))
+                    new AssignmentStatement("b", new ConstantExpression(0)))
             };
 
             AssertCode("if (a==0) b=0; ", expected);
@@ -55,7 +55,7 @@ namespace CodeGen.Parsing.Tests
         {
             Statement[] expected =
             {
-                new AssignmentStatement(new Reference("a"), new ConstantExpression("This is fine"))
+                new AssignmentStatement("a", new ConstantExpression("This is fine"))
             };
 
             AssertCode(@"a = ""This is fine"";", expected);
@@ -68,7 +68,7 @@ namespace CodeGen.Parsing.Tests
             {
                 new WhileStatement(new ExpressionNode(Operator.Lt, new ReferenceExpression("a"),
                         new ConstantExpression(4)),
-                    new AssignmentStatement(new Reference("b"), new ExpressionNode(Operator.Add,
+                    new AssignmentStatement("b", new ExpressionNode(Operator.Add,
                         new ReferenceExpression("b"),
                         new ConstantExpression(1)))),
             };
@@ -83,7 +83,7 @@ namespace CodeGen.Parsing.Tests
             {
                 new DoStatement(new ExpressionNode(Operator.Lt, new ReferenceExpression("a"),
                         new ConstantExpression(4)),
-                    new AssignmentStatement(new Reference("b"), new ExpressionNode(Operator.Add,
+                    new AssignmentStatement("b", new ExpressionNode(Operator.Add,
                         new ReferenceExpression("b"),
                         new ConstantExpression(1)))),
             };
@@ -118,7 +118,7 @@ namespace CodeGen.Parsing.Tests
         {
             Statement[] expected =
             {
-                new AssignmentStatement(new Reference("a"),
+                new AssignmentStatement("a",
                     new ExpressionNode(op, new ReferenceExpression("b"), new ReferenceExpression("c"))),
             };
 
@@ -128,9 +128,9 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void ForLoop()
         {
-            var initialization = new AssignmentStatement(new Reference("t"), new ConstantExpression(0));
+            var initialization = new AssignmentStatement("t", new ConstantExpression(0));
             var condition = new ExpressionNode(Operator.Lt, new ReferenceExpression("t"), new ConstantExpression(10));
-            var step = new AssignmentStatement(new Reference("t"),
+            var step = new AssignmentStatement("t",
                 new ExpressionNode(Operator.Add, new ReferenceExpression("t"), new ConstantExpression(1)));
 
             var forLoopOptions =
@@ -139,7 +139,7 @@ namespace CodeGen.Parsing.Tests
 
             Statement[] expected =
             {
-                new ForLoop(forLoopOptions, new AssignmentStatement(new Reference("b"), new ConstantExpression(123))),
+                new ForLoop(forLoopOptions, new AssignmentStatement("b", new ConstantExpression(123))),
             };
 
             AssertCode("for (t=0; t<10; t=t+1) b=123;", expected);
@@ -163,8 +163,8 @@ namespace CodeGen.Parsing.Tests
             {
                 new IfStatement(new ExpressionNode(Operator.Eq, new ReferenceExpression("a"),
                         new ConstantExpression(0)),
-                    new AssignmentStatement(new Reference("b"), new ConstantExpression(0)),
-                    new AssignmentStatement(new Reference("b"), new ConstantExpression(1))),
+                    new AssignmentStatement("b", new ConstantExpression(0)),
+                    new AssignmentStatement("b", new ConstantExpression(1))),
             };
 
             AssertCode("if (a==0) b=0; else b=1; ", expected);
@@ -177,8 +177,8 @@ namespace CodeGen.Parsing.Tests
             {
                 new IfStatement(new ExpressionNode(Operator.Eq, new ReferenceExpression("a"),
                         new ConstantExpression(0)),
-                    new Block(new AssignmentStatement(new Reference("b"), new ConstantExpression(0))),
-                    new Block(new AssignmentStatement(new Reference("b"), new ConstantExpression(1)))),
+                    new Block(new AssignmentStatement("b", new ConstantExpression(0))),
+                    new Block(new AssignmentStatement("b", new ConstantExpression(1)))),
             };
 
             AssertCode("if (a==0) {b=0;} else {b=1;}", expected);
@@ -187,26 +187,26 @@ namespace CodeGen.Parsing.Tests
         public static IEnumerable<object[]> TestData => new List<object[]>()
         {
             new object[]
-                {"a=1;", new Statement[] {new AssignmentStatement(new Reference("a"), new ConstantExpression(1)),}},
+                {"a=1;", new Statement[] {new AssignmentStatement("a", new ConstantExpression(1)),}},
             new object[] {"{}", new Statement[] {new Block()}},
             new object[]
             {
                 "{ a=1; }",
-                new Statement[] {new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(1)))}
+                new Statement[] {new Block(new AssignmentStatement("a", new ConstantExpression(1)))}
             },
             new object[]
             {
                 "{ {a=1;} }", new Statement[]
                 {
-                    new Block(new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(1)))),
+                    new Block(new Block(new AssignmentStatement("a", new ConstantExpression(1)))),
                 }
             },
             new object[]
             {
                 "{ {a=1; b=2; } }", new Statement[]
                 {
-                    new Block(new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(1)),
-                        new AssignmentStatement(new Reference("b"), new ConstantExpression(2))))
+                    new Block(new Block(new AssignmentStatement("a", new ConstantExpression(1)),
+                        new AssignmentStatement("b", new ConstantExpression(2))))
 
                 }
             },
@@ -214,8 +214,8 @@ namespace CodeGen.Parsing.Tests
             {
                 "{ {a=1;} {b=2;} }", new Statement[]
                 {
-                    new Block(new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(1))),
-                        new Block(new AssignmentStatement(new Reference("b"), new ConstantExpression(2)))),
+                    new Block(new Block(new AssignmentStatement("a", new ConstantExpression(1))),
+                        new Block(new AssignmentStatement("b", new ConstantExpression(2)))),
                 }
             },
             new object[]
@@ -223,14 +223,14 @@ namespace CodeGen.Parsing.Tests
                 "if (a) b=3;", new Statement[]
                 {
                     new IfStatement(new ReferenceExpression("a"),
-                        new AssignmentStatement(new Reference("b"), new ConstantExpression(3))),
+                        new AssignmentStatement("b", new ConstantExpression(3))),
                 }
             },
             new object[]
             {
                 "a=b*c;", new Statement[]
                 {
-                    new AssignmentStatement(new Reference("a"),
+                    new AssignmentStatement("a",
                         new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("b"),
                             new ReferenceExpression("c"))),
                 }
@@ -239,7 +239,7 @@ namespace CodeGen.Parsing.Tests
             {
                 "a=b*(c+d);", new Statement[]
                 {
-                    new AssignmentStatement(new Reference("a"),
+                    new AssignmentStatement("a",
                         new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("b"),
                             new ExpressionNode(nameof(Operator.Add), new ReferenceExpression("c"),
                                 new ReferenceExpression("d")))),
@@ -250,13 +250,13 @@ namespace CodeGen.Parsing.Tests
                 "for (t=0;t==1;t=t+1) { a=3; }", new Statement[]
                 {
                     new ForLoop(new ForLoopHeader(
-                            new AssignmentStatement(new Reference("t"), new ConstantExpression(0)),
+                            new AssignmentStatement("t", new ConstantExpression(0)),
                             new ExpressionNode(Operator.Eq, new ReferenceExpression("t"),
                                 new ConstantExpression(1)),
-                            new AssignmentStatement(new Reference("t"),
+                            new AssignmentStatement("t",
                                 new ExpressionNode(Operator.Add, new ReferenceExpression("t"),
                                     new ConstantExpression(1)))),
-                        new Block(new AssignmentStatement(new Reference("a"), new ConstantExpression(3)))),
+                        new Block(new AssignmentStatement("a", new ConstantExpression(3)))),
                 }
             },
         };       

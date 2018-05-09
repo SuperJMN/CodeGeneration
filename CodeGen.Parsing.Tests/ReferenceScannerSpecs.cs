@@ -13,13 +13,13 @@ namespace CodeGen.Parsing.Tests
         public void Assignment()
         {
             var ast = new AssignmentStatement("a", new ConstantExpression(1));
-            Assert(ast, 2);
+            Assert(ast, 3);
         }
 
         [Fact]
         public void Declarations()
         {
-            var ast = new DeclarationStatement(ReferenceType.Int, "a", new DirectInitialization(new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c")));
+            var ast = new DeclarationStatement(PrimitiveType.Int, "a", new DirectInitialization(new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c")));
 
             Assert(ast, 4);
         }
@@ -27,18 +27,17 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Function()
         {
-            var i = ReferenceType.Int;
-            var ast = new Function(new FunctionFirm("add", i, new List<Argument>
+            var ast = new Function(new FunctionFirm("add", ReturnType.Int, new List<Argument>
             {
-                new Argument(i, "a"),
-                new Argument(i, "b"),
+                new Argument(PrimitiveType.Int, "a"),
+                new Argument(PrimitiveType.Int, "b"),
             }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
                 new ReturnStatement(new ReferenceExpression("c"))
             }, new List<DeclarationStatement>()));
 
-            Assert(ast, 7);
+            Assert(ast, 8);
         }
 
         [Fact]
@@ -48,6 +47,13 @@ namespace CodeGen.Parsing.Tests
             Assert(ast, 2);
         }
 
+        [Fact]
+        public void Array()
+        {
+            var ast = new ArrayReferenceItem("array", new ConstantExpression(10));
+            Assert(ast, 3);
+        }
+        
         private static void Assert(ICodeUnit ast, int expectedRefCount)
         {
             var sut = new ReferenceScanner();

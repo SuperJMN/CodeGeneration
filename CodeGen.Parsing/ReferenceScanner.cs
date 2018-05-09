@@ -46,8 +46,9 @@ namespace CodeGen.Parsing
         public void Visit(AssignmentStatement expression)
         {
             expression.Assignment.Accept(this);
+            expression.Target.Accept(this);
 
-            AddReference(expression.Target);
+            AddReference(expression.Target.Reference);
         }
 
         public void Visit(ForLoop code)
@@ -82,7 +83,7 @@ namespace CodeGen.Parsing
                 argument.Accept(this);
             }
 
-            function.Block.Accept(this);            
+            function.Block.Accept(this);
         }
 
         public void Visit(Program program)
@@ -94,12 +95,12 @@ namespace CodeGen.Parsing
         }
 
         public void Visit(Call call)
-        {         
+        {
             foreach (var param in call.Parameters)
             {
                 param.Accept(this);
             }
-            
+
             AddReference(call.Reference);
         }
 
@@ -110,23 +111,35 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            AddReference(argument.Reference);
+            AddReference(argument.Item.Reference);
         }
 
         public void Visit(DeclarationStatement unit)
         {
             unit.Initialization?.Accept(this);
-
-            AddReference(unit.Identifier);
+            unit.ReferenceItem.Accept(this);            
         }
 
         public void Visit(ListInitialization unit)
-        {            
+        {
         }
 
         public void Visit(DirectInitialization unit)
         {
             unit.Expression.Accept(this);
+        }
+
+        public void Visit(StandardReferenceItem unit)
+        {
+            AddReference(unit.Reference);
+        }
+
+        public void Visit(ArrayReferenceItem unit)
+        {
+            unit.AccessExpression.Accept(this);
+
+            AddReference(unit.Source);
+            AddReference(unit.Reference);
         }
     }
 }

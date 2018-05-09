@@ -27,7 +27,7 @@ namespace CodeGen.Parsing.Tests
             var expected = new ConstantExpression(true);
 
             actual.ShouldDeepEqual(expected);
-        }
+        }       
 
         [Fact]
         public void Condition()
@@ -100,6 +100,15 @@ namespace CodeGen.Parsing.Tests
         {
             var actual = Parse("SomeFunc(Other(a), b)");
             var expected = new Call("SomeFunc", new Call("Other", new ReferenceExpression("a")), new ReferenceExpression("b"));
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void IndexedAccess()
+        {
+            var actual = Parse("array[30]");
+            var expected = new ArrayReferenceItem("array", new ConstantExpression(30));
 
             actual.ShouldDeepEqual(expected);
         }

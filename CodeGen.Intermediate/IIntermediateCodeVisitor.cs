@@ -19,5 +19,7 @@ namespace CodeGen.Intermediate
         void Visit(ParameterCode code);
         void Visit(AddressOf code);
         void Visit(ContentOf code);
+        void Visit(LoadFromArray code);
+        void Visit(StoreToArray code);
     }
 }

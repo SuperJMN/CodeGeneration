@@ -11,19 +11,19 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Simple()
         {
-            AssertCode("a", new DeclaratorAndInitializer(new Declarator("a"), null));
+            AssertCode("a", new DeclaratorAndInitializer("a", null));
         }  
         
         [Fact]
         public void SimpleInitialization()
         {
-            AssertCode("a=3", new DeclaratorAndInitializer(new Declarator("a"), new DirectInitialization(new ConstantExpression(3))));
+            AssertCode("a=3", new DeclaratorAndInitializer("a", new DirectInitialization(new ConstantExpression(3))));
         } 
 
         [Fact]
         public void Array()
         {
-            AssertCode("a[3]={1, 2, 3}", new DeclaratorAndInitializer(new Declarator("a", new ArrayDeclarator(3)), new ListInitialization(1, 2, 3)));
+            AssertCode("a[3]={1, 2, 3}", new DeclaratorAndInitializer(new ArrayReferenceItem("a", new ConstantExpression(3)), new ListInitialization(1, 2, 3)));
         } 
 
         protected override TokenListParser<LangToken, DeclaratorAndInitializer> Parser => Parsers.DeclaratorAndInitializer;

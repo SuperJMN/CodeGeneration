@@ -4,9 +4,9 @@ using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing
 {
-    public class ScopeScanner : ICodeUnitVisitor
+    public class SymbolTableVisitor : ICodeUnitVisitor
     {
-        public ScopeScanner()
+        public SymbolTableVisitor()
         {
             SymbolTable = new SymbolTable();
             CurrentSymbolTable = SymbolTable;
@@ -18,7 +18,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ExpressionNode expressionNode)
         {
-            CurrentSymbolTable.AnnotateSymbol(expressionNode.Reference);
+            CurrentSymbolTable.AnnotateImplicit(expressionNode.Reference);
 
             foreach (var op in expressionNode.Operands)
             {
@@ -28,7 +28,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ConstantExpression expression)
         {
-            CurrentSymbolTable.AnnotateSymbol(expression.Reference);
+            CurrentSymbolTable.AnnotateImplicit(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
@@ -40,13 +40,13 @@ namespace CodeGen.Parsing
 
         public void Visit(ReferenceExpression expression)
         {
-            CurrentSymbolTable.AnnotateSymbol(expression.Reference);
+            CurrentSymbolTable.AnnotateImplicit(expression.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
         {
             expression.Assignment.Accept(this);
-            CurrentSymbolTable.AnnotateSymbol(expression.Target);
+            expression.Target.Accept(this);            
         }
 
         public void Visit(ForLoop code)
@@ -107,7 +107,7 @@ namespace CodeGen.Parsing
                 p.Accept(this);
             }
 
-            CurrentSymbolTable.AnnotateSymbol(call.Reference);
+            CurrentSymbolTable.AnnotateImplicit(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
@@ -117,14 +117,23 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            CurrentSymbolTable.AnnotateTypedSymbol(argument.Reference, argument.Type);
+            CurrentSymbolTable.Annotate(argument.Item.Reference, argument.Type);
         }
 
         public void Visit(DeclarationStatement unit)
         {
+            unit.ReferenceItem.Accept(this);
             unit.Initialization?.Accept(this);
-
-            CurrentSymbolTable.AnnotateTypedSymbol(unit.Identifier, unit.ReferenceType);
+            CurrentSymbolTable.Annotate(unit.ReferenceItem.Reference, unit.ReferenceType);
+            
+            if (unit.ReferenceItem is ArrayReferenceItem ari)
+            {       
+                if (ari.AccessExpression is ConstantExpression ct)
+                {
+                    var ctValue = (int)ct.Value;
+                    CurrentSymbolTable.Annotate(ari.Source, unit.ReferenceType, ctValue);
+                }
+            }
         }
 
         public void Visit(ListInitialization unit)
@@ -134,6 +143,19 @@ namespace CodeGen.Parsing
         public void Visit(DirectInitialization unit)
         {
             unit.Expression.Accept(this);
+        }
+
+        public void Visit(StandardReferenceItem unit)
+        {
+            CurrentSymbolTable.AnnotateImplicit(unit.Reference);
+        }
+
+        public void Visit(ArrayReferenceItem unit)
+        {
+            CurrentSymbolTable.AnnotateImplicit(unit.Reference);
+            CurrentSymbolTable.AnnotateImplicit(unit.Source);
+            
+            unit.AccessExpression.Accept(this);
         }
 
         private void PushScope(ICodeUnit scopeOwner)

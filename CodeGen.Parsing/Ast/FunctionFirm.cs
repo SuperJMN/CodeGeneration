@@ -4,7 +4,7 @@ namespace CodeGen.Parsing.Ast
 {
     public class FunctionFirm
     {
-        public FunctionFirm(string name, ReferenceType returnType, ICollection<Argument> arguments)
+        public FunctionFirm(string name, ReturnType returnType, ICollection<Argument> arguments)
         {
             Name = name;
             ReturnType = returnType;
@@ -12,7 +12,7 @@ namespace CodeGen.Parsing.Ast
         }
 
         public string Name { get; }
-        public ReferenceType ReturnType { get; }
+        public ReturnType ReturnType { get; }
         public ICollection<Argument> Arguments { get; }
 
         public override string ToString()

@@ -1,6 +1,6 @@
 ﻿namespace CodeGen.Parsing.Ast
 {
-    public class Primitive : ReferenceType
+    public class Primitive : ReturnType
     {
         public Primitive(PrimitiveType type)
         {
@@ -25,6 +25,11 @@
         public override int GetHashCode()
         {
             return (int) Type;
+        }
+
+        public override string ToString()
+        {
+            return $"{Type}";
         }
     }
 }

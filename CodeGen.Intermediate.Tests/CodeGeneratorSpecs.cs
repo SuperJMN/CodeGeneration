@@ -23,8 +23,8 @@ namespace CodeGen.Intermediate.Tests
 
             var expected = new List<IntermediateCode>
             {
-                new BoolExpressionAssignment(booleanOperation, new Reference("T1"), new Reference("a"),
-                    new Reference("b"))
+                new BoolExpressionAssignment(booleanOperation, "T1", "a",
+                    "b")
             };
 
             actual.ShouldDeepEqual(expected);
@@ -32,11 +32,12 @@ namespace CodeGen.Intermediate.Tests
 
         private static IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit unit)
         {
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(unit);
             var namer = new ImplicitReferenceNameAssigner();
             namer.AssignNames(unit);
 
+            var sut = new IntermediateCodeGenerator();
+            var actual = sut.Generate(unit);
+            
             return actual.ToList().AsReadOnly();
         }
 
@@ -44,7 +45,7 @@ namespace CodeGen.Intermediate.Tests
         public void ComplexAssignment()
         {
             var expr = new AssignmentStatement(
-                new Reference("x"),
+                "x",
                 new ExpressionNode(nameof(Operator.Add),
                     new ExpressionNode(nameof(Operator.Multiply),
                         new ReferenceExpression("y"),
@@ -59,11 +60,11 @@ namespace CodeGen.Intermediate.Tests
             var actual = Generate(expr);
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("z"), new Reference("w")),
-                IntermediateCode.Emit.Mult(new Reference("T2"), new Reference("y"), new Reference("T1")),
-                IntermediateCode.Emit.Add(new Reference("T3"), new Reference("y"), new Reference("x")),
-                IntermediateCode.Emit.Add(new Reference("T4"), new Reference("T2"), new Reference("T3")),
-                IntermediateCode.Emit.Set(new Reference("x"), new Reference("T4"))
+                IntermediateCode.Emit.Mult("T1", "z", "w"),
+                IntermediateCode.Emit.Mult("T2", "y", "T1"),
+                IntermediateCode.Emit.Add("T3", "y", "x"),
+                IntermediateCode.Emit.Add("T4", "T2", "T3"),
+                IntermediateCode.Emit.Set("x", "T4")
             };
 
             actual.ShouldDeepEqual(expected);
@@ -72,13 +73,13 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void ConstantAssignment()
         {
-            var st = new AssignmentStatement(new Reference("a"), new ConstantExpression(123));
+            var st = new AssignmentStatement("a", new ConstantExpression(123));
             var actual = Generate(st);
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.Set(new Reference("T1"), 123),
-                IntermediateCode.Emit.Set(new Reference("a"), new Reference("T1"))
+                IntermediateCode.Emit.Set("T1", 123),
+                IntermediateCode.Emit.Set("a", "T1")
             };
 
             actual.ShouldDeepEqual(expected);
@@ -87,7 +88,7 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfSentence()
         {
-            var statement = new AssignmentStatement(new Reference("b"), new ReferenceExpression("c"));
+            var statement = new AssignmentStatement("b", new ReferenceExpression("c"));
 
             var expr = new IfStatement(new ConstantExpression(true),
                 new Block(new List<Statement> {statement}));
@@ -98,9 +99,9 @@ namespace CodeGen.Intermediate.Tests
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.Set(new Reference("T1"), true),
-                IntermediateCode.Emit.JumpIfFalse(new Reference("T1"), label),
-                IntermediateCode.Emit.Set(new Reference("b"), new Reference("c")),
+                IntermediateCode.Emit.Set("T1", true),
+                IntermediateCode.Emit.JumpIfFalse("T1", label),
+                IntermediateCode.Emit.Set("b", "c"),
                 IntermediateCode.Emit.Label(label)
             };
 
@@ -116,7 +117,7 @@ namespace CodeGen.Intermediate.Tests
             var condition = new ExpressionNode(nameof(Operator.Eq), left, right);
 
             var statement = new IfStatement(condition,
-                new Block(new AssignmentStatement(new Reference("a"), new ReferenceExpression("b"))));
+                new Block(new AssignmentStatement("a", new ReferenceExpression("b"))));
 
             var actual = Generate(statement);
 
@@ -124,10 +125,10 @@ namespace CodeGen.Intermediate.Tests
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("x"), new Reference("y")),
-                IntermediateCode.Emit.IsEqual(new Reference("T2"), new Reference("T1"), new Reference("z")),
-                IntermediateCode.Emit.JumpIfFalse(new Reference("T2"), label),
-                IntermediateCode.Emit.Set(new Reference("a"), new Reference("b")),
+                IntermediateCode.Emit.Mult("T1", "x", "y"),
+                IntermediateCode.Emit.IsEqual("T2", "T1", "z"),
+                IntermediateCode.Emit.JumpIfFalse("T2", label),
+                IntermediateCode.Emit.Set("a", "b"),
                 IntermediateCode.Emit.Label(label)
             };
 
@@ -166,8 +167,8 @@ namespace CodeGen.Intermediate.Tests
             //    int r = add(1, 2);
             //}
 
-            var i = ReferenceType.Int;
-            var addFunc = new Function(new FunctionFirm("add", i, new List<Argument>
+            var i = PrimitiveType.Int;
+            var addFunc = new Function(new FunctionFirm("add", ReturnType.Int, new List<Argument>
             {
                 new Argument(i, "a"),
                 new Argument(i, "b")
@@ -178,7 +179,7 @@ namespace CodeGen.Intermediate.Tests
                 new ReturnStatement(new ReferenceExpression("c"))
             }, new List<DeclarationStatement>()));
 
-            var mainFunc = new Function(new FunctionFirm("main", ReferenceType.Void, new List<Argument>()), new Block(
+            var mainFunc = new Function(new FunctionFirm("main", ReturnType.Void, new List<Argument>()), new Block(
                 new List<Statement>
                 {
                     new AssignmentStatement("r", new Call("add", new ConstantExpression(1), new ConstantExpression(2)))
@@ -221,7 +222,7 @@ namespace CodeGen.Intermediate.Tests
         public void SimpleAssignment()
         {
             var expr = new AssignmentStatement(
-                new Reference("a"),
+                new StandardReferenceItem(new Reference("a")), 
                 new ExpressionNode(nameof(Operator.Add),
                     new ReferenceExpression("b"),
                     new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("c"),
@@ -233,12 +234,44 @@ namespace CodeGen.Intermediate.Tests
 
             var expected = new List<IntermediateCode>
             {
-                IntermediateCode.Emit.Mult(new Reference("T1"), new Reference("c"), new Reference("d")),
-                IntermediateCode.Emit.Add(new Reference("T2"), new Reference("b"), new Reference("T1")),
-                IntermediateCode.Emit.Set(new Reference("a"), new Reference("T2"))
+                IntermediateCode.Emit.Mult("T1", "c", "d"),
+                IntermediateCode.Emit.Add("T2", "b", "T1"),
+                IntermediateCode.Emit.Set("a", "T2")
             };
 
             actual.ShouldDeepEqual(expected);
         }
+
+        [Fact]
+        public void LoadFromArray()
+        {
+            var expr = new AssignmentStatement(new StandardReferenceItem(new Reference("a")), new ArrayReferenceItem("b", new ConstantExpression(10)));
+            var actual = Generate(expr);
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.Set("T1", 10),
+                IntermediateCode.Emit.LoadFromArray("T2", "b", "T1"),
+                IntermediateCode.Emit.Set("a", "T2")
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }
+
+        [Fact]
+        public void StoreToArray()
+        {
+            var target = new ArrayReferenceItem("a", new ConstantExpression(10));
+            var expr = new AssignmentStatement(target, (StandardReferenceItem)"b");
+            var actual = Generate(expr);
+
+            var expected = new List<IntermediateCode>
+            {
+                IntermediateCode.Emit.Set("T1", 10),
+                IntermediateCode.Emit.StoreToArray("a", "T1", "b"),
+            };
+
+            actual.ShouldDeepEqual(expected);
+        }       
     }
 }

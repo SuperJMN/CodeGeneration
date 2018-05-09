@@ -7,7 +7,7 @@ namespace CodeGen.Parsing.Ast
     public class Function : ICodeUnit
     {
         public string Name => Firm.Name;
-        public ReferenceType ReturnType => Firm.ReturnType;
+        public ReturnType ReturnType => Firm.ReturnType;
         public ICollection<Argument> Arguments => Firm.Arguments;
         public FunctionFirm Firm { get; }
         public Block Block { get; }
@@ -25,7 +25,7 @@ namespace CodeGen.Parsing.Ast
 
         public override string ToString()
         {
-            var args = string.Join(",", Arguments.Select(x => $"{x.Type} {x.Reference}"));
+            var args = string.Join(",", Arguments.Select(x => $"{x.Type} {x.Item}"));
             return $"{ReturnType} {Name}({args})";
         }
     }

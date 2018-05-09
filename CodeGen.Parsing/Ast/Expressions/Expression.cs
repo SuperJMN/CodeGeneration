@@ -1,4 +1,4 @@
-﻿using CodeGen.Core;
+using CodeGen.Core;
 using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast.Expressions

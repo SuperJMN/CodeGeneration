@@ -99,6 +99,16 @@ namespace CodeGen.Intermediate.Codes
             {
                 return new HaltCode();
             }
+
+            public static IntermediateCode LoadFromArray(Reference target, Reference source, Reference index)
+            {
+                return new LoadFromArray(target, source, index);
+            }
+
+            public static IntermediateCode StoreToArray(Reference target, Reference index, Reference source)
+            {
+                return new StoreToArray(target, index, source);
+            }
         }
     }
 }

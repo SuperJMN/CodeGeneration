@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CodeGen.Intermediate.Codes;
+using CodeGen.Parsing;
 using CodeGen.Parsing.Ast;
 using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
@@ -168,7 +169,7 @@ namespace CodeGen.Intermediate
                 st.Accept(this);
             }
 
-            if (Equals(function.ReturnType, ReferenceType.Void))
+            if (Equals(function.ReturnType, ReturnType.Void))
             {
                 if (!function.Block.Statements.Any(statement => statement is ReturnStatement))
                 {
@@ -220,7 +221,7 @@ namespace CodeGen.Intermediate
         {
             if (declarationStatement.Initialization is DirectInitialization a)
             {
-                var assignment = new AssignmentStatement(declarationStatement.Identifier, a.Expression);
+                var assignment = new AssignmentStatement(declarationStatement.ReferenceItem, a.Expression);
                 assignment.Accept(this);
             }            
         }
@@ -234,6 +235,16 @@ namespace CodeGen.Intermediate
             unit.Expression.Accept(this);
         }
 
+        public void Visit(StandardReferenceItem unit)
+        {            
+        }
+
+        public void Visit(ArrayReferenceItem unit)
+        {
+            unit.AccessExpression.Accept(this);
+            InnerCode.Add(new LoadFromArray(unit.Reference, unit.Source, unit.AccessExpression.Reference));
+        }
+
         public void Visit(ReferenceExpression expression)
         {
         }
@@ -242,7 +253,15 @@ namespace CodeGen.Intermediate
         {
             statement.Assignment.Accept(this);
 
-            InnerCode.Add(IntermediateCode.Emit.Set(statement.Target, statement.Assignment.Reference));
+            if (statement.Target is ArrayReferenceItem ar)
+            {
+                ar.AccessExpression.Accept(this);
+                InnerCode.Add(new StoreToArray(ar.Source, ar.AccessExpression.Reference, statement.Assignment.Reference));
+            }
+            else
+            {
+                InnerCode.Add(IntermediateCode.Emit.Set(statement.Target.Reference, statement.Assignment.Reference));
+            }            
         }
     }
 }

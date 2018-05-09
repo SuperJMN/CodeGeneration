@@ -1,17 +1,17 @@
 ﻿namespace CodeGen.Parsing.Ast
 {
-    public class Pointer : ReferenceType
+    public class Pointer : ReturnType
     {
-        public Pointer(ReferenceType referenceType)
+        public Pointer(ReturnType returnType)
         {
-            ReferenceType = referenceType;
+            ReturnType = returnType;
         }
 
-        public ReferenceType ReferenceType { get; }
+        public ReturnType ReturnType { get; }
 
         protected bool Equals(Pointer other)
         {
-            return Equals(ReferenceType, other.ReferenceType);
+            return Equals(ReturnType, other.ReturnType);
         }
 
         public override bool Equals(object obj)
@@ -24,7 +24,12 @@
 
         public override int GetHashCode()
         {
-            return (ReferenceType != null ? ReferenceType.GetHashCode() : 0);
+            return (ReturnType != null ? ReturnType.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return $"*{ReturnType}";
         }
     }
 }

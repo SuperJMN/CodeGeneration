@@ -5,13 +5,13 @@ namespace CodeGen.Parsing.Ast.Statements
 {
     public class AssignmentStatement : Statement
     {
-        public AssignmentStatement(Reference target, Expression assignment)
+        public AssignmentStatement(ReferenceItem target, Expression assignment)
         {
             Target = target;
             Assignment = assignment;
         }
 
-        public Reference Target { get; }
+        public ReferenceItem Target { get; }
         public Expression Assignment { get; }
         public override void Accept(ICodeUnitVisitor unitVisitor)
         {
