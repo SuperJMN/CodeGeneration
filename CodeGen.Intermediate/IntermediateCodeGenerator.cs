@@ -7,12 +7,10 @@ namespace CodeGen.Intermediate
 {
     public class IntermediateCodeGenerator
     {
-        private int implicitReferenceCount;
         private int labelCount;
 
         public IEnumerable<IntermediateCode> Generate(ICodeUnit codeUnit)
         {
-            implicitReferenceCount = 0;
             labelCount = 0;
 
             var codeGeneratingVisitor = new CodeUnitGeneratingVisitor();

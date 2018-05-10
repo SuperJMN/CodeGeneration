@@ -102,12 +102,12 @@ namespace CodeGen.Intermediate.Codes
 
             public static IntermediateCode LoadFromArray(Reference target, Reference source, Reference index)
             {
-                return new LoadFromArray(target, source, index);
+                return new LoadFromArray(target, new IndexedReference(source, index));
             }
 
             public static IntermediateCode StoreToArray(Reference target, Reference index, Reference source)
             {
-                return new StoreToArray(target, index, source);
+                return new StoreToArray(new IndexedReference(target, index), source);
             }
         }
     }

@@ -242,7 +242,7 @@ namespace CodeGen.Intermediate
         public void Visit(ArrayReferenceItem unit)
         {
             unit.AccessExpression.Accept(this);
-            InnerCode.Add(new LoadFromArray(unit.Reference, unit.Source, unit.AccessExpression.Reference));
+            InnerCode.Add(new LoadFromArray(unit.Reference, new IndexedReference(unit.Source, unit.AccessExpression.Reference)));
         }
 
         public void Visit(ReferenceExpression expression)
@@ -256,7 +256,7 @@ namespace CodeGen.Intermediate
             if (statement.Target is ArrayReferenceItem ar)
             {
                 ar.AccessExpression.Accept(this);
-                InnerCode.Add(new StoreToArray(ar.Source, ar.AccessExpression.Reference, statement.Assignment.Reference));
+                InnerCode.Add(new StoreToArray(new IndexedReference(ar.Source, ar.AccessExpression.Reference), statement.Assignment.Reference));
             }
             else
             {

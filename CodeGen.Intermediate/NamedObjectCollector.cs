@@ -96,16 +96,16 @@ namespace CodeGen.Intermediate
 
         public void Visit(LoadFromArray code)
         {
-            AddReference(code.Source);
-            AddReference(code.Index);
+            AddReference(code.Source.Base);
+            AddReference(code.Source.Index);
             AddReference(code.Target);
         }
 
         public void Visit(StoreToArray code)
         {
             AddReference(code.Source);
-            AddReference(code.Index);            
-            AddReference(code.Target);
+            AddReference(code.Target.Base);            
+            AddReference(code.Target.Index);
         }
 
         private void AddReference(Reference reference)
