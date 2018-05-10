@@ -8,17 +8,17 @@ namespace CodeGen.Parsing
     {
         public SymbolTableVisitor()
         {
-            SymbolTable = new SymbolTable();
-            CurrentSymbolTable = SymbolTable;
+            FullSymbolTable = new FullSymbolTable();
+            CurrentSymbolTable = FullSymbolTable;
         }
 
-        public SymbolTable SymbolTable { get; }
+        public FullSymbolTable FullSymbolTable { get; }
 
-        private SymbolTable CurrentSymbolTable { get; set; }
+        private FullSymbolTable CurrentSymbolTable { get; set; }
 
         public void Visit(ExpressionNode expressionNode)
         {
-            CurrentSymbolTable.AnnotateImplicit(expressionNode.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(expressionNode.Reference);
 
             foreach (var op in expressionNode.Operands)
             {
@@ -28,7 +28,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ConstantExpression expression)
         {
-            CurrentSymbolTable.AnnotateImplicit(expression.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
@@ -40,7 +40,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ReferenceExpression expression)
         {
-            CurrentSymbolTable.AnnotateImplicit(expression.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(expression.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
@@ -107,7 +107,7 @@ namespace CodeGen.Parsing
                 p.Accept(this);
             }
 
-            CurrentSymbolTable.AnnotateImplicit(call.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
@@ -117,21 +117,21 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            CurrentSymbolTable.Annotate(argument.Item.Reference, argument.Type);
+            CurrentSymbolTable.AddAppearance(argument.Item.Reference, argument.Type);
         }
 
         public void Visit(DeclarationStatement unit)
         {
             unit.ReferenceItem.Accept(this);
             unit.Initialization?.Accept(this);
-            CurrentSymbolTable.Annotate(unit.ReferenceItem.Reference, unit.ReferenceType);
+            CurrentSymbolTable.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
             
             if (unit.ReferenceItem is ArrayReferenceItem ari)
             {       
                 if (ari.AccessExpression is ConstantExpression ct)
                 {
                     var ctValue = (int)ct.Value;
-                    CurrentSymbolTable.Annotate(ari.Source, unit.ReferenceType, ctValue);
+                    CurrentSymbolTable.AddAppearance(ari.Source, unit.ReferenceType, ctValue);
                 }
             }
         }
@@ -147,20 +147,20 @@ namespace CodeGen.Parsing
 
         public void Visit(StandardReferenceItem unit)
         {
-            CurrentSymbolTable.AnnotateImplicit(unit.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(unit.Reference);
         }
 
         public void Visit(ArrayReferenceItem unit)
         {
-            CurrentSymbolTable.AnnotateImplicit(unit.Reference);
-            CurrentSymbolTable.AnnotateImplicit(unit.Source);
+            CurrentSymbolTable.AddAppearanceForImplicit(unit.Reference);
+            CurrentSymbolTable.AddAppearanceForImplicit(unit.Source);
             
             unit.AccessExpression.Accept(this);
         }
 
         private void PushScope(ICodeUnit scopeOwner)
         {
-            CurrentSymbolTable = CurrentSymbolTable.CreateChildScope(scopeOwner);
+            CurrentSymbolTable = CurrentSymbolTable.AddChild(scopeOwner);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using CodeGen.Core;
 
@@ -9,9 +8,9 @@ namespace CodeGen.Parsing.Ast
     public class SymbolTable
     {
         public ICodeUnit Owner { get; }
+        public Dictionary<Reference, Properties> Symbols { get; }
+        public IEnumerable<SymbolTable> Children { get; }
         public SymbolTable Parent { get; }
-        private readonly List<SymbolTable> children = new List<SymbolTable>();
-        private readonly IDictionary<Reference, Properties> symbols = new Dictionary<Reference, Properties>();
 
         public SymbolTable()
         {
@@ -23,23 +22,11 @@ namespace CodeGen.Parsing.Ast
             Parent = parent;
         }
 
-        public IEnumerable<SymbolTable> Children => children.AsReadOnly();
-
-        public IReadOnlyDictionary<Reference, Properties> Symbols => new ReadOnlyDictionary<Reference, Properties>(symbols);
-
-        public SymbolTable CreateChildScope(ICodeUnit scopeOwner)
+        public SymbolTable(ICodeUnit owner, Dictionary<Reference, Properties> symbols, IEnumerable<SymbolTable> children)
         {
-            var scope = new SymbolTable(scopeOwner, this);
-            children.Add(scope);
-            return scope;
-        }
-
-        public void AnnotateImplicit(Reference reference)
-        {
-            if (!symbols.ContainsKey(reference))
-            {
-                symbols.Add(reference, new Properties());
-            }
+            Owner = owner;
+            Symbols = symbols;
+            Children = children;
         }
 
         public int Size
@@ -49,24 +36,6 @@ namespace CodeGen.Parsing.Ast
                 var size = Symbols.Aggregate(0, (a, b) => a + b.Value.Size);
                 return size;
             }
-        }
-
-        public void Annotate(Reference reference, PrimitiveType type, int length = 1)
-        {
-            Properties properties;
-
-            if (!symbols.ContainsKey(reference))
-            {
-                properties = new Properties();
-                symbols.Add(reference, properties);
-            }
-            else
-            {
-                properties = symbols[reference];
-            }
-
-            properties.AssignType(type);
-            properties.AssignLength(length);
         }
     }
 }

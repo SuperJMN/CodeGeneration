@@ -6,7 +6,6 @@ namespace CodeGen.Intermediate.Codes
     {
         public Reference Target { get; }
         public IndexedReference Source { get; }
-        public Reference Index => Source.Index;
 
         public LoadFromArray(Reference target, IndexedReference source)
         {
@@ -21,7 +20,7 @@ namespace CodeGen.Intermediate.Codes
 
         public override string ToString()
         {
-            return $"{Target} = {Source}[{Index}]";
+            return $"{Target} = {Source}";
         }
     }
 }

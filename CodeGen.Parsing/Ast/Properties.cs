@@ -2,9 +2,9 @@
 {
     public class Properties
     {
-        public PrimitiveType Type { get; private set; }
+        public PrimitiveType Type { get; set; }
 
-        public int Size { get; private set; } = 1;
+        public int Size { get; set; } = 1;
         public int Offset { get; set; }
 
         public void AssignType(PrimitiveType type)
