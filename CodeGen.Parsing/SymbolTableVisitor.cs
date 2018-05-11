@@ -8,17 +8,17 @@ namespace CodeGen.Parsing
     {
         public SymbolTableVisitor()
         {
-            FullSymbolTable = new FullSymbolTable();
-            CurrentSymbolTable = FullSymbolTable;
+            SymbolTableBuilder = new SymbolTableBuilder();
+            CurrentSymbolTableBuilder = SymbolTableBuilder;
         }
 
-        public FullSymbolTable FullSymbolTable { get; }
+        public SymbolTableBuilder SymbolTableBuilder { get; }
 
-        private FullSymbolTable CurrentSymbolTable { get; set; }
+        private SymbolTableBuilder CurrentSymbolTableBuilder { get; set; }
 
         public void Visit(ExpressionNode expressionNode)
         {
-            CurrentSymbolTable.AddAppearanceForImplicit(expressionNode.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(expressionNode.Reference);
 
             foreach (var op in expressionNode.Operands)
             {
@@ -28,7 +28,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ConstantExpression expression)
         {
-            CurrentSymbolTable.AddAppearanceForImplicit(expression.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(expression.Reference);
         }
 
         public void Visit(IfStatement expression)
@@ -40,7 +40,7 @@ namespace CodeGen.Parsing
 
         public void Visit(ReferenceExpression expression)
         {
-            CurrentSymbolTable.AddAppearanceForImplicit(expression.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(expression.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
@@ -89,7 +89,7 @@ namespace CodeGen.Parsing
 
         private void PopScope()
         {
-            CurrentSymbolTable = CurrentSymbolTable.Parent;
+            CurrentSymbolTableBuilder = CurrentSymbolTableBuilder.Parent;
         }
 
         public void Visit(Program program)
@@ -107,7 +107,7 @@ namespace CodeGen.Parsing
                 p.Accept(this);
             }
 
-            CurrentSymbolTable.AddAppearanceForImplicit(call.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(call.Reference);
         }
 
         public void Visit(ReturnStatement returnStatement)
@@ -117,21 +117,21 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            CurrentSymbolTable.AddAppearance(argument.Item.Reference, argument.Type);
+            CurrentSymbolTableBuilder.AddAppearance(argument.Item.Reference, argument.Type);
         }
 
         public void Visit(DeclarationStatement unit)
         {
             unit.ReferenceItem.Accept(this);
             unit.Initialization?.Accept(this);
-            CurrentSymbolTable.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
+            CurrentSymbolTableBuilder.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
             
             if (unit.ReferenceItem is ArrayReferenceItem ari)
             {       
                 if (ari.AccessExpression is ConstantExpression ct)
                 {
                     var ctValue = (int)ct.Value;
-                    CurrentSymbolTable.AddAppearance(ari.Source, unit.ReferenceType, ctValue);
+                    CurrentSymbolTableBuilder.AddAppearance(ari.Source, unit.ReferenceType, ctValue);
                 }
             }
         }
@@ -147,20 +147,20 @@ namespace CodeGen.Parsing
 
         public void Visit(StandardReferenceItem unit)
         {
-            CurrentSymbolTable.AddAppearanceForImplicit(unit.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Reference);
         }
 
         public void Visit(ArrayReferenceItem unit)
         {
-            CurrentSymbolTable.AddAppearanceForImplicit(unit.Reference);
-            CurrentSymbolTable.AddAppearanceForImplicit(unit.Source);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Source);
             
             unit.AccessExpression.Accept(this);
         }
 
         private void PushScope(ICodeUnit scopeOwner)
         {
-            CurrentSymbolTable = CurrentSymbolTable.AddChild(scopeOwner);
+            CurrentSymbolTableBuilder = CurrentSymbolTableBuilder.AddChild(scopeOwner);
         }
     }
 }

@@ -242,7 +242,6 @@ namespace CodeGen.Intermediate
         public void Visit(ArrayReferenceItem unit)
         {
             unit.AccessExpression.Accept(this);
-            InnerCode.Add(new LoadFromArray(unit.Reference, new IndexedReference(unit.Source, unit.AccessExpression.Reference)));
         }
 
         public void Visit(ReferenceExpression expression)

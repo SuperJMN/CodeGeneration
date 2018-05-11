@@ -8,13 +8,13 @@ namespace CodeGen.Parsing
         {
             var visitor = new SymbolTableVisitor();
             unit.Accept(visitor);
-            var visitorRawSymbolTable = visitor.FullSymbolTable;
+            var visitorRawSymbolTable = visitor.SymbolTableBuilder;
             return CreateSymbolTable(visitorRawSymbolTable);
         }
 
-        private SymbolTable CreateSymbolTable(FullSymbolTable origin)
+        private SymbolTable CreateSymbolTable(SymbolTableBuilder origin)
         {
-            return origin.ToSymbolTable();
+            return origin.Build();
         }
     }
 }

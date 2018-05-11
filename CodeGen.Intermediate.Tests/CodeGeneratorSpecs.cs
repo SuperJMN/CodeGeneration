@@ -251,8 +251,10 @@ namespace CodeGen.Intermediate.Tests
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Set("T1", 10),
-                IntermediateCode.Emit.LoadFromArray("T2", "b", "T1"),
-                IntermediateCode.Emit.Set("a", "T2")
+                new AddressOf("T2", "b"),
+                IntermediateCode.Emit.Add("T3", "T2", "T1"),
+                new ContentOf("T4", "T3"),
+                IntermediateCode.Emit.Set("a", "T4"),
             };
 
             actual.ShouldDeepEqual(expected);

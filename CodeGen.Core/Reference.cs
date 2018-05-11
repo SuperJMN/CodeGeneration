@@ -58,6 +58,6 @@
         public static implicit operator Reference(string str)
         {
             return new Reference(str);
-        }
+        }        
     }    
 }

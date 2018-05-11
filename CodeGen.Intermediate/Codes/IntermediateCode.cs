@@ -10,7 +10,7 @@ namespace CodeGen.Intermediate.Codes
 
         public static class Emit
         {
-            public static IntermediateCode Add(Reference destination, Reference left, Reference right)
+            public static ArithmeticAssignment Add(Reference destination, Reference left, Reference right)
             {
                 return new ArithmeticAssignment(ArithmeticOperator.Add, destination, left, right);
             }

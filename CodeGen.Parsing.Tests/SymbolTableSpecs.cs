@@ -8,12 +8,12 @@ using Xunit;
 
 namespace CodeGen.Parsing.Tests
 {
-    public class TablaMixinSpecs
+    public class SymbolTableSpecs
     {
         [Fact]
         public void Convert()
         {
-            var root = new FullSymbolTable();
+            var root = new SymbolTableBuilder();
             var owner = new Function(new FunctionFirm("sample", ReturnType.Int, new List<Argument>()), new Block());
             var child = root.AddChild(owner);
             child.AddAppearance("a", PrimitiveType.Int);
@@ -24,7 +24,7 @@ namespace CodeGen.Parsing.Tests
             child.AddAppearance("a", PrimitiveType.Int);
             child.AddAppearanceForImplicit("T1");
 
-            var actual = root.ToSymbolTable();
+            var actual = root.Build();
 
             var symbols = new List<Symbol>()
             {

@@ -6,7 +6,7 @@ namespace CodeGen.Parsing
 {
     public static class TableMixin
     {
-        public static SymbolTable ToSymbolTable(this FullSymbolTable origin)
+        public static SymbolTable ToSymbolTable(this SymbolTableBuilder origin)
         {
             var symbols = GenerateSymbols(origin);
             
@@ -27,7 +27,7 @@ namespace CodeGen.Parsing
             return symbolTable;
         }
 
-        private static IEnumerable<Symbol> GenerateSymbols(FullSymbolTable origin)
+        private static IEnumerable<Symbol> GenerateSymbols(SymbolTableBuilder origin)
         {
             var offset = 0;
             var list = new List<Symbol>();

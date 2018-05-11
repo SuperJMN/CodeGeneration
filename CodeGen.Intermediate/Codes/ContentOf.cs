@@ -2,12 +2,12 @@
 
 namespace CodeGen.Intermediate.Codes
 {
-    public class AddressOf : IntermediateCode
+    public class ContentOf : IntermediateCode
     {
         public Reference Target { get; }
         public Reference Source { get; }
 
-        public AddressOf(Reference target, Reference source)
+        public ContentOf(Reference target, Reference source)
         {
             Target = target;
             Source = source;
@@ -20,7 +20,7 @@ namespace CodeGen.Intermediate.Codes
 
         public override string ToString()
         {
-            return $"{Target} = AddressOf({Source})";
+            return $"{Target} = ContentOf({Source})";
         }
     }
 }
