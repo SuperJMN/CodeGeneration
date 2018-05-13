@@ -13,6 +13,7 @@ namespace CodeGen.Parsing
         public Reference Reference { get; }
         public PrimitiveType Type { get; set; }
         public int Size { get; set; }
+        public bool IsDeclaration { get; set; }
 
         public override string ToString()
         {

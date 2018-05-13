@@ -2,12 +2,14 @@
 {
     public class Primitive : ReturnType
     {
-        public Primitive(PrimitiveType type)
+        public Primitive(PrimitiveType type, bool isArray = false)
         {
             Type = type;
+            IsArray = isArray;
         }
 
         public PrimitiveType Type { get; }
+        public bool IsArray { get; }
 
         protected bool Equals(Primitive other)
         {
@@ -18,7 +20,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Primitive) obj);
         }
 

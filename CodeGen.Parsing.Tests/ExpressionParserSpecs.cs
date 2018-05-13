@@ -15,7 +15,7 @@ namespace CodeGen.Parsing.Tests
         public void BooleanExpression()
         {
             var actual = Parse("b==1");
-            var expected = new ExpressionNode(Operator.Eq, (ReferenceExpression)"b", new ConstantExpression(1));
+            var expected = new ExpressionNode(Operator.Eq, (ReferenceAccessItem)"b", new ConstantExpression(1));
 
             actual.ShouldDeepEqual(expected);
         }
@@ -42,8 +42,8 @@ namespace CodeGen.Parsing.Tests
         public void OperatorExpression()
         {
             var actual = Parse("a+b*12");
-            var mult = new ExpressionNode(Operator.Multiply, new ReferenceExpression("b"), new ConstantExpression(12));
-            var expected = new ExpressionNode(Operator.Add, new ReferenceExpression("a"), mult);
+            var mult = new ExpressionNode(Operator.Multiply, new ReferenceAccessItem("b"), new ConstantExpression(12));
+            var expected = new ExpressionNode(Operator.Add, new ReferenceAccessItem("a"), mult);
 
             actual.ShouldDeepEqual(expected);
         }
@@ -52,8 +52,8 @@ namespace CodeGen.Parsing.Tests
         public void AddressOfVariable()
         {
             var actual = Parse("*b + &variable");
-            var pointerVal = new ExpressionNode(Operator.PointerValue, new ReferenceExpression("b"));
-            var pointerRef = new ExpressionNode(Operator.PointerAddress, new ReferenceExpression("variable"));
+            var pointerVal = new ExpressionNode(Operator.PointerValue, new ReferenceAccessItem("b"));
+            var pointerRef = new ExpressionNode(Operator.PointerAddress, new ReferenceAccessItem("variable"));
             var expected = new ExpressionNode(Operator.Add, pointerVal, pointerRef);
 
             actual.ShouldDeepEqual(expected);
@@ -63,7 +63,7 @@ namespace CodeGen.Parsing.Tests
         public void ContentsOfReference()
         {
             var actual = Parse("*a");
-            var expected = new ExpressionNode(Operator.PointerValue, new ReferenceExpression("a"));
+            var expected = new ExpressionNode(Operator.PointerValue, new ReferenceAccessItem("a"));
 
             actual.ShouldDeepEqual(expected);
         }
@@ -72,7 +72,7 @@ namespace CodeGen.Parsing.Tests
         public void NegateReference()
         {
             var actual = Parse("!a");
-            var expected = new ExpressionNode(Operator.Not, new ReferenceExpression("a"));
+            var expected = new ExpressionNode(Operator.Not, new ReferenceAccessItem("a"));
 
             actual.ShouldDeepEqual(expected);
         }
@@ -81,7 +81,7 @@ namespace CodeGen.Parsing.Tests
         public void Negative()
         {
             var actual = Parse("-a");
-            var expected = new ExpressionNode(Operator.Negate, new ReferenceExpression("a"));
+            var expected = new ExpressionNode(Operator.Negate, new ReferenceAccessItem("a"));
 
             actual.ShouldDeepEqual(expected);
         }
@@ -90,7 +90,7 @@ namespace CodeGen.Parsing.Tests
         public void Func()
         {
             var actual = Parse("SomeFunc(a, b)");
-            var expected = new Call("SomeFunc", new ReferenceExpression("a"), new ReferenceExpression("b"));
+            var expected = new Call("SomeFunc", new ReferenceAccessItem("a"), new ReferenceAccessItem("b"));
 
             actual.ShouldDeepEqual(expected);
         }
@@ -99,16 +99,16 @@ namespace CodeGen.Parsing.Tests
         public void NestedFunc()
         {
             var actual = Parse("SomeFunc(Other(a), b)");
-            var expected = new Call("SomeFunc", new Call("Other", new ReferenceExpression("a")), new ReferenceExpression("b"));
+            var expected = new Call("SomeFunc", new Call("Other", new ReferenceAccessItem("a")), new ReferenceAccessItem("b"));
 
             actual.ShouldDeepEqual(expected);
         }
 
         [Fact]
-        public void IndexedAccess()
+        public void ArrayIndexedAccess()
         {
             var actual = Parse("array[30]");
-            var expected = new ArrayReferenceItem("array", new ConstantExpression(30));
+            var expected = new ReferenceAccessItem("array", new ConstantExpression(30));
 
             actual.ShouldDeepEqual(expected);
         }

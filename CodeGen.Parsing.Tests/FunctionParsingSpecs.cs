@@ -26,7 +26,7 @@ namespace CodeGen.Parsing.Tests
                 new Argument(PrimitiveType.Int, "b"),
             }), new Block(new List<Statement>()
             {
-                new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))),
+                new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceAccessItem("a"), new ReferenceAccessItem("b"))),
             })));
         }
 
@@ -35,8 +35,8 @@ namespace CodeGen.Parsing.Tests
         {
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(PrimitiveType.Int, "a"),
-                new DeclarationStatement(PrimitiveType.Int, "b"),
+                new DeclarationStatement(ReturnType.Int, "a"),
+                new DeclarationStatement(ReturnType.Int, "b"),
             };
 
             var expected = new Function(new FunctionFirm("main", ReturnType.Void, new List<Argument>()), new Block()
@@ -52,7 +52,7 @@ namespace CodeGen.Parsing.Tests
         {
             var expected = new Function(new FunctionFirm("function", ReturnType.Void, new List<Argument>()
             {
-                new Argument(PrimitiveType.Int, new ArrayReferenceItem("array", new ConstantExpression(10)))
+                new Argument(PrimitiveType.Int, new ReferenceAccessItem("array", new ConstantExpression(10)))
             }), new Block());
 
             AssertCode("void function(int array[10]) { }", expected);

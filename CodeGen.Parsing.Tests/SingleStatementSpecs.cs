@@ -12,13 +12,13 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MethodCall()
         {
-            AssertCode("func(a, b);", new Call("func", new ReferenceExpression("a"), new ReferenceExpression("b")));
+            AssertCode("func(a, b);", new Call("func", new ReferenceAccessItem("a"), new ReferenceAccessItem("b")));
         }    
         
         [Fact]
         public void Return()
         {
-            AssertCode("return a+b;", new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ReferenceExpression("b"))));
+            AssertCode("return a+b;", new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceAccessItem("a"), new ReferenceAccessItem("b"))));
         }   
 
         protected override TokenListParser<LangToken, Statement> Parser => Parsers.SingleStatement;

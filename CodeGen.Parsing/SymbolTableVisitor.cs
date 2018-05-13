@@ -38,9 +38,9 @@ namespace CodeGen.Parsing
             expression.ElseStatement?.Accept(this);            
         }
 
-        public void Visit(ReferenceExpression expression)
+        public void Visit(ReferenceAccessItem accessItem)
         {
-            CurrentSymbolTableBuilder.AddAppearanceForImplicit(expression.Reference);
+            CurrentSymbolTableBuilder.AddAppearanceForImplicit(accessItem.Reference);
         }
 
         public void Visit(AssignmentStatement expression)
@@ -117,23 +117,23 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            CurrentSymbolTableBuilder.AddAppearance(argument.Item.Reference, argument.Type);
+            CurrentSymbolTableBuilder.AddAppearance(argument.AccessItem.Reference, argument.Type);
         }
 
         public void Visit(DeclarationStatement unit)
         {
-            unit.ReferenceItem.Accept(this);
-            unit.Initialization?.Accept(this);
-            CurrentSymbolTableBuilder.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
+            //unit.ReferenceItem.Accept(this);
+            //unit.Initialization?.Accept(this);
+            //CurrentSymbolTableBuilder.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
             
-            if (unit.ReferenceItem is ArrayReferenceItem ari)
-            {       
-                if (ari.AccessExpression is ConstantExpression ct)
-                {
-                    var ctValue = (int)ct.Value;
-                    CurrentSymbolTableBuilder.AddAppearance(ari.Source, unit.ReferenceType, ctValue);
-                }
-            }
+            //if (unit.ReferenceItem is ArrayReferenceItem ari)
+            //{       
+            //    if (ari.AccessExpression is ConstantExpression ct)
+            //    {
+            //        var ctValue = (int)ct.Value;
+            //        CurrentSymbolTableBuilder.AddAppearance(ari.Source, unit.ReferenceType, ctValue);
+            //    }
+            //}
         }
 
         public void Visit(ListInitialization unit)
@@ -143,19 +143,6 @@ namespace CodeGen.Parsing
         public void Visit(DirectInitialization unit)
         {
             unit.Expression.Accept(this);
-        }
-
-        public void Visit(StandardReferenceItem unit)
-        {
-            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Reference);
-        }
-
-        public void Visit(ArrayReferenceItem unit)
-        {
-            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Reference);
-            CurrentSymbolTableBuilder.AddAppearanceForImplicit(unit.Source);
-            
-            unit.AccessExpression.Accept(this);
         }
 
         private void PushScope(ICodeUnit scopeOwner)

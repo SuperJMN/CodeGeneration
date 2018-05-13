@@ -19,7 +19,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Declarations()
         {
-            var ast = new DeclarationStatement(PrimitiveType.Int, "a", new DirectInitialization(new ExpressionNode(Operator.Add, (ReferenceExpression)"b", (ReferenceExpression)"c")));
+            var ast = new DeclarationStatement(ReturnType.Int, "a", new DirectInitialization(new ExpressionNode(Operator.Add, (ReferenceAccessItem)"b", (ReferenceAccessItem)"c")));
 
             Assert(ast, 4);
         }
@@ -33,8 +33,8 @@ namespace CodeGen.Parsing.Tests
                 new Argument(PrimitiveType.Int, "b"),
             }), new Block(new List<Statement>
             {
-                new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceExpression)"a", (ReferenceExpression)"b")),
-                new ReturnStatement(new ReferenceExpression("c"))
+                new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceAccessItem)"a", (ReferenceAccessItem)"b")),
+                new ReturnStatement(new ReferenceAccessItem("c"))
             }, new List<DeclarationStatement>()));
 
             Assert(ast, 8);
@@ -43,15 +43,15 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void MethodCall()
         {
-            var ast = new Call("main", new ReferenceExpression("b"));
+            var ast = new Call("main", new ReferenceAccessItem("b"));
             Assert(ast, 2);
         }
 
         [Fact]
         public void Array()
         {
-            var ast = new ArrayReferenceItem("array", new ConstantExpression(10));
-            Assert(ast, 3);
+            var ast = new ReferenceAccessItem("array", new ConstantExpression(10));
+            Assert(ast, 2);
         }
         
         private static void Assert(ICodeUnit ast, int expectedRefCount)

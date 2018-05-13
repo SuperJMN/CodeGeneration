@@ -17,26 +17,11 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, Expression> Indexer =
             Parse.Ref(() => Expression.OptionalOrDefault().BetweenBrackets());
 
-        private static readonly TokenListParser<LangToken, Expression> ReferenceItem =
+        private static readonly TokenListParser<LangToken, Expression> ReferenceAccess =
             from aste in Token.EqualTo(LangToken.Asterisk).Many()
             from id in Identifier
             from indexer in Indexer.OptionalOrDefault()
-            select (Expression)MakeRefItem(id, aste.Length, indexer);
-
-        private static ReferenceItem MakeRefItem(string identifier, int indirectionLevel, Expression accesssExpression)
-        {
-            if (indirectionLevel == 0)
-            {
-                if (accesssExpression == null)
-                {
-                    return new StandardReferenceItem(identifier);
-                }
-
-                return new ArrayReferenceItem(identifier, accesssExpression);
-            }
-
-            return new PointerReferenceItem(MakeRefItem(identifier, indirectionLevel - 1, accesssExpression));
-        }
+            select (Expression)new ReferenceAccessItem(id, indexer, aste.Length);
 
         private static readonly TokenListParser<LangToken, string> Add = Token.EqualTo(LangToken.Plus)
             .Value(Operator.Add);
@@ -103,7 +88,7 @@ namespace CodeGen.Parsing
 
         private static readonly TokenListParser<LangToken, Expression> Reference =
             Token.EqualTo(LangToken.Identifier)
-                .Select(token => (Expression) new ReferenceExpression(token.ToStringValue()));
+                .Select(token => (Expression) new ReferenceAccessItem(token.ToStringValue()));
 
         private static readonly TokenListParser<LangToken, Expression> BooleanValue =
             Token.EqualTo(LangToken.True).Value((Expression) new ConstantExpression(true))
@@ -128,7 +113,7 @@ namespace CodeGen.Parsing
             select (Expression) new Call(name, parameters);
 
         private static readonly TokenListParser<LangToken, Expression> Item =
-            FunctionCall.Try().Or(ReferenceItem).Or(Literal);
+            FunctionCall.Try().Or(ReferenceAccess).Or(Literal);
 
         private static readonly TokenListParser<LangToken, Expression> Factor =
             Parse.Ref(() => Expression).BetweenParenthesis()
@@ -162,10 +147,10 @@ namespace CodeGen.Parsing
         private static readonly TokenListParser<LangToken, Expression> Condition = Expression.BetweenParenthesis();
 
         private static readonly TokenListParser<LangToken, Statement> RegularAssignment =
-            from target in ReferenceItem
+            from target in ReferenceAccess
             from eq in Token.EqualTo(LangToken.Equal)
             from expr in Expression
-            select (Statement) new AssignmentStatement((ReferenceItem)target, expr);
+            select (Statement) new AssignmentStatement((ReferenceAccessItem)target, expr);
 
         private static readonly TokenListParser<LangToken, Statement> OperatorAssignment =
             from identifier in Identifier
@@ -289,9 +274,9 @@ namespace CodeGen.Parsing
             select new Declarator(identifier, array, asterisks.Length);
 
         public static readonly TokenListParser<LangToken, DeclaratorAndInitializer> DeclaratorAndInitializer =
-            from dec in ReferenceItem
+            from dec in ReferenceAccess
             from init in Initializer.OptionalOrDefault()
-            select new DeclaratorAndInitializer((ReferenceItem)dec, init);
+            select new DeclaratorAndInitializer((ReferenceAccessItem)dec, init);
 
         private static readonly TokenListParser<LangToken, DeclaratorAndInitializer[]> DeclaratorsAndInitializers =
             DeclaratorAndInitializer.CommaDelimited();
@@ -300,7 +285,20 @@ namespace CodeGen.Parsing
             from type in BaseType
             from declsAndInits in DeclaratorsAndInitializers
             from sm in Token.EqualTo(LangToken.Semicolon)
-            select declsAndInits.Select(x => new DeclarationStatement(type, x.ReferenceItem, x.Initialization));
+            select declsAndInits.Select(x => MakeDeclaration(type, x));
+
+        private static DeclarationStatement MakeDeclaration(PrimitiveType type, DeclaratorAndInitializer x)
+        {
+            var fullType = MakeType(type, x.ReferenceAccessItemAccess);
+
+            return new DeclarationStatement(fullType, x.ReferenceAccessItemAccess.Reference, x.Initialization);
+        }
+
+        private static ReturnType MakeType(PrimitiveType type, ReferenceAccessItem xReferenceAccessItemAccess)
+        {
+            return Ast.ReturnType.Create(type, xReferenceAccessItemAccess.IndirectionLevel,
+                xReferenceAccessItemAccess.AccessExpression != null);
+        }
 
         public static readonly TokenListParser<LangToken, IEnumerable<DeclarationStatement>[]> Declarations =
             DeclarationStatement.Many();
@@ -323,8 +321,8 @@ namespace CodeGen.Parsing
 
         private static readonly TokenListParser<LangToken, Argument> Argument =
             from primitiveType in BaseType
-            from name in ReferenceItem
-            select new Argument(primitiveType, (ReferenceItem)name);
+            from name in ReferenceAccess
+            select new Argument(primitiveType, (ReferenceAccessItem)name);
 
         private static readonly TokenListParser<LangToken, Argument[]>
             Arguments = Argument.CommaDelimited();

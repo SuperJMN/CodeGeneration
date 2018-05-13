@@ -12,23 +12,24 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Int()
         {
-            AssertCode("int a;", new []{ new DeclarationStatement(PrimitiveType.Int, "a"), });
+            AssertCode("int a;", new[] {new DeclarationStatement(ReturnType.Int, "a"),});
         }
 
         [Fact]
         public void Multiple()
         {
-            AssertCode("int a, b;", new []
+            AssertCode("int a, b;", new[]
             {
-                new DeclarationStatement(PrimitiveType.Int, "a"),
-                new DeclarationStatement(PrimitiveType.Int, "b"),
+                new DeclarationStatement(ReturnType.Int, "a"),
+                new DeclarationStatement(ReturnType.Int, "b"),
             });
         }
 
         [Fact]
         public void IntPointer()
         {
-            AssertCode("int *pointer;", new []{new DeclarationStatement(PrimitiveType.Int, new PointerReferenceItem("pointer")) });
+            AssertCode("int *pointer;",
+                new[] {new DeclarationStatement(ReturnType.IntPointer, "pointer")});
         }
 
         [Fact]
@@ -37,23 +38,30 @@ namespace CodeGen.Parsing.Tests
             AssertCode("int **pointer;",
                 new[]
                 {
-                    new DeclarationStatement(PrimitiveType.Int,
-                        new PointerReferenceItem(new PointerReferenceItem("pointer")))
+                    new DeclarationStatement(new Pointer(new Pointer(new Primitive(PrimitiveType.Int))), "pointer")
                 });
         }
+
 
         [Fact]
         public void IntWithInitialization()
         {
-            AssertCode("int a=12;", new[] { new DeclarationStatement(PrimitiveType.Int, "a", new DirectInitialization(new ConstantExpression(12))) });
+            AssertCode("int a=12;",
+                new[]
+                {
+                    new DeclarationStatement(ReturnType.Int, "a", new DirectInitialization(new ConstantExpression(12)))
+                });
         }
 
         [Fact]
         public void ArrayInitialization()
         {
-            AssertCode("int a[]={1, 2, 3};", new[] { new DeclarationStatement(PrimitiveType.Int, "a", new ListInitialization(1, 2, 3)) });
+            AssertCode("int a[]={1, 2, 3};",
+                new[] {new DeclarationStatement(ReturnType.Int, "a", new ListInitialization(1, 2, 3))});
         }
 
-        protected override TokenListParser<LangToken, IEnumerable<DeclarationStatement>> Parser => Parsers.DeclarationStatement;
+        protected override TokenListParser<LangToken, IEnumerable<DeclarationStatement>> Parser =>
+            Parsers.DeclarationStatement;
     }
 }
+    

@@ -25,7 +25,7 @@ namespace CodeGen.Parsing.Ast
 
         public override string ToString()
         {
-            var args = string.Join(",", Arguments.Select(x => $"{x.Type} {x.Item}"));
+            var args = string.Join(",", Arguments.Select(x => $"{x.Type} {x.AccessItem}"));
             return $"{ReturnType} {Name}({args})";
         }
     }

@@ -3,12 +3,12 @@
     public class Argument : ICodeUnit
     {
         public PrimitiveType Type { get; }
-        public ReferenceItem Item { get; }
+        public ReferenceAccessItem AccessItem { get; }
 
-        public Argument(PrimitiveType type, ReferenceItem item)
+        public Argument(PrimitiveType type, ReferenceAccessItem accessItem)
         {
             Type = type;
-            Item = item;
+            AccessItem = accessItem;
         }
 
         public void Accept(ICodeUnitVisitor unitVisitor)

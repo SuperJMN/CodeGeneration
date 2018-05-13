@@ -48,7 +48,7 @@ namespace CodeGen.Parsing.Ast
 
         public static int GetValue(this Reference reference, SymbolTable table, int[] memory, int index = 1)
         {
-            return GetArray(reference, table, memory, index, 1).First();
+            return GetArray(reference, table, memory, 1, index).First();
         }
 
         public static void SetValue(this Reference reference, int value, SymbolTable table, int[] memory, int index = 0)
@@ -57,8 +57,10 @@ namespace CodeGen.Parsing.Ast
             {
                 memory[props.Offset + index] = value;
             }
-
-            throw new InvalidOperationException($"The referece {reference} doesn't exist in the 'main' symbolTable");
+            else
+            {
+                throw new InvalidOperationException($"The referece {reference} doesn't exist in the 'main' symbolTable");
+            }            
         }
 
         public static int[] GetArray(this Reference reference, SymbolTable table, int[] memory, int length, int index = 0)
@@ -67,7 +69,7 @@ namespace CodeGen.Parsing.Ast
             {
                 return memory.Skip(props.Offset + index).Take(length).ToArray();
             }
-            
+
             throw new InvalidOperationException($"The referece {reference} doesn't exist in the 'main' symbolTable");
         }
     }

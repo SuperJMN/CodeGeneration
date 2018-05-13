@@ -38,11 +38,6 @@ namespace CodeGen.Parsing
             expression.ElseStatement?.Accept(this);
         }
 
-        public void Visit(ReferenceExpression expression)
-        {
-            AddReference(expression.Reference);
-        }
-
         public void Visit(AssignmentStatement expression)
         {
             expression.Assignment.Accept(this);
@@ -111,13 +106,13 @@ namespace CodeGen.Parsing
 
         public void Visit(Argument argument)
         {
-            AddReference(argument.Item.Reference);
+            AddReference(argument.AccessItem.Reference);
         }
 
         public void Visit(DeclarationStatement unit)
         {
             unit.Initialization?.Accept(this);
-            unit.ReferenceItem.Accept(this);            
+            AddReference(unit.Reference);
         }
 
         public void Visit(ListInitialization unit)
@@ -129,17 +124,10 @@ namespace CodeGen.Parsing
             unit.Expression.Accept(this);
         }
 
-        public void Visit(StandardReferenceItem unit)
+        public void Visit(ReferenceAccessItem unit)
         {
+            unit.AccessExpression?.Accept(this);
             AddReference(unit.Reference);
-        }
-
-        public void Visit(ArrayReferenceItem unit)
-        {
-            unit.AccessExpression.Accept(this);
-
-            AddReference(unit.Source);
-            AddReference(unit.Reference);
-        }
+        }        
     }
 }

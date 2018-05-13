@@ -9,15 +9,17 @@ using CodeGen.Parsing.Ast.Expressions;
 using CodeGen.Parsing.Ast.Statements;
 using DeepEqual.Syntax;
 using Xunit;
+using Reference = CodeGen.Core.Reference;
+using ReferenceAccessItem = CodeGen.Parsing.Ast.Expressions.ReferenceAccessItem;
 
 namespace CodeGen.Intermediate.Tests
 {
-    public class CodeGeneratorSpecs
+    public class CodeGeneratorSpecs : GeneratorSpecsBase
     {
         private static void TestBooleanOperation(BooleanOperation booleanOperation)
         {
-            var sut = new ExpressionNode(booleanOperation.ToOperatorName(), new ReferenceExpression("a"),
-                new ReferenceExpression("b"));
+            var sut = new ExpressionNode(booleanOperation.ToOperatorName(), new ReferenceAccessItem("a"),
+                new ReferenceAccessItem("b"));
 
             var actual = Generate(sut);
 
@@ -30,16 +32,7 @@ namespace CodeGen.Intermediate.Tests
             actual.ShouldDeepEqual(expected);
         }
 
-        private static IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit unit)
-        {
-            var namer = new ImplicitReferenceNameAssigner();
-            namer.AssignNames(unit);
 
-            var sut = new IntermediateCodeGenerator();
-            var actual = sut.Generate(unit);
-            
-            return actual.ToList().AsReadOnly();
-        }
 
         [Fact]
         public void ComplexAssignment()
@@ -48,12 +41,12 @@ namespace CodeGen.Intermediate.Tests
                 "x",
                 new ExpressionNode(nameof(Operator.Add),
                     new ExpressionNode(nameof(Operator.Multiply),
-                        new ReferenceExpression("y"),
-                        new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("z"),
-                            new ReferenceExpression("w"))
+                        new ReferenceAccessItem("y"),
+                        new ExpressionNode(nameof(Operator.Multiply), new ReferenceAccessItem("z"),
+                            new ReferenceAccessItem("w"))
                     ),
-                    new ExpressionNode(nameof(Operator.Add), new ReferenceExpression("y"),
-                        new ReferenceExpression("x"))
+                    new ExpressionNode(nameof(Operator.Add), new ReferenceAccessItem("y"),
+                        new ReferenceAccessItem("x"))
                 )
             );
 
@@ -88,7 +81,7 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfSentence()
         {
-            var statement = new AssignmentStatement("b", new ReferenceExpression("c"));
+            var statement = new AssignmentStatement("b", new ReferenceAccessItem("c"));
 
             var expr = new IfStatement(new ConstantExpression(true),
                 new Block(new List<Statement> {statement}));
@@ -111,13 +104,13 @@ namespace CodeGen.Intermediate.Tests
         [Fact]
         public void IfStatementComplexExpression()
         {
-            var left = new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("x"),
-                new ReferenceExpression("y"));
-            var right = new ReferenceExpression("z");
+            var left = new ExpressionNode(nameof(Operator.Multiply), new ReferenceAccessItem("x"),
+                new ReferenceAccessItem("y"));
+            var right = new ReferenceAccessItem("z");
             var condition = new ExpressionNode(nameof(Operator.Eq), left, right);
 
             var statement = new IfStatement(condition,
-                new Block(new AssignmentStatement("a", new ReferenceExpression("b"))));
+                new Block(new AssignmentStatement("a", new ReferenceAccessItem("b"))));
 
             var actual = Generate(statement);
 
@@ -175,8 +168,8 @@ namespace CodeGen.Intermediate.Tests
             }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c",
-                    new ExpressionNode(Operator.Add, (ReferenceExpression) "a", (ReferenceExpression) "b")),
-                new ReturnStatement(new ReferenceExpression("c"))
+                    new ExpressionNode(Operator.Add, (ReferenceAccessItem) "a", (ReferenceAccessItem) "b")),
+                new ReturnStatement(new ReferenceAccessItem("c"))
             }, new List<DeclarationStatement>()));
 
             var mainFunc = new Function(new FunctionFirm("main", ReturnType.Void, new List<Argument>()), new Block(
@@ -222,11 +215,11 @@ namespace CodeGen.Intermediate.Tests
         public void SimpleAssignment()
         {
             var expr = new AssignmentStatement(
-                new StandardReferenceItem(new Reference("a")), 
+                "a", 
                 new ExpressionNode(nameof(Operator.Add),
-                    new ReferenceExpression("b"),
-                    new ExpressionNode(nameof(Operator.Multiply), new ReferenceExpression("c"),
-                        new ReferenceExpression("d"))
+                    new ReferenceAccessItem("b"),
+                    new ExpressionNode(nameof(Operator.Multiply), new ReferenceAccessItem("c"),
+                        new ReferenceAccessItem("d"))
                 )
             );
 
@@ -242,19 +235,36 @@ namespace CodeGen.Intermediate.Tests
             actual.ShouldDeepEqual(expected);
         }
 
+      
+    }
+
+    public class GeneratorSpecsBase
+    {
+        protected static IReadOnlyCollection<IntermediateCode> Generate(ICodeUnit unit)
+        {
+            var namer = new ImplicitReferenceNameAssigner();
+            namer.AssignNames(unit);
+
+            var sut = new IntermediateCodeGenerator();
+            var actual = sut.Generate(unit);
+            
+            return actual.ToList().AsReadOnly();
+        }
+    }
+
+    public class Array : GeneratorSpecsBase
+    {
         [Fact]
         public void LoadFromArray()
         {
-            var expr = new AssignmentStatement(new StandardReferenceItem(new Reference("a")), new ArrayReferenceItem("b", new ConstantExpression(10)));
+            var expr = new AssignmentStatement("a", new ConstantExpression(10));
             var actual = Generate(expr);
 
             var expected = new List<IntermediateCode>
             {
                 IntermediateCode.Emit.Set("T1", 10),
-                new AddressOf("T2", "b"),
-                IntermediateCode.Emit.Add("T3", "T2", "T1"),
-                new ContentOf("T4", "T3"),
-                IntermediateCode.Emit.Set("a", "T4"),
+                IntermediateCode.Emit.LoadFromArray("T2", "b", "T1"),
+                IntermediateCode.Emit.Set("a", "T2"),
             };
 
             actual.ShouldDeepEqual(expected);
@@ -264,7 +274,7 @@ namespace CodeGen.Intermediate.Tests
         public void StoreToArray()
         {
             var target = new ArrayReferenceItem("a", new ConstantExpression(10));
-            var expr = new AssignmentStatement(target, (StandardReferenceItem)"b");
+            var expr = new AssignmentStatement(target, "b");
             var actual = Generate(expr);
 
             var expected = new List<IntermediateCode>

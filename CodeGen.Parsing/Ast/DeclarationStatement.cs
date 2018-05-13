@@ -1,17 +1,18 @@
-﻿using CodeGen.Parsing.Ast.Statements;
+﻿using CodeGen.Core;
+using CodeGen.Parsing.Ast.Statements;
 
 namespace CodeGen.Parsing.Ast
 {
     public class DeclarationStatement : Statement
     {
-        public PrimitiveType ReferenceType { get; }
-        public ReferenceItem ReferenceItem { get; }
+        public ReturnType ReferenceType { get; }
+        public Reference Reference { get; }
         public InitializationExpression Initialization { get; }
 
-        public DeclarationStatement(PrimitiveType referenceType, ReferenceItem referenceItem, InitializationExpression initialization = null)
+        public DeclarationStatement(ReturnType referenceType, Reference reference, InitializationExpression initialization = null)
         {
             ReferenceType = referenceType;
-            ReferenceItem = referenceItem;
+            Reference = reference;
             Initialization = initialization;
         }
 

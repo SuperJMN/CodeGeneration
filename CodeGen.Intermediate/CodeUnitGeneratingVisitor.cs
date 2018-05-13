@@ -219,11 +219,11 @@ namespace CodeGen.Intermediate
 
         public void Visit(DeclarationStatement declarationStatement)
         {
-            if (declarationStatement.Initialization is DirectInitialization a)
-            {
-                var assignment = new AssignmentStatement(declarationStatement.ReferenceItem, a.Expression);
-                assignment.Accept(this);
-            }            
+            //if (declarationStatement.Initialization is DirectInitialization a)
+            //{
+            //    var assignment = new AssignmentStatement(declarationStatement.Reference, a.Expression);
+            //    assignment.Accept(this);
+            //}            
         }
 
         public void Visit(ListInitialization unit)
@@ -235,32 +235,23 @@ namespace CodeGen.Intermediate
             unit.Expression.Accept(this);
         }
 
-        public void Visit(StandardReferenceItem unit)
+        public void Visit(ReferenceAccessItem unit)
         {            
         }
-
-        public void Visit(ArrayReferenceItem unit)
-        {
-            unit.AccessExpression.Accept(this);
-        }
-
-        public void Visit(ReferenceExpression expression)
-        {
-        }
-
+      
         public void Visit(AssignmentStatement statement)
         {
             statement.Assignment.Accept(this);
 
-            if (statement.Target is ArrayReferenceItem ar)
-            {
-                ar.AccessExpression.Accept(this);
-                InnerCode.Add(new StoreToArray(new IndexedReference(ar.Source, ar.AccessExpression.Reference), statement.Assignment.Reference));
-            }
-            else
-            {
+            //if (statement.Target is ArrayReferenceItem ar)
+            //{
+            //    ar.AccessExpression.Accept(this);
+            //    InnerCode.Add(new StoreToArray(new IndexedReference(ar.Source, ar.AccessExpression.Reference), statement.Assignment.Reference));
+            //}
+            //else
+            //{
                 InnerCode.Add(IntermediateCode.Emit.Set(statement.Target.Reference, statement.Assignment.Reference));
-            }            
+            //}            
         }
     }
 }

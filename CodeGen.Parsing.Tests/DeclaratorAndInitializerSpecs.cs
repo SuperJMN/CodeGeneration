@@ -23,7 +23,7 @@ namespace CodeGen.Parsing.Tests
         [Fact]
         public void Array()
         {
-            AssertCode("a[3]={1, 2, 3}", new DeclaratorAndInitializer(new ArrayReferenceItem("a", new ConstantExpression(3)), new ListInitialization(1, 2, 3)));
+            AssertCode("a[3]={1, 2, 3}", new DeclaratorAndInitializer(new ReferenceAccessItem("a", new ConstantExpression(3)), new ListInitialization(1, 2, 3)));
         } 
 
         protected override TokenListParser<LangToken, DeclaratorAndInitializer> Parser => Parsers.DeclaratorAndInitializer;

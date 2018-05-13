@@ -46,7 +46,8 @@ namespace CodeGen.Parsing
             appearances.Add(new Appearance(reference)
             {
                 Type = argumentType,
-                Size = size
+                Size = size,
+                IsDeclaration = true,
             });
         }
 
@@ -55,13 +56,13 @@ namespace CodeGen.Parsing
             var symbols = GenerateSymbols(this);
             
             var subTables = new List<SymbolTable>();
-            foreach (var child in this.Children)
+            foreach (var child in Children)
             {
                 var convertedChild = child.Build();
                 subTables.Add(convertedChild);
             }
 
-            var symbolTable = new SymbolTable(this.Owner, symbols.ToDictionary(s => s.Reference, s => new Properties()
+            var symbolTable = new SymbolTable(Owner, symbols.ToDictionary(s => s.Reference, s => new Properties()
             {
                 Offset = s.Offset,
                 Type = s.Type,
@@ -77,7 +78,7 @@ namespace CodeGen.Parsing
             var list = new List<Symbol>();
             foreach (var g in origin.Appearances.GroupBy(x => x.Reference))
             {
-                var firstAppearance = g.First();
+                var firstAppearance = g.FirstOrDefault(x => x.IsDeclaration) ?? g.First();
                 list.Add(new Symbol(g.Key, firstAppearance.Type, offset, firstAppearance.Size));
 
                 offset += firstAppearance.Size;                

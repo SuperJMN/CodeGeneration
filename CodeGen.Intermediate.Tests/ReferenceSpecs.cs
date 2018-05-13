@@ -2,6 +2,7 @@ using CodeGen.Core;
 using CodeGen.Parsing;
 using FluentAssertions;
 using Xunit;
+using Reference = CodeGen.Core.Reference;
 
 namespace CodeGen.Intermediate.Tests
 {

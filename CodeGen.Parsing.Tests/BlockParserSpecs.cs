@@ -18,8 +18,8 @@ namespace CodeGen.Parsing.Tests
 
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(PrimitiveType.Int, "a"),
-                new DeclarationStatement(PrimitiveType.Int, "b"),
+                new DeclarationStatement(ReturnType.Int, "a"),
+                new DeclarationStatement(ReturnType.Int, "b"),
             };
 
             var expected = new Block(new List<Statement>(), declarationStatements);
@@ -34,13 +34,13 @@ namespace CodeGen.Parsing.Tests
 
             var declarationStatements = new List<DeclarationStatement>()
             {
-                new DeclarationStatement(PrimitiveType.Int, "a"),
-                new DeclarationStatement(PrimitiveType.Int, "b"),
+                new DeclarationStatement(ReturnType.Int, "a"),
+                new DeclarationStatement(ReturnType.Int, "b"),
             };
 
             var expected = new Block(new List<Statement>()
                 {
-                    new AssignmentStatement("a", new ExpressionNode(Operator.Add, new ReferenceExpression("a"), new ConstantExpression(1)))
+                    new AssignmentStatement("a", new ExpressionNode(Operator.Add, new ReferenceAccessItem("a"), new ConstantExpression(1)))
                 }, 
                 declarationStatements);
 
@@ -51,9 +51,9 @@ namespace CodeGen.Parsing.Tests
         public void MethodCallAndAssignment()
         {
             var block = new Block(
-                new Call("func", new ReferenceExpression("a"), new ReferenceExpression("b")),
+                new Call("func", new ReferenceAccessItem("a"), new ReferenceAccessItem("b")),
                 new AssignmentStatement("a",
-                    new ExpressionNode(Operator.Add, new ReferenceExpression("b"), new ReferenceExpression("c"))));
+                    new ExpressionNode(Operator.Add, new ReferenceAccessItem("b"), new ReferenceAccessItem("c"))));
 
             AssertCode("{ func(a, b); a=b+c; }", block);
         }

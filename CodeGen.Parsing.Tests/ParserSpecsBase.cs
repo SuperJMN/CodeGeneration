@@ -11,7 +11,7 @@ namespace CodeGen.Parsing.Tests
             return Parser.Parse(TokenizerFactory.Create().Tokenize(source));
         }
 
-        public void AssertCode(string source, T expectation)
+        protected void AssertCode(string source, T expectation)
         {
             var ast = Parse(source);
             ast.ShouldDeepEqual(expectation);

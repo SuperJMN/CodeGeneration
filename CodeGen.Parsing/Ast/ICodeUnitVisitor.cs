@@ -8,7 +8,7 @@ namespace CodeGen.Parsing.Ast
         void Visit(ExpressionNode unit);
         void Visit(ConstantExpression unit);
         void Visit(IfStatement unit);
-        void Visit(ReferenceExpression unit);
+        void Visit(ReferenceAccessItem unit);
         void Visit(AssignmentStatement unit);
         void Visit(ForLoop unit);
         void Visit(WhileStatement unit);
@@ -22,7 +22,5 @@ namespace CodeGen.Parsing.Ast
         void Visit(DeclarationStatement unit);
         void Visit(ListInitialization unit);
         void Visit(DirectInitialization unit);
-        void Visit(StandardReferenceItem unit);
-        void Visit(ArrayReferenceItem unit);
     }
 }
