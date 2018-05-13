@@ -219,11 +219,14 @@ namespace CodeGen.Intermediate
 
         public void Visit(DeclarationStatement declarationStatement)
         {
-            //if (declarationStatement.Initialization is DirectInitialization a)
-            //{
-            //    var assignment = new AssignmentStatement(declarationStatement.Reference, a.Expression);
-            //    assignment.Accept(this);
-            //}            
+            if (declarationStatement.Initialization is DirectInitialization a)
+            {
+                if (declarationStatement.ReferenceType is Primitive p)
+                {
+                    var assignment = new AssignmentStatement(new ReferenceAccessItem(declarationStatement.Reference), a.Expression);
+                    assignment.Accept(this);
+                }
+            }
         }
 
         public void Visit(ListInitialization unit)

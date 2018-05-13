@@ -319,15 +319,17 @@ namespace CodeGen.Parsing
             from asterisks in Token.EqualTo(LangToken.Asterisk).Many()
             select GetRefType(b, asterisks.Length);
 
+
+
+        private static readonly TokenListParser<LangToken, ReturnType> ReturnType = ReferenceType;
+
         private static readonly TokenListParser<LangToken, Argument> Argument =
-            from primitiveType in BaseType
+            from primitiveType in ReturnType
             from name in ReferenceAccess
             select new Argument(primitiveType, (ReferenceAccessItem)name);
 
         private static readonly TokenListParser<LangToken, Argument[]>
             Arguments = Argument.CommaDelimited();
-
-        private static readonly TokenListParser<LangToken, ReturnType> ReturnType = ReferenceType;
 
         public static readonly TokenListParser<LangToken, Function> Function =
             from returnType in ReturnType

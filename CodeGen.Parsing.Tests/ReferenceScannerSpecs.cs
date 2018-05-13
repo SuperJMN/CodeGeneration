@@ -29,8 +29,8 @@ namespace CodeGen.Parsing.Tests
         {
             var ast = new Function(new FunctionFirm("add", ReturnType.Int, new List<Argument>
             {
-                new Argument(PrimitiveType.Int, "a"),
-                new Argument(PrimitiveType.Int, "b"),
+                new Argument(ReturnType.Int, "a"),
+                new Argument(ReturnType.Int, "b"),
             }), new Block(new List<Statement>
             {
                 new AssignmentStatement("c", new ExpressionNode(Operator.Add, (ReferenceAccessItem)"a", (ReferenceAccessItem)"b")),

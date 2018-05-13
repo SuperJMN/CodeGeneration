@@ -2,10 +2,10 @@
 {
     public class Argument : ICodeUnit
     {
-        public PrimitiveType Type { get; }
+        public ReturnType Type { get; }
         public ReferenceAccessItem AccessItem { get; }
 
-        public Argument(PrimitiveType type, ReferenceAccessItem accessItem)
+        public Argument(ReturnType type, ReferenceAccessItem accessItem)
         {
             Type = type;
             AccessItem = accessItem;

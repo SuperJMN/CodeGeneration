@@ -122,9 +122,8 @@ namespace CodeGen.Parsing
 
         public void Visit(DeclarationStatement unit)
         {
-            //unit.ReferenceItem.Accept(this);
-            //unit.Initialization?.Accept(this);
-            //CurrentSymbolTableBuilder.AddAppearance(unit.ReferenceItem.Reference, unit.ReferenceType);
+            unit.Initialization?.Accept(this);
+            CurrentSymbolTableBuilder.AddAppearance(unit.Reference, unit.ReferenceType);
             
             //if (unit.ReferenceItem is ArrayReferenceItem ari)
             //{       

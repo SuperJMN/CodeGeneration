@@ -41,7 +41,7 @@ namespace CodeGen.Parsing
             return child;
         }
 
-        public void AddAppearance(Reference reference, PrimitiveType argumentType, int size = 1)
+        public void AddAppearance(Reference reference, ReturnType argumentType, int size = 1)
         {
             appearances.Add(new Appearance(reference)
             {

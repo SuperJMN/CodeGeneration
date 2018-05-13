@@ -22,8 +22,8 @@ namespace CodeGen.Parsing.Tests
         {
             AssertCode("int suma(int a, int b) { return a+b; }", new Function(new FunctionFirm("suma", ReturnType.Int, new List<Argument>
             {
-                new Argument(PrimitiveType.Int, "a"),
-                new Argument(PrimitiveType.Int, "b"),
+                new Argument(ReturnType.Int, "a"),
+                new Argument(ReturnType.Int, "b"),
             }), new Block(new List<Statement>()
             {
                 new ReturnStatement(new ExpressionNode(Operator.Add, new ReferenceAccessItem("a"), new ReferenceAccessItem("b"))),
@@ -52,7 +52,7 @@ namespace CodeGen.Parsing.Tests
         {
             var expected = new Function(new FunctionFirm("function", ReturnType.Void, new List<Argument>()
             {
-                new Argument(PrimitiveType.Int, new ReferenceAccessItem("array", new ConstantExpression(10)))
+                new Argument(ReturnType.Int, new ReferenceAccessItem("array", new ConstantExpression(10)))
             }), new Block());
 
             AssertCode("void function(int array[10]) { }", expected);

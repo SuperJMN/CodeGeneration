@@ -2,12 +2,12 @@
 {
     public class Properties
     {
-        public PrimitiveType Type { get; set; }
+        public ReturnType Type { get; set; }
 
         public int Size { get; set; } = 1;
         public int Offset { get; set; }
 
-        public void AssignType(PrimitiveType type)
+        public void AssignType(ReturnType type)
         {
             Type = type;
         }

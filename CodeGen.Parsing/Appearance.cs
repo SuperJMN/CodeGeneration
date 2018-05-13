@@ -11,7 +11,7 @@ namespace CodeGen.Parsing
         }
 
         public Reference Reference { get; }
-        public PrimitiveType Type { get; set; }
+        public ReturnType Type { get; set; }
         public int Size { get; set; }
         public bool IsDeclaration { get; set; }
 
